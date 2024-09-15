@@ -4,10 +4,11 @@ import {
   useCurrentSession,
   useCurrentWallet,
 } from '@roochnetwork/rooch-sdk-kit';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export function useAppSession() {
   const sessionKey = useCurrentSession();
+  const { wallet } = useCurrentWallet();
   const { mutateAsync: createSessionKey } = useCreateSessionKey();
   const [sessionLoading, setSessionLoading] = useState(false);
 
@@ -20,10 +21,10 @@ export function useAppSession() {
     const defaultScopes = [`${MODULE_ADDRESS}::*::*`];
     createSessionKey(
       {
-        appName: 'rooch-anki',
-        appUrl: 'https://rooch-anki.vercel.app',
+        appName: 'rooch-raffle',
+        appUrl: 'https://rooch-raffle.vercel.app',
         scopes: defaultScopes,
-        maxInactiveInterval: 60,
+        maxInactiveInterval: 3 * 24 * 60 * 60, // 三天
       },
       {
         onSuccess: (result: any) => {
@@ -36,14 +37,17 @@ export function useAppSession() {
     ).finally(() => setSessionLoading(false));
   };
 
+  const sessionOrWallet = sessionKey || wallet;
+
   return {
     sessionKey,
+    sessionOrWallet,
     handlerCreateSessionKey,
     sessionLoading,
   };
 }
 
-export const useWalletAddress = () => {
+export const useWalletHexAddress = () => {
   const { wallet } = useCurrentWallet();
-  return wallet?.getRoochAddress().toStr() ?? '';
+  return wallet?.getRoochAddress().toHexAddress() ?? '';
 };

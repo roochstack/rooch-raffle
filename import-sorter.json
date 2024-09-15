@@ -1,0 +1,10 @@
+{
+  "autoFormat": "onSave",
+  "quoteMark": "single",
+  "wrappingStyle": {
+    "maxBindingNamesPerLine": 0,
+    "maxDefaultAndBindingNamesPerLine": 0,
+    "maxExportNamesPerLine": 0,
+    "maxNamesPerWrappedLine": 0
+  }
+}
