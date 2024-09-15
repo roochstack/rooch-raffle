@@ -1,0 +1,28 @@
+---
+compiled_package_info:
+  package_name: red_envelope
+  address_alias_instantiation:
+    bitcoin_move: "0000000000000000000000000000000000000000000000000000000000000004"
+    moveos_std: "0000000000000000000000000000000000000000000000000000000000000002"
+    red_envelope: 7baf7e35a094010063008f0109d9e3377112040565b431c7badf364311f9fd7f
+    rooch_framework: "0000000000000000000000000000000000000000000000000000000000000003"
+    std: "0000000000000000000000000000000000000000000000000000000000000001"
+    vm_reserved: "0000000000000000000000000000000000000000000000000000000000000000"
+  source_digest: D40F4E36B780B7087C3223FA000F746BA70F19F755B7354FBAD61C5D08998F19
+  build_flags:
+    dev_mode: false
+    test_mode: false
+    generate_docs: false
+    generate_abis: false
+    install_dir: ~
+    force_recompilation: false
+    additional_named_addresses: {}
+    architecture: ~
+    fetch_deps_only: false
+    skip_fetch_latest_git_deps: false
+    bytecode_version: ~
+dependencies:
+  - BitcoinMove
+  - MoveStdlib
+  - MoveosStdlib
+  - RoochFramework
