@@ -69,9 +69,7 @@ export function ManageRaffleActivity({ id }: ManageActivityProps) {
 
         {ableToOpen && (
           <div>
-            <div className="text-base/7 font-semibold text-gray-950 dark:text-white">
-              活动已结束，尚未开奖
-            </div>
+            <div className="text-base/7 font-semibold text-gray-950">活动已结束，尚未开奖</div>
             <Button
               onClick={async () => {
                 try {
@@ -98,44 +96,42 @@ export function ManageRaffleActivity({ id }: ManageActivityProps) {
         )}
 
         {raffleDetailQueryResult.data!.opened && (
-          <div className="text-base/7 font-semibold text-gray-950 dark:text-white">活动已结束</div>
+          <div className="text-base/7 font-semibold text-gray-950">活动已结束</div>
         )}
 
         <div>
           <div className="rounded-lg bg-white p-4 shadow-sm">
-            <div className="text-base/7 font-semibold text-gray-950 dark:text-white sm:text-sm/6">
-              Details
-            </div>
-            <hr className="mt-4 w-full border-t border-gray-950/10 dark:border-white/10" />
+            <div className="text-base/7 font-semibold text-gray-950 sm:text-sm/6">Details</div>
+            <hr className="mt-4 w-full border-t border-gray-950/10" />
             <dl className="grid grid-cols-1 text-base/6 sm:grid-cols-[min(50%,theme(spacing.80))_auto] sm:text-sm/6">
-              <dt className="col-start-1 border-t border-gray-950/5 pt-3 text-gray-500 first:border-none dark:border-white/5 dark:text-gray-400 sm:py-3 sm:dark:border-white/5">
+              <dt className="col-start-1 border-t border-gray-950/5 pt-3 text-gray-500 first:border-none sm:py-3">
                 Description
               </dt>
-              <dd className="sm:[&amp;:nth-child(2)]:border-none pb-3 pt-1 text-gray-950 dark:text-white sm:py-3 dark:sm:border-white/5">
+              <dd className="sm:[&amp;:nth-child(2)]:border-none pb-3 pt-1 text-gray-950 sm:py-3">
                 {raffleDetailQueryResult.data!.description}
               </dd>
-              <dt className="col-start-1 border-t border-gray-950/5 pt-3 text-gray-500 first:border-none dark:border-white/5 dark:text-gray-400 sm:border-t sm:border-gray-950/5 sm:py-3 sm:dark:border-white/5">
+              <dt className="col-start-1 border-t border-gray-950/5 pt-3 text-gray-500 first:border-none sm:border-t sm:border-gray-950/5 sm:py-3">
                 Reward amount
               </dt>
-              <dd className="sm:[&amp;:nth-child(2)]:border-none pb-3 pt-1 text-gray-950 dark:text-white sm:border-t sm:border-gray-950/5 sm:py-3 dark:sm:border-white/5">
+              <dd className="sm:[&amp;:nth-child(2)]:border-none pb-3 pt-1 text-gray-950 sm:border-t sm:border-gray-950/5 sm:py-3">
                 {raffleDetailQueryResult.data!.rewardAmount}
               </dd>
-              <dt className="col-start-1 border-t border-gray-950/5 pt-3 text-gray-500 first:border-none dark:border-white/5 dark:text-gray-400 sm:py-3 sm:dark:border-white/5">
+              <dt className="col-start-1 border-t border-gray-950/5 pt-3 text-gray-500 first:border-none sm:py-3">
                 Created at
               </dt>
-              <dd className="sm:[&amp;:nth-child(2)]:border-none pb-3 pt-1 text-gray-950 dark:text-white sm:border-t sm:border-gray-950/5 sm:py-3 dark:sm:border-white/5">
+              <dd className="sm:[&amp;:nth-child(2)]:border-none pb-3 pt-1 text-gray-950 sm:border-t sm:border-gray-950/5 sm:py-3">
                 {formatDate(raffleDetailQueryResult.data!.createdAt, 'yyyy-MM-dd HH:mm:ss')}
               </dd>
-              <dt className="col-start-1 border-t border-gray-950/5 pt-3 text-gray-500 first:border-none dark:border-white/5 dark:text-gray-400 sm:border-t sm:border-gray-950/5 sm:py-3 sm:dark:border-white/5">
+              <dt className="col-start-1 border-t border-gray-950/5 pt-3 text-gray-500 first:border-none sm:border-t sm:border-gray-950/5 sm:py-3">
                 Start time
               </dt>
-              <dd className="sm:[&amp;:nth-child(2)]:border-none pb-3 pt-1 text-gray-950 dark:text-white sm:border-t sm:border-gray-950/5 sm:py-3 dark:sm:border-white/5">
+              <dd className="sm:[&amp;:nth-child(2)]:border-none pb-3 pt-1 text-gray-950 sm:border-t sm:border-gray-950/5 sm:py-3">
                 {formatDate(raffleDetailQueryResult.data!.startTime, 'yyyy-MM-dd HH:mm:ss')}
               </dd>
-              <dt className="col-start-1 border-t border-gray-950/5 pt-3 text-gray-500 first:border-none dark:border-white/5 dark:text-gray-400 sm:border-t sm:border-gray-950/5 sm:py-3 sm:dark:border-white/5">
+              <dt className="col-start-1 border-t border-gray-950/5 pt-3 text-gray-500 first:border-none sm:border-t sm:border-gray-950/5 sm:py-3">
                 End time
               </dt>
-              <dd className="sm:[&amp;:nth-child(2)]:border-none pb-3 pt-1 text-gray-950 dark:text-white sm:border-t sm:border-gray-950/5 sm:py-3 dark:sm:border-white/5">
+              <dd className="sm:[&amp;:nth-child(2)]:border-none pb-3 pt-1 text-gray-950 sm:border-t sm:border-gray-950/5 sm:py-3">
                 {formatDate(raffleDetailQueryResult.data!.endTime, 'yyyy-MM-dd HH:mm:ss')}
               </dd>
             </dl>

@@ -5,9 +5,7 @@ import { ArrowUpRightIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
-import {
-  useClaimRemainingCoin, useClaimRemainingNFT, useEnvelopeDetail, useToast,
-} from '@/hooks';
+import { useClaimRemainingCoin, useClaimRemainingNFT, useEnvelopeDetail, useToast } from '@/hooks';
 import { formatRelativeTime } from '@/utils/kit';
 import StatusCellContent from '../activity/status-cell-content';
 import { Button } from '../ui/button';
@@ -22,7 +20,7 @@ interface ManageActivityProps {
 export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
   const { data: envelopeDetail } = useEnvelopeDetail(id);
   const claimRemainingCoin = useClaimRemainingCoin();
-  const claimRemainingNFT = useClaimRemainingNFT(); 
+  const claimRemainingNFT = useClaimRemainingNFT();
   const { toast } = useToast();
 
   if (!envelopeDetail) {
@@ -140,10 +138,8 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
 
         <div>
           <div className="rounded-lg bg-white p-4 shadow-sm">
-            <div className="text-base/7 font-semibold text-gray-950 dark:text-white sm:text-sm/6">
-              Summary
-            </div>
-            <hr className="mt-4 w-full border-t border-gray-950/10 dark:border-white/10" />
+            <div className="text-base/7 font-semibold text-gray-950 sm:text-sm/6">Summary</div>
+            <hr className="mt-4 w-full border-t border-gray-950/10" />
             {envelopeDetail.assetType === 'nft' && <NftEnvelopeDetailTable data={envelopeDetail} />}
             {envelopeDetail.assetType === 'coin' && (
               <CoinEnvelopeDetailTable data={envelopeDetail} />
