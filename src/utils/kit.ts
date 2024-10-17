@@ -71,3 +71,7 @@ export function formatRelativeTime(
 
   return formatDate(time, 'yyyy-MM-dd HH:mm');
 }
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
