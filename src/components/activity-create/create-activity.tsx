@@ -37,6 +37,21 @@ function CreateActivityPage() {
               >
                 <TabsList className="rounded-2 grid w-full grid-cols-2 bg-muted">
                   <TabsTrigger
+                    value="envelope"
+                    className="rounded-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-gray-500 data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
+                  >
+                    <span
+                      className={cn(
+                        'mr-2 opacity-50 transition-all',
+                        activityType === 'envelope' && 'opacity-100'
+                      )}
+                    >
+                      🧧
+                    </span>
+                    红包
+                  </TabsTrigger>
+                  <TabsTrigger
+                    disabled
                     value="raffle"
                     className="rounded-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-gray-500 data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
                   >
@@ -49,20 +64,6 @@ function CreateActivityPage() {
                       🎁
                     </span>
                     抽奖
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="envelope"
-                    className="rounded-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-gray-500 data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
-                  >
-                    <span
-                      className={cn(
-                        'mr-2 opacity-50 transition-all',
-                        activityType === 'envelope' && 'opacity-100'
-                      )}
-                    >
-                      🧧
-                    </span>{' '}
-                    红包
                   </TabsTrigger>
                 </TabsList>
               </Tabs>

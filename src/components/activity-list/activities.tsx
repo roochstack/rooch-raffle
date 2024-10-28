@@ -13,11 +13,11 @@ import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 function ActivitiesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const activityType = (searchParams.get('type') as CreateActivityType) || 'raffle';
+  const activityType = (searchParams.get('type') as CreateActivityType) || 'envelope';
   const setActivityType = (type: CreateActivityType) => {
     router.replace(`/activities?type=${type}`);
   };
-  const [selectActivityTypeDialogOpen, setSelectActivityTypeDialogOpen] = useState(false);
+
   return (
     <div className="relative pt-14">
       <style jsx global>
@@ -37,20 +37,6 @@ function ActivitiesPage() {
           >
             <TabsList className="rounded-2 grid w-full grid-cols-2 bg-muted">
               <TabsTrigger
-                value="raffle"
-                className="rounded-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-gray-500 data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
-              >
-                <span
-                  className={cn(
-                    'mr-2 opacity-50 transition-all',
-                    activityType === 'raffle' && 'opacity-100'
-                  )}
-                >
-                  🎁
-                </span>
-                抽奖
-              </TabsTrigger>
-              <TabsTrigger
                 value="envelope"
                 className="rounded-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-gray-500 data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
               >
@@ -64,6 +50,22 @@ function ActivitiesPage() {
                 </span>
                 红包
               </TabsTrigger>
+              <TabsTrigger
+                disabled
+                value="raffle"
+                className="rounded-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-gray-500 data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
+              >
+                <span
+                  className={cn(
+                    'mr-2 opacity-50 transition-all',
+                    activityType === 'raffle' && 'opacity-100'
+                  )}
+                >
+                  🎁
+                </span>
+                抽奖
+              </TabsTrigger>
+
             </TabsList>
           </Tabs>
 
