@@ -4,7 +4,7 @@
  * Open the command palette (Ctrl + Shift + P) and execute the command > Reload Window.
  */
 const config = {
-  semi: true,
+  semi: false,
   tabWidth: 2,
   endOfLine: 'lf',
   printWidth: 100,
