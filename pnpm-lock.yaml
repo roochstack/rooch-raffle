@@ -96,11 +96,11 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@roochnetwork/rooch-sdk':
-        specifier: ^0.2.6
-        version: 0.2.6(typescript@5.6.2)
+        specifier: ^0.2.7
+        version: 0.2.7(typescript@5.6.2)
       '@roochnetwork/rooch-sdk-kit':
-        specifier: ^0.2.6
-        version: 0.2.6(@tanstack/react-query@5.56.2(react@18.3.1))(@types/react@18.3.5)(react@18.3.1)(typescript@5.6.2)
+        specifier: ^0.2.7
+        version: 0.2.7(@tanstack/react-query@5.56.2(react@18.3.1))(@types/react@18.3.5)(react@18.3.1)(typescript@5.6.2)
       '@tanstack/react-query':
         specifier: ^5.56.2
         version: 5.56.2(react@18.3.1)
@@ -1121,15 +1121,15 @@ packages:
   '@radix-ui/rect@1.1.0':
     resolution: {integrity: sha512-A9+lCBZoaMJlVKcRBz2YByCG+Cp2t6nAnMnNba+XiWxnj6r4JUFqfsgwocMBZU9LPtdxC6wB56ySYpc7LQIoJg==}
 
-  '@roochnetwork/rooch-sdk-kit@0.2.6':
-    resolution: {integrity: sha512-foU39Z4UXHGuRIGP3BJCYaE9tzB5t27avxs1J9a69J8mDYNIiAS9krU8HDmJ8mL7QbzgCuQKLIwKBQjR4180PQ==}
+  '@roochnetwork/rooch-sdk-kit@0.2.7':
+    resolution: {integrity: sha512-4RP41/3aAMxPHlMef9f8V45HRwXWW0M5fkWFCf12L5O1v0iaBxbL0O3pw8Lsu8ESd7BKdvk1ho5Qz7L+J/bcOg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@tanstack/react-query': ^5.0.0
       react: '*'
 
-  '@roochnetwork/rooch-sdk@0.2.6':
-    resolution: {integrity: sha512-4Ox8AjFbNWAflwWnHZe3YxMUee0ZGHnTTegQTppvAvpHlYDxfoxP9tNJbMYeLH/ioV+MTISn9pUgxcBfd/k7wA==}
+  '@roochnetwork/rooch-sdk@0.2.7':
+    resolution: {integrity: sha512-iQdoN06ijFLmdyPfOxgQGhcgl62vkhRKWUQ1fZO0+V2Kpu8wF4qN2Xg7nqZ8VCC5Kr1g9St2CmS60PXPjpCgPw==}
     engines: {node: '>=18.0.0'}
 
   '@scure/base@1.1.8':
@@ -3027,9 +3027,9 @@ snapshots:
 
   '@radix-ui/rect@1.1.0': {}
 
-  '@roochnetwork/rooch-sdk-kit@0.2.6(@tanstack/react-query@5.56.2(react@18.3.1))(@types/react@18.3.5)(react@18.3.1)(typescript@5.6.2)':
+  '@roochnetwork/rooch-sdk-kit@0.2.7(@tanstack/react-query@5.56.2(react@18.3.1))(@types/react@18.3.5)(react@18.3.1)(typescript@5.6.2)':
     dependencies:
-      '@roochnetwork/rooch-sdk': 0.2.6(typescript@5.6.2)
+      '@roochnetwork/rooch-sdk': 0.2.7(typescript@5.6.2)
       '@tanstack/react-query': 5.56.2(react@18.3.1)
       '@vanilla-extract/css': 1.15.5
       '@vanilla-extract/dynamic': 2.1.2
@@ -3043,7 +3043,7 @@ snapshots:
       - immer
       - typescript
 
-  '@roochnetwork/rooch-sdk@0.2.6(typescript@5.6.2)':
+  '@roochnetwork/rooch-sdk@0.2.7(typescript@5.6.2)':
     dependencies:
       '@mysten/bcs': 1.0.4
       '@noble/curves': 1.6.0
