@@ -1,26 +1,26 @@
 'use client';
 
-import { TopRightActions } from './top-right-actions';
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
+import { TopRightActions } from './top-right-actions'
+import { useEffect, useState } from 'react'
+import Image from 'next/image'
+
 export function GlobalHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      setIsScrolled(scrollPosition > 50);
-    };
+      setIsScrolled(scrollPosition > 50)
+    }
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 flex h-14 items-center justify-between transition-colors ${
-        isScrolled ? 'border-b border-gray-100/20 shadow-sm backdrop-blur-md' : 'bg-transparent'
-      }`}
+      className={`fixed left-0 right-0 top-0 z-50 flex h-14 items-center justify-between transition-colors ${isScrolled ? 'border-b border-gray-100/20 shadow-sm backdrop-blur-md' : 'bg-transparent'
+        }`}
     >
       <div className="container mx-auto flex w-full max-w-5xl items-center justify-between px-6">
         <div className="z-10 flex items-center gap-5">
@@ -37,11 +37,12 @@ export function GlobalHeader() {
               </div>
             </a>
           </div>
+
         </div>
         <div>
           <TopRightActions />
         </div>
       </div>
     </header>
-  );
+  )
 }
