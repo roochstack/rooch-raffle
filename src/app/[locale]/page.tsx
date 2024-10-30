@@ -13,8 +13,8 @@ export default function Home() {
       <div className="mx-auto mt-16 max-w-2xl text-center">
         <div>
           <div className="">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">{t('home.title')}</h1>
-            <div className="mt-5 text-lg leading-8">{t('home.description')}</div>
+            <h1 className="text-4xl font-bold sm:text-5xl">{t('home.title')}</h1>
+            <div className="mt-5 text-lg">{t('home.description')}</div>
           </div>
           <div className="mt-9 flex justify-center gap-5">
             <Button>
