@@ -1,0 +1,14 @@
+{
+  "common": {
+    "connect": "连接钱包",
+    "disconnect": "断开连接",
+    "create": "创建",
+    "join": "加入",
+    "loading": "加载中..."
+  },
+  "navigation": {
+    "home": "首页",
+    "history": "历史",
+    "about": "关于"
+  }
+} 

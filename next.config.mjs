@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
+import createNextIntlPlugin from 'next-intl/plugin'
 
-const isProduction = process.env.NODE_ENV === 'production';
+const withNextIntl = createNextIntlPlugin()
+
+const isProduction = process.env.NODE_ENV === 'production'
 
 const nextConfig = {
   images: {
@@ -21,6 +24,6 @@ const nextConfig = {
   compiler: {
     removeConsole: isProduction ? { exclude: ['error'] } : false,
   },
-};
+}
 
-export default nextConfig;
+export default withNextIntl(nextConfig)

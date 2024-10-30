@@ -1,0 +1,14 @@
+{
+  "common": {
+    "connect": "Connect Wallet",
+    "disconnect": "Disconnect",
+    "create": "Create",
+    "join": "Join",
+    "loading": "Loading..."
+  },
+  "navigation": {
+    "home": "Home",
+    "history": "History",
+    "about": "About"
+  }
+} 
