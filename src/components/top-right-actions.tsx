@@ -66,7 +66,7 @@ export function TopRightActions() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button size="sm" disabled={sessionLoading} onClick={handlerCreateSessionKey}>
+              <Button size="sm" variant="outline" disabled={sessionLoading} onClick={handlerCreateSessionKey}>
                 {t('session.create')}
               </Button>
             )}
