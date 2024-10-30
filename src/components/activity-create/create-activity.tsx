@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CreateActivityType } from '@/interfaces';
@@ -9,6 +10,7 @@ import CreateEnvelopeForm from './create-envelope-form';
 import CreateRaffleForm from './create-raffle-form';
 
 function CreateActivityPage() {
+  const t = useTranslations('activities.create');
   const router = useRouter();
   const searchParams = useSearchParams();
   const activityType = (searchParams.get('type') as CreateActivityType) || 'envelope';
@@ -29,27 +31,13 @@ function CreateActivityPage() {
       <div className="h-full w-full">
         <div className="container mx-auto max-w-5xl space-y-6 overflow-hidden p-6 pt-11 md:flex-row">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">创建活动</h1>
+            <h1 className="text-3xl font-bold">{t('title')}</h1>
             <div>
               <Tabs
                 value={activityType}
                 onValueChange={(value) => setActivityType(value as CreateActivityType)}
               >
                 <TabsList className="rounded-2 grid w-full grid-cols-2 bg-muted">
-                  <TabsTrigger
-                    value="raffle"
-                    className="rounded-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-gray-500 data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
-                  >
-                    <span
-                      className={cn(
-                        'mr-2 opacity-50 transition-all',
-                        activityType === 'raffle' && 'opacity-100'
-                      )}
-                    >
-                      🎁
-                    </span>
-                    抽奖
-                  </TabsTrigger>
                   <TabsTrigger
                     value="envelope"
                     className="rounded-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-gray-500 data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
@@ -60,9 +48,24 @@ function CreateActivityPage() {
                         activityType === 'envelope' && 'opacity-100'
                       )}
                     >
-                      🧧
-                    </span>{' '}
-                    红包
+                      {t('tabs.envelope.emoji')}
+                    </span>
+                    {t('tabs.envelope.title')}
+                  </TabsTrigger>
+                  <TabsTrigger
+                    disabled
+                    value="raffle"
+                    className="rounded-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-gray-500 data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
+                  >
+                    <span
+                      className={cn(
+                        'mr-2 opacity-50 transition-all',
+                        activityType === 'raffle' && 'opacity-100'
+                      )}
+                    >
+                      {t('tabs.raffle.emoji')}
+                    </span>
+                    {t('tabs.raffle.title')}
                   </TabsTrigger>
                 </TabsList>
               </Tabs>

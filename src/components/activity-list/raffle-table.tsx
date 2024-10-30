@@ -9,10 +9,12 @@ import { Empty } from '../empty';
 import { Button } from '../ui/button';
 import StatusCellContent from '../activity/status-cell-content';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTranslations } from 'next-intl';
 
 const skeletonArray = Array.from({ length: 3 });
 
 export function RaffleTable() {
+  const t = useTranslations();
   const { data: raffles, isLoading } = useRaffles();
   const router = useRouter();
 
@@ -22,13 +24,13 @@ export function RaffleTable() {
     return (
       <div className="flex items-center justify-center pt-16">
         <Empty
-          title="No data"
+          title={t('common.noData')}
           description={
             <Link
               href="/create?type=raffle"
               className="inline-block border-b border-transparent text-gray-400 transition-all"
             >
-              创建第一个抽奖活动
+              {t('activities.list.raffle.table.createFirst')}
               <ArrowRightIcon className="ml-1 inline-block h-4 w-4" />
             </Link>
           }
@@ -96,15 +98,15 @@ export function RaffleTable() {
                 <div className="text-base/6 font-semibold">{raffle.name}</div>
                 <p className="text-xs/6 text-gray-500">
                   {raffle.status === 'ongoing'
-                    ? `started at ${formatDate(raffle.startTime, 'yyyy-MM-dd HH:mm')}`
+                    ? t('time.startAt', { time: formatDate(raffle.startTime, 'yyyy-MM-dd HH:mm') })
                     : raffle.status === 'not-started'
-                      ? `start at ${formatDate(raffle.startTime, 'yyyy-MM-dd HH:mm')}`
+                      ? t('time.startAt', { time: formatDate(raffle.startTime, 'yyyy-MM-dd HH:mm') })
                       : raffle.status === 'ended'
-                        ? `ended at ${formatDate(raffle.endTime, 'yyyy-MM-dd HH:mm')}`
+                        ? t('time.endedAt', { time: formatDate(raffle.endTime, 'yyyy-MM-dd HH:mm') })
                         : ''}
                 </p>
                 <p className="text-xs/6 text-gray-600">
-                  {raffle.claimedAddressList.length} 人已参与
+                  {t('activities.list.raffle.participantCount', { count: raffle.claimedAddressList.length })}
                 </p>
               </div>
             </div>

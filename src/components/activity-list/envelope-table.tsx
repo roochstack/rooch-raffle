@@ -1,35 +1,29 @@
-import { useOpenBox } from '@/hooks/use-open-box';
-import { useToast } from '@/hooks/use-toast';
+import { useTranslations } from 'next-intl';
 import { useEnvelopes } from '@/hooks';
 import { cn } from '@/lib/utils';
-import { formatDate } from 'date-fns';
-import { ArrowUpRightIcon, MoreVertical } from 'lucide-react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { Button } from '../ui/button';
-import StatusCellContent from '../activity/status-cell-content';
-import { Empty } from '../empty';
+import { ArrowUpRightIcon } from 'lucide-react';
 import Link from 'next/link';
+import { Empty } from '../empty';
 import { Skeleton } from '@/components/ui/skeleton';
-import { CoinClaimedCount } from './coin-claimed-count';
 import { EnvelopeCard } from '@/components/activity-list/envelope-card';
 
 const skeletonArray = Array.from({ length: 3 });
 
 export function EnvelopeTable() {
+  const t = useTranslations('activities.create');
   const { data: envelopes, isLoading } = useEnvelopes();
 
   if (!isLoading && !envelopes?.length) {
     return (
       <div className="flex items-center justify-center pt-16">
         <Empty
-          title="No data"
+          title={t('noData')}
           description={
             <Link
               href="/create?type=envelope"
               className="inline-flex items-center border-b border-transparent text-gray-400 transition-all hover:border-gray-500 hover:text-gray-500"
             >
-              创建第一个红包活动
+              {t('firstActivity')}
               <ArrowUpRightIcon className="ml-1 inline-block h-4 w-4" />
             </Link>
           }

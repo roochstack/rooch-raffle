@@ -7,6 +7,7 @@ import { ActivityStatus } from '@/interfaces';
 import { formatCoinType } from '@/utils/kit';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import PreviewBanner from './preview-banner';
+import { useTranslations } from 'next-intl';
 
 interface CoinActivityPreviewProps {
   coverImageUrl?: string | null;
@@ -31,6 +32,8 @@ export default function CoinActivityPreview({
   coinName,
   coinSymbol,
 }: CoinActivityPreviewProps) {
+  const t = useTranslations('activities.preview');
+
   return (
     <>
       <PreviewBanner />
@@ -54,7 +57,7 @@ export default function CoinActivityPreview({
               <div className="space-y-4">
                 <div className="space-y-3">
                   <h1 className="text-5xl font-bold leading-none text-gray-900">
-                    {activityName || '[活动名称]'}
+                    {activityName || t('placeholder.activityName')}
                   </h1>
                 </div>
 
@@ -65,11 +68,11 @@ export default function CoinActivityPreview({
                     <StatusBadge status={status} />
                     <span className="space-x-1.5 text-sm text-gray-500">
                       <span>
-                        {startTime ? formatDate(startTime, 'yyyy-MM-dd HH:mm') : '[开始时间]'}
+                        {startTime ? formatDate(startTime, 'yyyy-MM-dd HH:mm') : t('placeholder.startTime')}
                       </span>
                       <span>-</span>
                       <span>
-                        {endTime ? formatDate(endTime, 'yyyy-MM-dd HH:mm') : '[结束时间]'}
+                        {endTime ? formatDate(endTime, 'yyyy-MM-dd HH:mm') : t('placeholder.endTime')}
                       </span>
                     </span>
                   </div>
@@ -79,8 +82,9 @@ export default function CoinActivityPreview({
               <div className="space-y-4">
                 <div className="flex items-baseline justify-between">
                   <h3 className="flex items-center space-x-2 text-3xl font-bold leading-none text-gray-900">
-                    <span>瓜分</span>
-                    <span>{totalCoin || '[总额]'}</span>
+                    <span>{t('coin.share')}</span>
+                    <span>{totalCoin || t('placeholder.totalAmount')}</span>
+                    <span>{coinSymbol || t('placeholder.symbol')}</span>
                     <Popover>
                       <PopoverTrigger asChild>
                         <span className="cursor-pointer border-b border-dashed border-gray-400 transition-all hover:border-gray-600">
@@ -91,10 +95,10 @@ export default function CoinActivityPreview({
                         <div className="grid gap-4">
                           <div className="space-y-2">
                             <div className="text-sm font-medium leading-none">
-                              {coinName || '[COIN NAME]'}
+                              {coinName || t('placeholder.coinName')}
                             </div>
                             <p className="font-mono text-xs text-muted-foreground">
-                              {coinType ? formatCoinType(coinType) : '[COIN TYPE]'}
+                              {coinType ? formatCoinType(coinType) : t('placeholder.coinType')}
                             </p>
                           </div>
                         </div>
@@ -110,17 +114,17 @@ export default function CoinActivityPreview({
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">已领取人数</span>
+                <span className="text-sm text-gray-500">{t('coin.claimedCount')}</span>
                 <span className="text-sm">0</span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">已领取金额</span>
+                <span className="text-sm text-gray-500">{t('coin.claimedAmount')}</span>
                 <span className="space-x-1 text-sm leading-none text-gray-500">
                   <span>0</span>
                   <span>/</span>
-                  <span>{totalCoin || '[总额]'}</span>
-                  <span className="text-xs">{coinSymbol || '[SYMBOL]'}</span>
+                  <span>{totalCoin || t('placeholder.totalAmount')}</span>
+                  <span className="text-xs">{coinSymbol || t('placeholder.symbol')}</span>
                 </span>
               </div>
             </div>

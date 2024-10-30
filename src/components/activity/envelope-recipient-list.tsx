@@ -10,6 +10,7 @@ import { formatDate } from 'date-fns';
 import { Skeleton } from '../ui/skeleton';
 import { formatUnits } from '@/utils/kit';
 import { useWalletHexAddress } from '@/hooks';
+import { useTranslations } from 'next-intl';
 
 interface EnvelopeRecipientListProps {
   claimed: ClaimedItem[];
@@ -24,6 +25,8 @@ const EnvelopeRecipientList = ({
   coinDecimals,
   coinSymbol,
 }: EnvelopeRecipientListProps) => {
+  const t = useTranslations('activities.envelope.participantList');
+  const tCommon = useTranslations('common');
   const [showAll, setShowAll] = useState(false);
   const walletAddress = useWalletHexAddress();
 
@@ -34,7 +37,7 @@ const EnvelopeRecipientList = ({
   return (
     <div>
       <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-500">已领取人数</span>
+        <span className="text-sm text-gray-500">{t('title')}</span>
         {loading ? (
           <Skeleton className="h-3 w-10" />
         ) : shortClaimed.length ? (
@@ -54,20 +57,22 @@ const EnvelopeRecipientList = ({
             </div>
             <div className="flex items-center space-x-1">
               {shortClaimed.length < claimed.length && (
-                <span className="text-sm">+{claimed.length - shortClaimed.length} </span>
+                <span className="text-sm">
+                  {t('count', { count: claimed.length - shortClaimed.length })}
+                </span>
               )}
               <ChevronRightIcon className="h-4 w-4" />
             </div>
           </div>
         ) : (
-          <span className="text-sm text-gray-500">无人领取</span>
+          <span className="text-sm text-gray-500">{tCommon('noData')}</span>
         )}
       </div>
 
       <Dialog open={showAll} onOpenChange={setShowAll}>
         <DialogContent className="bg-white">
           <DialogHeader>
-            <DialogTitle>领取列表</DialogTitle>
+            <DialogTitle>{t('title')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-2">
             {claimed.map((item, i) => (
@@ -81,7 +86,7 @@ const EnvelopeRecipientList = ({
 
                     {item.address === walletAddress && (
                       <span className="ml-2 rounded-sm bg-gray-200 px-1 py-0.5 text-xs text-gray-500">
-                        You
+                        {tCommon('you')}
                       </span>
                     )}
                   </span>

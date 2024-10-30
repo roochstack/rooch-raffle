@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { AlarmClockMinusIcon, CircleCheckBigIcon, LoaderCircleIcon } from 'lucide-react';
 import ShimmerButton from '../magicui/shimmer-button';
 import { Button } from '../ui/button';
@@ -17,6 +20,7 @@ export default function RaffleStatusButton({
   loading,
   minLoadingDuration = 800,
 }: StatusButtonProps) {
+  const t = useTranslations('activities.raffle.claimButton');
   const [innerLoading, setInnerLoading] = useState(false);
 
   useEffect(() => {
@@ -34,7 +38,7 @@ export default function RaffleStatusButton({
     return (
       <ShimmerButton borderRadius="6px" className="h-12 w-full text-base font-semibold">
         <LoaderCircleIcon className="mr-1 h-4 w-4 animate-spin" />
-        参与中...
+        {t('participating')}
       </ShimmerButton>
     );
   }
@@ -43,7 +47,7 @@ export default function RaffleStatusButton({
     return (
       <Button size="lg" className="h-12 w-full cursor-not-allowed" disabled>
         <LoaderCircleIcon className="mr-1 h-4 w-4 animate-spin" />
-        等待中...
+        {t('waiting')}
       </Button>
     );
   }
@@ -52,7 +56,7 @@ export default function RaffleStatusButton({
     return (
       <Button size="lg" className="h-12 w-full cursor-not-allowed" disabled>
         <CircleCheckBigIcon className="mr-1 h-4 w-4" />
-        已参与
+        {t('participated')}
       </Button>
     );
   }
@@ -61,7 +65,7 @@ export default function RaffleStatusButton({
     return (
       <Button size="lg" className="h-12 w-full cursor-not-allowed" disabled>
         <AlarmClockMinusIcon className="mr-1 h-4 w-4" />
-        尚未开始
+        {t('notStarted')}
       </Button>
     );
   }
@@ -92,7 +96,7 @@ export default function RaffleStatusButton({
           }
         }}
       >
-        🎁 立即参与
+        {t('participate')}
       </ShimmerButton>
     );
   }
@@ -100,7 +104,7 @@ export default function RaffleStatusButton({
   if (type === 'ended') {
     return (
       <Button size="lg" className="h-12 w-full cursor-not-allowed" disabled>
-        活动已结束
+        {t('ended')}
       </Button>
     );
   }
@@ -108,7 +112,7 @@ export default function RaffleStatusButton({
   if (type === 'all-claimed') {
     return (
       <Button size="lg" className="h-12 w-full cursor-not-allowed" disabled>
-        参与人数已满
+        {t('full')}
       </Button>
     );
   }

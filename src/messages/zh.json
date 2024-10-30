@@ -1,0 +1,299 @@
+{
+  "home": {
+    "title": "透明公开的抽奖和红包体验",
+    "description": "通过 Bitcoin 区块头生成的随机数，确保抽奖过程不可篡改，保障用户的每一次参与都安全可靠。",
+    "manage": "管理活动"
+  },
+  "common": {
+    "connect": "连接钱包",
+    "disconnect": "断开连接",
+    "create": "创建",
+    "join": "加入",
+    "loading": "加载中...",
+    "confirm": "确认",
+    "cancel": "取消",
+    "back": "返回",
+    "next": "下一步",
+    "submit": "提交",
+    "copy": "复制",
+    "copied": "已复制",
+    "error": "错误",
+    "success": "成功",
+    "waiting": "等待中...",
+    "you": "你",
+    "noData": "暂无数据",
+    "preview": "预览",
+    "previewPage": "预览活动页面",
+    "activityPage": "活动页面",
+    "details": "详情",
+    "summary": "概览",
+    "participantCount": "{count} 人已参与"
+  },
+  "time": {
+    "endIn": "还有 {time} 结束",
+    "endedAt": "已于 {time} 结束",
+    "startAt": "将于 {time} 开始",
+    "createdAt": "创建于 {time}",
+    "startTime": "开始时间",
+    "endTime": "结束时间"
+  },
+  "navigation": {
+    "home": "首页",
+    "history": "历史",
+    "about": "关于",
+    "activities": "活动",
+    "myActivities": "我的活动"
+  },
+  "wallet": {
+    "connectPrompt": "请先连接钱包",
+    "wrongNetwork": "请切换到正确的网络",
+    "balance": "余额",
+    "address": "钱包地址",
+    "availableBalance": "可用余额",
+    "selectWallet": "选择钱包"
+  },
+  "activities": {
+    "title": "活动列表",
+    "create": {
+      "title": "创建活动",
+      "firstActivity": "创建第一个活动",
+      "noData": "暂无活动",
+      "form": {
+        "name": "活动名称",
+        "namePlaceholder": "恭喜发财！",
+        "description": "活动描述",
+        "startTime": "开始时间",
+        "endTime": "结束时间",
+        "assetType": {
+          "label": "资产类型",
+          "description": "这是领取红包时可以获得的东西",
+          "coin": {
+            "emoji": "🪙",
+            "label": "Coin"
+          },
+          "nft": {
+            "emoji": "🖼️",
+            "label": "NFT"
+          }
+        },
+        "envelopeType": {
+          "label": "红包类型",
+          "random": {
+            "emoji": "🎲",
+            "title": "拼手气",
+            "description": "红包金额随机"
+          },
+          "average": {
+            "emoji": "⚖️",
+            "title": "普通",
+            "description": "红包金额相同"
+          }
+        },
+        "reward": {
+          "label": "奖励内容",
+          "selectCoin": "选择 Coin",
+          "selectNFT": "选择 NFT",
+          "noCoin": "未找到 Coin",
+          "noNFT": "未找到 NFT",
+          "nftEmpty": "NFT 不能为空",
+          "loading": "加载中...",
+          "balance": "可用余额：",
+          "searchCoin": "搜索 coin...",
+          "searchNFT": "搜索 NFT...",
+          "noCoinFound": "未找到 Coin",
+          "noNFTFound": "未找到 NFT"
+        },
+        "quantity": {
+          "label": "红包个数",
+          "unlimited": "默认无限制"
+        },
+        "amount": {
+          "label": "总金额",
+          "perAmount": "单个金额"
+        },
+        "validation": {
+          "nameRequired": "活动名称不能为空",
+          "rewardRequired": "请选择奖励内容",
+          "amountRequired": "金额不能为空",
+          "quantityRequired": "红包个数不能为空",
+          "balanceExceeded": "超过了可用余额",
+          "endTimeInvalid": "结束时间不能早于开始时间",
+          "nftEmpty": "NFT 不能为空",
+          "rewardAmountRequired": "奖品数量不能为空",
+          "rewardAmountExceeded": "奖品数量不能超过总人数"
+        },
+        "imageUpload": {
+          "title": "上传封面图片",
+          "sizeLimit": "请��择不超过 100KB 的图片文件"
+        },
+        "time": {
+          "start": "开始",
+          "end": "结束"
+        },
+        "raffle": {
+          "rewardAmount": "奖品数量",
+          "totalAmount": "人数限制",
+          "rewardInfoPlaceholder": "请输入奖品信息",
+          "totalAmountPlaceholder": "默认无限制"
+        }
+      },
+      "button": {
+        "createEnvelope": "🧧 创建红包活动",
+        "createRaffle": "🎁 创建抽奖活动"
+      },
+      "tabs": {
+        "envelope": {
+          "title": "红包",
+          "emoji": "🧧"
+        },
+        "raffle": {
+          "title": "抽奖",
+          "emoji": "🎁"
+        }
+      }
+    },
+    "envelope": {
+      "title": "红包详情",
+      "preview": "红包预览",
+      "amount": "金额",
+      "quantity": "数量",
+      "remaining": "剩余",
+      "claimed": "已领取",
+      "share": "分享",
+      "shareTitle": "分享红包",
+      "shareDescription": "快来领取红包！",
+      "claimButton": {
+        "waiting": "等待中...",
+        "claiming": "领取中...",
+        "claimed": "已领取",
+        "notStarted": "尚未开始",
+        "claim": "🧧立即开红包",
+        "ended": "活动已结束",
+        "allClaimed": "已领完"
+      },
+      "participantList": {
+        "title": "领取列表",
+        "count": "{count} 人已参与"
+      },
+      "manage": {
+        "returnRemaining": "退回剩余资金",
+        "returnNFT": "退回剩余 NFT"
+      },
+      "type": "🧧 红包",
+      "coinType": "🪙 Coin",
+      "nftType": "🖼️ NFT"
+    },
+    "raffle": {
+      "title": "抽奖详情",
+      "preview": "抽奖预览",
+      "rewardInfo": "抽奖内容",
+      "rewardAmount": "奖品数量",
+      "totalAmount": "人数限制",
+      "claimButton": {
+        "waiting": "等待中...",
+        "participating": "参与中...",
+        "participated": "已参与",
+        "notStarted": "尚未开始",
+        "participate": "🎁 立即参与",
+        "ended": "活动已结束",
+        "full": "参与人数已满"
+      },
+      "participantList": {
+        "title": "参与列表",
+        "count": "{count} 人已参与"
+      },
+      "manage": {
+        "openBox": "开奖",
+        "openBoxSuccess": "✅ 开奖成功",
+        "openBoxFailed": "❌ 开奖失败",
+        "notOpened": "活动已结束，尚未开奖",
+        "opened": "活动已结束"
+      },
+      "description": {
+        "expand": "点击展开",
+        "collapse": "点击收起"
+      },
+      "participants": {
+        "count": "已参与人数",
+        "noParticipants": "��人参与",
+        "list": "参与列表"
+      }
+    },
+    "list": {
+      "tabs": {
+        "envelope": {
+          "title": "红包",
+          "emoji": "🧧"
+        },
+        "raffle": {
+          "title": "抽奖",
+          "emoji": "🎁"
+        }
+      },
+      "raffle": {
+        "participantCount": "{count} 人已参与",
+        "table": {
+          "createFirst": "创建第一个抽奖活动"
+        }
+      }
+    },
+    "manage": {
+      "title": "活动管理",
+      "activityPage": "活动页面",
+      "summary": "概览",
+      "details": "详情",
+      "description": "描述",
+      "rewardAmount": "奖品数量",
+      "nft": "NFT",
+      "raffle": {
+        "openBox": "开奖",
+        "openBoxSuccess": "✅ 开奖成功",
+        "openBoxFailed": "❌ 开奖失败",
+        "notOpened": "活动已结束，尚未开奖",
+        "ended": "活动已结束"
+      },
+      "envelope": {
+        "returnRemaining": "退回剩余资金",
+        "returnNFT": "退回剩余 NFT",
+        "returnSuccess": "✅ 退回成功",
+        "returnFailed": "❌ 退回失败"
+      },
+      "createdAt": "创建于"
+    },
+    "preview": {
+      "banner": "这是一个预览页面，仅用于展示活动信息，并非实际活动页面。",
+      "placeholder": {
+        "activityName": "[活动名称]",
+        "startTime": "[开始时间]",
+        "endTime": "[结束时间]",
+        "totalAmount": "[总额]",
+        "symbol": "[SYMBOL]",
+        "coinName": "[COIN NAME]",
+        "coinType": "[COIN TYPE]"
+      },
+      "coin": {
+        "share": "瓜分",
+        "claimedCount": "已领取人数",
+        "claimedAmount": "已领取金额"
+      },
+      "nft": {
+        "share": "瓜分",
+        "unit": "个",
+        "type": "NFT"
+      },
+      "description": {
+        "expand": "点击展开",
+        "collapse": "点击收起"
+      }
+    }
+  },
+  "status": {
+    "ongoing": "进行中",
+    "ended": "已结束",
+    "notStarted": "未开始",
+    "upcoming": "即将开始"
+  },
+  "session": {
+    "create": "创建 Session"
+  }
+}

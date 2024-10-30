@@ -7,6 +7,7 @@ import { ChevronRightIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { HashAvatar } from '../hash-avatar';
 import { Skeleton } from '../ui/skeleton';
+import { useTranslations } from 'next-intl';
 
 interface RaffleRecipientListProps {
   claimed: Omit<ClaimedItem, 'amount' | 'claimedAt'>[];
@@ -16,6 +17,7 @@ interface RaffleRecipientListProps {
 const RaffleRecipientList = ({ claimed, loading }: RaffleRecipientListProps) => {
   const [showAll, setShowAll] = useState(false);
   const walletAddress = useWalletHexAddress();
+  const t = useTranslations();
 
   const shortClaimed = useMemo(() => {
     return claimed.slice(0, 5);
@@ -24,7 +26,7 @@ const RaffleRecipientList = ({ claimed, loading }: RaffleRecipientListProps) => 
   return (
     <div>
       <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-500">已参与人数</span>
+        <span className="text-sm text-gray-500">{t('activities.raffle.participants.count')}</span>
         {loading ? (
           <Skeleton className="h-3 w-10" />
         ) : shortClaimed.length ? (
@@ -50,14 +52,14 @@ const RaffleRecipientList = ({ claimed, loading }: RaffleRecipientListProps) => 
             </div>
           </div>
         ) : (
-          <span className="text-sm text-gray-500">无人参与</span>
+          <span className="text-sm text-gray-500">{t('activities.raffle.participants.noParticipants')}</span>
         )}
       </div>
 
       <Dialog open={showAll} onOpenChange={setShowAll}>
         <DialogContent className="bg-white">
           <DialogHeader>
-            <DialogTitle>参与列表</DialogTitle>
+            <DialogTitle>{t('activities.raffle.participants.list')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-2">
             {claimed.map((item, i) => (
@@ -70,7 +72,7 @@ const RaffleRecipientList = ({ claimed, loading }: RaffleRecipientListProps) => 
                     {`${item.address.slice(0, 4)}...${item.address.slice(-6)}`}
                     {item.address === walletAddress && (
                       <span className="ml-2 rounded-sm bg-gray-200 px-1 py-0.5 text-xs text-gray-500">
-                        You
+                        {t('common.you')}
                       </span>
                     )}
                   </span>

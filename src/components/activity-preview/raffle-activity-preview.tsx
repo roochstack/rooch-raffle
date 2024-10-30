@@ -10,6 +10,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 import { formatDate } from 'date-fns';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 const emptyClaimed: Omit<ClaimedItem, 'amount' | 'claimedAt'>[] = [];
 
@@ -39,6 +40,8 @@ function RaffleActivityPreviewPage() {
     setIsDescExpanded(!isDescExpanded);
   }, [isDescExpanded]);
 
+  const t = useTranslations('activities.preview');
+
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center">
       <div
@@ -57,7 +60,7 @@ function RaffleActivityPreviewPage() {
           <div className="space-y-12">
             <div className="space-y-4">
               <div className="space-y-3">
-                <h1 className="text-5xl font-bold text-gray-900">{activityName || '[活动名称]'}</h1>
+                <h1 className="text-5xl font-bold text-gray-900">{activityName || t('placeholder.activityName')}</h1>
               </div>
 
               <div className="flex items-center space-x-2">
@@ -65,10 +68,12 @@ function RaffleActivityPreviewPage() {
                   <StatusBadge status={status} />
                   <span className="space-x-1.5 text-sm text-gray-500">
                     <span>
-                      {startTime ? formatDate(startTime, 'yyyy-MM-dd HH:mm') : '[开始时间]'}
+                      {startTime ? formatDate(startTime, 'yyyy-MM-dd HH:mm') : t('placeholder.startTime')}
                     </span>
                     <span>-</span>
-                    <span>{endTime ? formatDate(endTime, 'yyyy-MM-dd HH:mm') : '[结束时间]'}</span>
+                    <span>
+                      {endTime ? formatDate(endTime, 'yyyy-MM-dd HH:mm') : t('placeholder.endTime')}
+                    </span>
                   </span>
                 </div>
               </div>
@@ -86,21 +91,12 @@ function RaffleActivityPreviewPage() {
                   {isDescExpandable && (
                     <div className="mt-1 flex items-center gap-4">
                       <Separator className="flex-1 bg-transparent" />
-                      {isDescExpanded ? (
-                        <span
-                          className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground/80"
-                          onClick={toggleDescExpand}
-                        >
-                          点击收起 <ChevronUpIcon className="h-3 w-3" />
-                        </span>
-                      ) : (
-                        <span
-                          className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground"
-                          onClick={toggleDescExpand}
-                        >
-                          点击展开 <ChevronDownIcon className="h-3 w-3" />
-                        </span>
-                      )}
+                      <span className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground/80" onClick={toggleDescExpand}>
+                        {t('description.collapse')} <ChevronUpIcon className="h-3 w-3" />
+                      </span>
+                      <span className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground" onClick={toggleDescExpand}>
+                        {t('description.expand')} <ChevronDownIcon className="h-3 w-3" />
+                      </span>
                       <Separator className="flex-1 bg-transparent" />
                     </div>
                   )}

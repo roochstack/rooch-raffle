@@ -12,6 +12,7 @@ import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
 import CoinEnvelopeDetailTable from './coin-envelope-detail-table';
 import NftEnvelopeDetailTable from './nft-envelope-detail-table';
+import { useTranslations } from 'next-intl';
 
 interface ManageActivityProps {
   id: string;
@@ -22,6 +23,7 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
   const claimRemainingCoin = useClaimRemainingCoin();
   const claimRemainingNFT = useClaimRemainingNFT();
   const { toast } = useToast();
+  const t = useTranslations();
 
   if (!envelopeDetail) {
     return <div>Loading...</div>;
@@ -59,17 +61,18 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
                 href={`/activities/envelope/${id}`}
                 className="inline-flex cursor-pointer items-center justify-center rounded-md border-b border-transparent bg-gray-200/60 px-2.5 py-2 text-sm font-semibold leading-none text-gray-600 transition-all hover:bg-gray-600 hover:text-white"
               >
-                <span>Activity Page</span> <ArrowUpRightIcon className="ml-1 h-3.5 w-3.5" />
+                <span>{t('activities.manage.activityPage')}</span>
+                <ArrowUpRightIcon className="ml-1 h-3.5 w-3.5" />
               </Link>
             </div>
 
             <div className="flex items-center gap-4">
               <div className="flex items-center space-x-1.5">
                 <Badge variant="secondary" className="px-2">
-                  🧧 红包
+                  {t('activities.envelope.type')}
                 </Badge>
                 <Badge variant="secondary" className="px-2">
-                  {envelopeDetail.assetType === 'coin' ? '🪙 Coin' : '🖼️ NFT'}
+                  {envelopeDetail.assetType === 'coin' ? t('activities.envelope.coinType') : t('activities.envelope.nftType')}
                 </Badge>
               </div>
 
@@ -77,7 +80,7 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
                 className="text-sm leading-none text-gray-500"
                 title={formatDate(envelopeDetail.createdAt, 'yyyy-MM-dd HH:mm')}
               >
-                Created at {formatRelativeTime(envelopeDetail.createdAt, 'hours')}
+                {t('activities.manage.createdAt')} {formatRelativeTime(envelopeDetail.createdAt, 'hours')}
               </div>
             </div>
           </div>
@@ -96,17 +99,17 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
                       coinType: envelopeDetail.coinType,
                     });
                     toast({
-                      title: '✅ 退回成功',
+                      title: t('activities.manage.envelope.returnSuccess'),
                     });
                   } catch (error) {
                     console.error(error);
                     toast({
-                      title: '❌ 退回失败',
+                      title: t('activities.manage.envelope.returnFailed'),
                     });
                   }
                 }}
               >
-                退回剩余资金
+                {t('activities.manage.envelope.returnRemaining')}
               </Button>
             </div>
           )}
@@ -131,14 +134,16 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
                 }
               }}
             >
-              退回剩余 NFT
+              {t('activities.manage.envelope.returnNFT')}
             </Button>
           </div>
         )}
 
         <div>
           <div className="rounded-lg bg-white p-4 shadow-sm">
-            <div className="text-base/7 font-semibold text-gray-950 sm:text-sm/6">Summary</div>
+            <div className="text-base/7 font-semibold text-gray-950 sm:text-sm/6">
+              {t('activities.manage.summary')}
+            </div>
             <hr className="mt-4 w-full border-t border-gray-950/10" />
             {envelopeDetail.assetType === 'nft' && <NftEnvelopeDetailTable data={envelopeDetail} />}
             {envelopeDetail.assetType === 'coin' && (

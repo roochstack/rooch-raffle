@@ -23,6 +23,8 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import { WalletRow } from './wallet-row';
+import { useTranslations } from 'next-intl';
+import { LanguageSwitcher } from './language-switcher';
 
 export function TopRightActions() {
   const { sessionKey, handlerCreateSessionKey, sessionLoading } = useAppSession();
@@ -38,8 +40,11 @@ export function TopRightActions() {
     return wallets.slice(0, 3);
   }, [wallets]);
 
+  const t = useTranslations();
+
   return (
     <div className="flex items-center gap-4 text-sm">
+      <LanguageSwitcher />
       <div className="cursor-pointer text-foreground/60 hover:text-foreground/80">
         {NETWORK_NAME}
       </div>
@@ -56,23 +61,23 @@ export function TopRightActions() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem onClick={() => setWalletDisconnected()}>
-                    Disconnect
+                    {t('common.disconnect')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button size="sm" disabled={sessionLoading} onClick={handlerCreateSessionKey}>
-                创建 Session
+              <Button size="sm" variant="outline" disabled={sessionLoading} onClick={handlerCreateSessionKey}>
+                {t('session.create')}
               </Button>
             )}
           </div>
         ) : currentWallet.isConnecting ? (
           <Button size="sm" disabled>
-            连接中...
+            {t('common.loading')}
           </Button>
         ) : (
           <Button size="sm" variant="outline" onClick={() => setConnectModalOpen(true)}>
-            连接钱包
+            {t('common.connect')}
           </Button>
         )}
       </div>
@@ -80,7 +85,9 @@ export function TopRightActions() {
 
         <DialogContent className="sm:max-w-[360px]">
           <DialogHeader>
-            <DialogTitle className="text-center">选择钱包</DialogTitle>
+            <DialogTitle className="text-center">
+              {t('wallet.selectWallet')}
+            </DialogTitle>
           </DialogHeader>
           <div className="grid gap-1 py-2">
             {validWallets.map((wallet) => (

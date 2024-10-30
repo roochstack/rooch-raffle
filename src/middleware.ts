@@ -1,14 +1,19 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
+import createIntlMiddleware from 'next-intl/middleware'
 
 // avoid error: Using Node.js Modules in Edge Runtime
-import { getRoochNodeUrl } from '@roochnetwork/rooch-sdk/dist/esm/client/networks';
+import { getRoochNodeUrl } from '@roochnetwork/rooch-sdk/dist/esm/client/networks'
+import { routing } from './i18n/routing'
 
-const apiDomains = [getRoochNodeUrl('testnet')];
-const isProduction = process.env.NODE_ENV === 'production';
+const apiDomains = [getRoochNodeUrl('testnet')]
+const isProduction = process.env.NODE_ENV === 'production'
 
-export function middleware(request: NextRequest) {
-  const nonce = crypto.randomUUID().replace(/-/g, '');
+const intlMiddleware = createIntlMiddleware(routing)
+
+export async function middleware(request: NextRequest) {
+  const response = await intlMiddleware(request)
+  const nonce = crypto.randomUUID().replace(/-/g, '')
 
   const csp = [
     { name: 'default-src', values: ["'self'"] },
@@ -33,37 +38,34 @@ export function middleware(request: NextRequest) {
       values: ["'self'", ...apiDomains],
     },
     { name: 'upgrade-insecure-requests', values: [] },
-  ];
+  ]
 
   const contentSecurityPolicyHeaderValue = csp
     .map((directive) => `${directive.name} ${directive.values.join(' ')}`)
-    .join('; ');
+    .join('; ')
 
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-nonce', nonce);
-  requestHeaders.set('Content-Security-Policy', contentSecurityPolicyHeaderValue);
+  const responseHeaders = new Headers(response.headers)
+  responseHeaders.set('x-nonce', nonce)
+  responseHeaders.set('Content-Security-Policy', contentSecurityPolicyHeaderValue)
 
-  const response = NextResponse.next({ request: { headers: requestHeaders } });
-  response.headers.set('Content-Security-Policy', contentSecurityPolicyHeaderValue);
+  const finalResponse = new NextResponse(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: responseHeaders,
+  })
 
-  return response;
+  return finalResponse
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
+    '/(zh|en)/:path*',
     {
-      source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+      source: '/((?!api|_next/static|_next/image|favicon.ico|.*\\.png|.*\\.svg).*)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },
       ],
     },
   ],
-};
+}
