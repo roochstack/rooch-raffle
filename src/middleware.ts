@@ -6,7 +6,11 @@ import createIntlMiddleware from 'next-intl/middleware'
 import { getRoochNodeUrl } from '@roochnetwork/rooch-sdk/dist/esm/client/networks'
 import { routing } from './i18n/routing'
 
-const apiDomains = [getRoochNodeUrl('testnet')]
+const apiDomains = [
+  getRoochNodeUrl('devnet'),
+  getRoochNodeUrl('testnet'),
+  getRoochNodeUrl('mainnet'),
+]
 const isProduction = process.env.NODE_ENV === 'production'
 
 const intlMiddleware = createIntlMiddleware(routing)
