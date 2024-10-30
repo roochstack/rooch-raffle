@@ -23,7 +23,7 @@ export function LanguageSwitcher() {
       variant="ghost"
       size="icon"
       onClick={toggleLocale}
-      className="hover:bg-accent text-foreground/60 hover:text-foreground/80"
+      className="hover:bg-accent flex items-center text-foreground/60 hover:text-foreground/80"
     >
       <Globe className="min-h-4 min-w-4" />
       <span className="ml-1 text-xs">{locale === 'en' ? 'EN' : '中文'}</span>

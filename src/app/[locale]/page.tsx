@@ -16,7 +16,7 @@ export default function Home() {
             <h1 className="text-4xl font-bold sm:text-5xl">{t('home.title')}</h1>
             <div className="mt-5 text-lg">{t('home.description')}</div>
           </div>
-          <div className="mt-9 flex justify-center gap-5">
+          <div className="mt-9 flex flex-col md:flex-row justify-center gap-5">
             <Button>
               <Link href="/create">{t('activities.create.firstActivity')}</Link>
             </Button>
