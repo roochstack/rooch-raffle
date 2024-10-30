@@ -1,16 +1,20 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { CreateActivityType } from '@/interfaces';
 import { cn } from '@/lib/utils';
 import { Plus } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useState } from 'react';
+import { Suspense } from 'react';
 import { EnvelopeTable } from './envelope-table';
 import { RaffleTable } from './raffle-table';
 import { Button } from '../ui/button';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 
 function ActivitiesPage() {
+  const t = useTranslations('navigation');
+  const tCreate = useTranslations('activities.create');
+  const tList = useTranslations('activities.list');
   const router = useRouter();
   const searchParams = useSearchParams();
   const activityType = (searchParams.get('type') as CreateActivityType) || 'envelope';
@@ -29,7 +33,7 @@ function ActivitiesPage() {
       </style>
       <div className="fixed left-0 top-0 z-[-1] h-44 w-full bg-gradient-to-b from-[#f0f4fa] to-muted/0"></div>
       <div className="mx-auto max-w-5xl space-y-6 p-6 pt-11">
-        <h1 className="text-3xl font-bold">我的活动</h1>
+        <h1 className="text-3xl font-bold">{t('myActivities')}</h1>
         <div className="flex items-center justify-between">
           <Tabs
             value={activityType}
@@ -46,9 +50,9 @@ function ActivitiesPage() {
                     activityType === 'envelope' && 'opacity-100'
                   )}
                 >
-                  🧧
+                  {tList('tabs.envelope.emoji')}
                 </span>
-                红包
+                {tList('tabs.envelope.title')}
               </TabsTrigger>
               <TabsTrigger
                 disabled
@@ -61,11 +65,10 @@ function ActivitiesPage() {
                     activityType === 'raffle' && 'opacity-100'
                   )}
                 >
-                  🎁
+                  {tList('tabs.raffle.emoji')}
                 </span>
-                抽奖
+                {tList('tabs.raffle.title')}
               </TabsTrigger>
-
             </TabsList>
           </Tabs>
 
@@ -73,7 +76,7 @@ function ActivitiesPage() {
             <div className="mr-2 flex h-4 w-4 items-center justify-center rounded-full border border-current">
               <Plus className="h-3 w-3" />
             </div>
-            创建活动
+            {tCreate('title')}
           </Button>
         </div>
         <div>

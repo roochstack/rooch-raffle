@@ -8,6 +8,7 @@ import StatusBadge from '@/components/activity/status-badge';
 import { Separator } from '@/components/ui/separator';
 import { ActivityStatus } from '@/interfaces';
 import PreviewBanner from './preview-banner';
+import { useTranslations } from 'next-intl';
 
 interface NFTActivityPreviewProps {
   coverImageUrl?: string | null;
@@ -28,6 +29,8 @@ export default function NFTActivityPreview({
   endTime,
   nftCount,
 }: NFTActivityPreviewProps) {
+  const t = useTranslations('activities.preview');
+
   return (
     <>
       <PreviewBanner />
@@ -37,8 +40,8 @@ export default function NFTActivityPreview({
           style={
             coverImageUrl
               ? {
-                  backgroundImage: `url(${coverImageUrl})`,
-                }
+                backgroundImage: `url(${coverImageUrl})`,
+              }
               : {}
           }
         />
@@ -57,7 +60,7 @@ export default function NFTActivityPreview({
               <div className="space-y-4">
                 <div className="space-y-3">
                   <h1 className="text-5xl font-bold leading-none text-gray-900">
-                    {activityName || '[活动名称]'}
+                    {activityName || t('placeholder.activityName')}
                   </h1>
                 </div>
 
@@ -68,11 +71,11 @@ export default function NFTActivityPreview({
                     <StatusBadge status={status} />
                     <span className="space-x-1.5 text-sm text-gray-500">
                       <span>
-                        {startTime ? formatDate(startTime, 'yyyy-MM-dd HH:mm') : '[开始时间]'}
+                        {startTime ? formatDate(startTime, 'yyyy-MM-dd HH:mm') : t('placeholder.startTime')}
                       </span>
                       <span>-</span>
                       <span>
-                        {endTime ? formatDate(endTime, 'yyyy-MM-dd HH:mm') : '[结束时间]'}
+                        {endTime ? formatDate(endTime, 'yyyy-MM-dd HH:mm') : t('placeholder.endTime')}
                       </span>
                     </span>
                   </div>
@@ -82,10 +85,10 @@ export default function NFTActivityPreview({
               <div className="space-y-4">
                 <div className="flex items-baseline justify-between">
                   <h3 className="flex items-center space-x-2 text-3xl font-bold leading-none text-gray-900">
-                    <span>瓜分</span>
-                    <span>{nftCount} 个</span>
+                    <span>{t('nft.share')}</span>
+                    <span>{nftCount} {t('nft.unit')}</span>
                     <span className="inline-flex items-center gap-1">
-                      <span>NFT</span>
+                      <span>{t('nft.type')}</span>
                     </span>
                   </h3>
                 </div>

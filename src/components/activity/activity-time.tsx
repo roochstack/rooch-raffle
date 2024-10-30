@@ -1,7 +1,10 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { formatDate } from 'date-fns';
 import { ActivityStatus } from '@/interfaces';
 import { formatRelativeTime } from '@/utils/kit';
+import { useTranslations } from 'next-intl';
 
 interface ActivityTimeProps {
   startTime: Date;
@@ -27,6 +30,7 @@ const getElapsedTime = (startTime: Date, endTime: Date) => {
 };
 
 export default function ActivityTime({ startTime, endTime, status }: ActivityTimeProps) {
+  const t = useTranslations('time');
   const [elapsedTime, setElapsedTime] = useState(() => getElapsedTime(new Date(), endTime!));
 
   useEffect(() => {
@@ -40,15 +44,13 @@ export default function ActivityTime({ startTime, endTime, status }: ActivityTim
   }, [status, endTime]);
 
   if (status === 'ongoing') {
-    return <span className="text-sm text-gray-700">还有 {formatTime(elapsedTime)} 结束</span>;
+    return <span className="text-sm text-gray-700">{t('endIn', { time: formatTime(elapsedTime) })}</span>;
   }
 
   if (status === 'ended') {
     return (
       <span className="text-sm text-gray-500">
-        已于
-        <span className="mx-0.5">{formatRelativeTime(endTime)}</span>
-        结束
+        {t('endedAt', { time: formatRelativeTime(endTime) })}
       </span>
     );
   }
@@ -56,9 +58,7 @@ export default function ActivityTime({ startTime, endTime, status }: ActivityTim
   if (status === 'not-started') {
     return (
       <span className="text-sm text-gray-500">
-        将于
-        <span className="mx-0.5">{formatRelativeTime(startTime)}</span>
-        开始
+        {t('startAt', { time: formatRelativeTime(startTime) })}
       </span>
     );
   }

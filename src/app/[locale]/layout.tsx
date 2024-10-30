@@ -29,10 +29,8 @@ export const metadata: Metadata = {
   description: 'Rooch Raffle - create your own activities using Rooch',
 };
 
-// 定义支持的语言类型
 type SupportedLocale = 'en' | 'zh';
 
-// 验证支持的语言
 export function generateStaticParams() {
   return [{ locale: "en" }, { locale: "zh" }] as const;
 }

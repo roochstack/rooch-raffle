@@ -14,46 +14,58 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { LoadingButton, LoadingButtonStatus } from '../ui/loading-button';
 import { Textarea } from '../ui/textarea';
 import { ActivityFormLayout } from './activity-form-layout';
+import { useTranslations } from 'next-intl';
+
+interface FormValues {
+  activityName: string;
+  rewardInfo: string;
+  startTime: Date;
+  endTime: Date;
+  totalAmount: string;
+  rewardAmount: string;
+}
 
 const MAX_U64 = '18446744073709551615';
 const defaultCoverImageUrl = '/cover-4.png';
 
-const formSchema = z
-  .object({
-    activityName: z.string().min(1).max(200),
-    rewardInfo: z.string().min(1).max(1000),
-    startTime: z.date(),
-    endTime: z.date(),
-    totalAmount: z.union([z.string().regex(/^\d+$/), z.literal('')]),
-    rewardAmount: z.string().regex(/^\d+$/, { message: '单个奖品数量不能为空' }),
-  })
-  .refine(
-    (data) => {
-      return data.endTime > data.startTime;
-    },
-    {
-      message: '结束时间不能早于开始时间',
-      path: ['endTime'],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.totalAmount && data.rewardAmount) {
-        const total = parseInt(data.totalAmount);
-        const reward = parseInt(data.rewardAmount);
-        return reward <= total;
-      }
-      return true;
-    },
-    {
-      message: '奖品数量不能超过总人数',
-      path: ['rewardAmount'],
-    }
-  );
-
-type FormValues = z.infer<typeof formSchema>;
-
 export default function CreateRaffleForm() {
+  const t = useTranslations();
+
+  const formSchema = z
+    .object({
+      activityName: z.string().min(1).max(200),
+      rewardInfo: z.string().min(1).max(1000),
+      startTime: z.date(),
+      endTime: z.date(),
+      totalAmount: z.union([z.string().regex(/^\d+$/), z.literal('')]),
+      rewardAmount: z.string().regex(/^\d+$/, {
+        message: t('activities.create.form.validation.rewardAmountRequired')
+      }),
+    })
+    .refine(
+      (data) => {
+        return data.endTime > data.startTime;
+      },
+      {
+        message: t('activities.create.form.validation.endTimeInvalid'),
+        path: ['endTime'],
+      }
+    )
+    .refine(
+      (data) => {
+        if (data.totalAmount && data.rewardAmount) {
+          const total = parseInt(data.totalAmount);
+          const reward = parseInt(data.rewardAmount);
+          return reward <= total;
+        }
+        return true;
+      },
+      {
+        message: t('activities.create.form.validation.rewardAmountExceeded'),
+        path: ['rewardAmount'],
+      }
+    );
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -109,7 +121,6 @@ export default function CreateRaffleForm() {
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.size <= 100 * 1024) {
-      // 限制文件大小不超过 100KB
       const reader = new FileReader();
       reader.onload = (event) => {
         const base64String = event.target?.result as string;
@@ -117,7 +128,7 @@ export default function CreateRaffleForm() {
       };
       reader.readAsDataURL(file);
     } else {
-      alert('请选择不超过 100KB 的图片文件');
+      alert(t('activities.create.form.imageUpload.sizeLimit'));
     }
   };
 
@@ -152,9 +163,9 @@ export default function CreateRaffleForm() {
                 name="activityName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>活动标题</FormLabel>
+                    <FormLabel>{t('activities.create.form.name')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="恭喜发财！" {...field} />
+                      <Input placeholder={t('activities.create.form.namePlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -166,7 +177,7 @@ export default function CreateRaffleForm() {
                   name="startTime"
                   render={({ field }) => (
                     <FormItem className="md:w-1/2">
-                      <FormLabel>开始</FormLabel>
+                      <FormLabel>{t('time.startTime')}</FormLabel>
                       <FormControl>
                         <DateTimePicker {...field} format="yyyy-MM-dd HH:mm" />
                       </FormControl>
@@ -179,7 +190,7 @@ export default function CreateRaffleForm() {
                   name="endTime"
                   render={({ field }) => (
                     <FormItem className="md:w-1/2">
-                      <FormLabel>结束</FormLabel>
+                      <FormLabel>{t('time.endTime')}</FormLabel>
                       <FormControl>
                         <DateTimePicker {...field} format="yyyy-MM-dd HH:mm" />
                       </FormControl>
@@ -193,9 +204,12 @@ export default function CreateRaffleForm() {
                 name="rewardInfo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>抽奖内容</FormLabel>
+                    <FormLabel>{t('activities.create.form.reward.label')}</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="请输入抽奖内容" {...field} />
+                      <Textarea
+                        placeholder={t('activities.create.form.raffle.rewardInfoPlaceholder')}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -206,9 +220,14 @@ export default function CreateRaffleForm() {
                 name="totalAmount"
                 render={({ field }) => (
                   <FormItem className="md:w-1/2">
-                    <FormLabel>人数限制</FormLabel>
+                    <FormLabel>{t('activities.create.form.raffle.totalAmount')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="默认无限制" type="number" min={1} {...field} />
+                      <Input
+                        placeholder={t('activities.create.form.raffle.totalAmountPlaceholder')}
+                        type="number"
+                        min={1}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -219,7 +238,7 @@ export default function CreateRaffleForm() {
                 name="rewardAmount"
                 render={({ field }) => (
                   <FormItem className="md:w-1/2">
-                    <FormLabel>奖品数量</FormLabel>
+                    <FormLabel>{t('activities.create.form.raffle.rewardAmount')}</FormLabel>
                     <FormControl>
                       <Input type="number" min={1} {...field} />
                     </FormControl>
@@ -233,12 +252,12 @@ export default function CreateRaffleForm() {
               size="lg"
               className="h-12 w-full min-w-[140px] text-base"
               status={submitStatus}
-              loadingText="Waiting..."
-              successText="Created Successfully"
-              errorText="Failed to create"
+              loadingText={t('common.waiting')}
+              successText={t('common.success')}
+              errorText={t('common.error')}
               successIcon={<span className="mr-2 text-base">✅</span>}
             >
-              🎁 创建抽奖活动
+              {t('activities.create.button.createRaffle')}
             </LoadingButton>
           </form>
         </Form>
@@ -247,7 +266,7 @@ export default function CreateRaffleForm() {
             href="/activities/raffle/preview"
             className="inline-flex cursor-pointer items-center justify-center text-sm text-gray-500 transition-all hover:text-gray-700 hover:underline"
           >
-            <span>预览活动页面</span>
+            <span>{t('common.previewPage')}</span>
             <ArrowUpRightIcon className="ml-1 h-4 w-4" />
           </Link>
         </div>

@@ -1,14 +1,299 @@
 {
+  "home": {
+    "title": "Transparent Lucky Draw and Red Packet Experience",
+    "description": "Using random numbers generated from Bitcoin block headers to ensure the lottery process is tamper-proof, guaranteeing every participation is secure and reliable.",
+    "manage": "Manage Activities"
+  },
   "common": {
     "connect": "Connect Wallet",
     "disconnect": "Disconnect",
     "create": "Create",
     "join": "Join",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "copy": "Copy",
+    "copied": "Copied",
+    "error": "Error",
+    "success": "Success",
+    "waiting": "Waiting...",
+    "you": "You",
+    "noData": "No Data",
+    "preview": "Preview",
+    "previewPage": "Preview Activity Page",
+    "activityPage": "Activity Page",
+    "details": "Details",
+    "summary": "Summary",
+    "participantCount": "{count} Participants"
+  },
+  "time": {
+    "endIn": "Ends in {time}",
+    "endedAt": "Ended at {time}",
+    "startAt": "Starts at {time}",
+    "createdAt": "Created at {time}",
+    "startTime": "Start Time",
+    "endTime": "End Time"
   },
   "navigation": {
     "home": "Home",
     "history": "History",
-    "about": "About"
+    "about": "About",
+    "activities": "Activities",
+    "myActivities": "My Activities"
+  },
+  "wallet": {
+    "connectPrompt": "Please connect your wallet first",
+    "wrongNetwork": "Please switch to the correct network",
+    "balance": "Balance",
+    "address": "Wallet Address",
+    "availableBalance": "Available Balance",
+    "selectWallet": "Select Wallet"
+  },
+  "activities": {
+    "title": "Activity List",
+    "create": {
+      "title": "Create Activity",
+      "firstActivity": "Create Your First Activity",
+      "noData": "No Activities",
+      "form": {
+        "name": "Activity Name",
+        "namePlaceholder": "Good Fortune!",
+        "description": "Activity Description",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "assetType": {
+          "label": "Asset Type",
+          "description": "What participants can receive from red packets",
+          "coin": {
+            "emoji": "🪙",
+            "label": "Coin"
+          },
+          "nft": {
+            "emoji": "🖼️",
+            "label": "NFT"
+          }
+        },
+        "envelopeType": {
+          "label": "Red Packet Type",
+          "random": {
+            "emoji": "🎲",
+            "title": "Lucky Draw",
+            "description": "Random amounts"
+          },
+          "average": {
+            "emoji": "⚖️",
+            "title": "Regular",
+            "description": "Equal amounts"
+          }
+        },
+        "reward": {
+          "label": "Reward Content",
+          "selectCoin": "Select Coin",
+          "selectNFT": "Select NFT",
+          "noCoin": "No Coin Found",
+          "noNFT": "No NFT Found",
+          "nftEmpty": "NFT cannot be empty",
+          "loading": "Loading...",
+          "balance": "Available Balance: ",
+          "searchCoin": "Search coin...",
+          "searchNFT": "Search NFT...",
+          "noCoinFound": "No Coin Found",
+          "noNFTFound": "No NFT Found"
+        },
+        "quantity": {
+          "label": "Number of Red Packets",
+          "unlimited": "Unlimited by default"
+        },
+        "amount": {
+          "label": "Total Amount",
+          "perAmount": "Amount per packet"
+        },
+        "validation": {
+          "nameRequired": "Activity name is required",
+          "rewardRequired": "Please select a reward",
+          "amountRequired": "Amount is required",
+          "quantityRequired": "Quantity is required",
+          "balanceExceeded": "Exceeds available balance",
+          "endTimeInvalid": "End time cannot be earlier than start time",
+          "nftEmpty": "NFT cannot be empty",
+          "rewardAmountRequired": "Reward amount is required",
+          "rewardAmountExceeded": "Reward amount cannot exceed total participants"
+        },
+        "imageUpload": {
+          "title": "Upload Cover Image",
+          "sizeLimit": "Please select an image file under 100KB"
+        },
+        "time": {
+          "start": "Start",
+          "end": "End"
+        },
+        "raffle": {
+          "rewardAmount": "Reward Amount",
+          "totalAmount": "Total Amount",
+          "rewardInfoPlaceholder": "Please enter prize information",
+          "totalAmountPlaceholder": "Default unlimited"
+        }
+      },
+      "button": {
+        "createEnvelope": "🧧 Create Red Packet",
+        "createRaffle": "🎁 Create Lucky Draw"
+      },
+      "tabs": {
+        "envelope": {
+          "title": "Red Packet",
+          "emoji": "🧧"
+        },
+        "raffle": {
+          "title": "Lucky Draw",
+          "emoji": "🎁"
+        }
+      }
+    },
+    "envelope": {
+      "title": "Red Packet Details",
+      "preview": "Red Packet Preview",
+      "amount": "Amount",
+      "quantity": "Quantity",
+      "remaining": "Remaining",
+      "claimed": "Claimed",
+      "share": "Share",
+      "shareTitle": "Share Red Packet",
+      "shareDescription": "Come and claim the red packet!",
+      "claimButton": {
+        "waiting": "Waiting...",
+        "claiming": "Claiming...",
+        "claimed": "Claimed",
+        "notStarted": "Not Started",
+        "claim": "🧧 Open Red Packet",
+        "ended": "Activity Ended",
+        "allClaimed": "All Claimed"
+      },
+      "participantList": {
+        "title": "Claim List",
+        "count": "{count} Participants"
+      },
+      "manage": {
+        "returnRemaining": "Return Remaining Funds",
+        "returnNFT": "Return Remaining NFTs"
+      },
+      "type": "🧧 Red Packet",
+      "coinType": "🪙 Coin",
+      "nftType": "🖼️ NFT"
+    },
+    "raffle": {
+      "title": "Lucky Draw Details",
+      "preview": "Lucky Draw Preview",
+      "rewardInfo": "Prize Information",
+      "rewardAmount": "Number of Prizes",
+      "totalAmount": "Participant Limit",
+      "claimButton": {
+        "waiting": "Waiting...",
+        "participating": "Participating...",
+        "participated": "Participated",
+        "notStarted": "Not Started",
+        "participate": "🎁 Participate Now",
+        "ended": "Activity Ended",
+        "full": "Participation Full"
+      },
+      "participantList": {
+        "title": "Participant List",
+        "count": "{count} Participants"
+      },
+      "manage": {
+        "openBox": "Draw Winners",
+        "openBoxSuccess": "✅ Draw Successful",
+        "openBoxFailed": "❌ Draw Failed",
+        "notOpened": "Activity ended, pending draw",
+        "opened": "Activity Ended"
+      },
+      "description": {
+        "expand": "Click to expand",
+        "collapse": "Click to collapse"
+      },
+      "participants": {
+        "count": "Participant Count",
+        "noParticipants": "No Participants",
+        "list": "Participant List"
+      }
+    },
+    "list": {
+      "tabs": {
+        "envelope": {
+          "title": "Red Packet",
+          "emoji": "🧧"
+        },
+        "raffle": {
+          "title": "Lucky Draw",
+          "emoji": "🎁"
+        }
+      },
+      "raffle": {
+        "participantCount": "{count} Participants",
+        "table": {
+          "createFirst": "Create Your First Lucky Draw"
+        }
+      }
+    },
+    "manage": {
+      "title": "Activity Management",
+      "activityPage": "Activity Page",
+      "summary": "Summary",
+      "details": "Details",
+      "description": "Description",
+      "rewardAmount": "Number of Prizes",
+      "nft": "NFT",
+      "raffle": {
+        "openBox": "Draw Winners",
+        "openBoxSuccess": "✅ Draw Successful",
+        "openBoxFailed": "❌ Draw Failed",
+        "notOpened": "Activity ended, pending draw",
+        "ended": "Activity Ended"
+      },
+      "envelope": {
+        "returnRemaining": "Return Remaining Funds",
+        "returnNFT": "Return Remaining NFTs",
+        "returnSuccess": "✅ Return Successful",
+        "returnFailed": "❌ Return Failed"
+      },
+      "createdAt": "Created at"
+    },
+    "preview": {
+      "banner": "This is a preview page for displaying activity information only, not the actual activity page.",
+      "placeholder": {
+        "activityName": "[Activity Name]",
+        "startTime": "[Start Time]",
+        "endTime": "[End Time]",
+        "totalAmount": "[Total Amount]",
+        "symbol": "[SYMBOL]",
+        "coinName": "[COIN NAME]",
+        "coinType": "[COIN TYPE]"
+      },
+      "coin": {
+        "share": "Share",
+        "claimedCount": "Claimed Count",
+        "claimedAmount": "Claimed Amount"
+      },
+      "nft": {
+        "share": "Share",
+        "unit": "units",
+        "type": "NFT"
+      },
+      "description": {
+        "expand": "Click to expand",
+        "collapse": "Click to collapse"
+      }
+    }
+  },
+  "status": {
+    "ongoing": "Ongoing",
+    "ended": "Ended",
+    "notStarted": "Not Started",
+    "upcoming": "Coming Soon"
+  },
+  "session": {
+    "create": "Create Session"
   }
-} 
+}

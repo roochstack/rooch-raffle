@@ -13,12 +13,13 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '../../ui/skeleton';
-
+import { useTranslations } from 'next-intl';
 interface ActivityProps {
   id: string;
 }
 
 export default function RaffleActivity({ id }: ActivityProps) {
+  const t = useTranslations();
   const raffleResp = useRaffleDetail(id);
   const client = useRoochClient();
   const { sessionOrWallet } = useAppSession();
@@ -113,14 +114,14 @@ export default function RaffleActivity({ id }: ActivityProps) {
                           className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground/80"
                           onClick={toggleDescExpand}
                         >
-                          点击收起 <ChevronUpIcon className="h-3 w-3" />
+                          {t('activities.raffle.description.collapse')} <ChevronUpIcon className="h-3 w-3" />
                         </span>
                       ) : (
                         <span
                           className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground"
                           onClick={toggleDescExpand}
                         >
-                          点击展开 <ChevronDownIcon className="h-3 w-3" />
+                          {t('activities.raffle.description.expand')} <ChevronDownIcon className="h-3 w-3" />
                         </span>
                       )}
                       <Separator className="flex-1 bg-transparent" />
@@ -167,7 +168,7 @@ export default function RaffleActivity({ id }: ActivityProps) {
           <div className="space-y-2">
             {raffleResp.isLoading ? (
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">已参与人数</span>
+                <span className="text-sm text-gray-500">{t('activities.raffle.participants.count')}</span>
                 <Skeleton className="h-3 w-10" />
               </div>
             ) : (

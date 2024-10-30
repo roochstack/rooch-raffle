@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CreateActivityType } from '@/interfaces';
@@ -9,6 +10,7 @@ import CreateEnvelopeForm from './create-envelope-form';
 import CreateRaffleForm from './create-raffle-form';
 
 function CreateActivityPage() {
+  const t = useTranslations('activities.create');
   const router = useRouter();
   const searchParams = useSearchParams();
   const activityType = (searchParams.get('type') as CreateActivityType) || 'envelope';
@@ -29,7 +31,7 @@ function CreateActivityPage() {
       <div className="h-full w-full">
         <div className="container mx-auto max-w-5xl space-y-6 overflow-hidden p-6 pt-11 md:flex-row">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">创建活动</h1>
+            <h1 className="text-3xl font-bold">{t('title')}</h1>
             <div>
               <Tabs
                 value={activityType}
@@ -46,9 +48,9 @@ function CreateActivityPage() {
                         activityType === 'envelope' && 'opacity-100'
                       )}
                     >
-                      🧧
+                      {t('tabs.envelope.emoji')}
                     </span>
-                    红包
+                    {t('tabs.envelope.title')}
                   </TabsTrigger>
                   <TabsTrigger
                     disabled
@@ -61,9 +63,9 @@ function CreateActivityPage() {
                         activityType === 'raffle' && 'opacity-100'
                       )}
                     >
-                      🎁
+                      {t('tabs.raffle.emoji')}
                     </span>
-                    抽奖
+                    {t('tabs.raffle.title')}
                   </TabsTrigger>
                 </TabsList>
               </Tabs>

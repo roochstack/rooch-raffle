@@ -1,9 +1,6 @@
+import { useTranslations } from 'next-intl';
 import confetti from 'canvas-confetti';
-import {
-  AlarmClockMinusIcon,
-  CircleCheckBigIcon,
-  LoaderCircleIcon
-} from 'lucide-react';
+import { AlarmClockMinusIcon, CircleCheckBigIcon, LoaderCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import ShimmerButton from '../magicui/shimmer-button';
 import { Button } from '../ui/button';
@@ -21,6 +18,7 @@ export default function EnvelopeStatusButton({
   loading,
   minLoadingDuration = 800,
 }: StatusButtonProps) {
+  const t = useTranslations('activities.envelope.claimButton');
   const [innerLoading, setInnerLoading] = useState(false);
 
   useEffect(() => {
@@ -41,7 +39,7 @@ export default function EnvelopeStatusButton({
         onClick={onClaim}
       >
         <LoaderCircleIcon className="mr-1 h-4 w-4 animate-spin" />
-        领取中...
+        {t('claiming')}
       </ShimmerButton>
     );
   }
@@ -50,7 +48,7 @@ export default function EnvelopeStatusButton({
     return (
       <Button size="lg" className="h-12 w-full cursor-not-allowed" disabled>
         <LoaderCircleIcon className="mr-1 h-4 w-4 animate-spin" />
-        等待中...
+        {t('waiting')}
       </Button>
     );
   }
@@ -59,7 +57,7 @@ export default function EnvelopeStatusButton({
     return (
       <Button size="lg" className="h-12 w-full cursor-not-allowed" disabled>
         <CircleCheckBigIcon className="mr-1 h-4 w-4" />
-        已领取
+        {t('claimed')}
       </Button>
     );
   }
@@ -68,7 +66,7 @@ export default function EnvelopeStatusButton({
     return (
       <Button size="lg" className="h-12 w-full cursor-not-allowed" disabled>
         <AlarmClockMinusIcon className="mr-1 h-4 w-4" />
-        尚未开始
+        {t('notStarted')}
       </Button>
     );
   }
@@ -99,7 +97,7 @@ export default function EnvelopeStatusButton({
           }
         }}
       >
-        🧧立即开红包
+        {t('claim')}
       </ShimmerButton>
     );
   }
@@ -107,7 +105,7 @@ export default function EnvelopeStatusButton({
   if (type === 'ended') {
     return (
       <Button size="lg" className="h-12 w-full cursor-not-allowed" disabled>
-        活动已结束
+        {t('ended')}
       </Button>
     );
   }
@@ -115,7 +113,7 @@ export default function EnvelopeStatusButton({
   if (type === 'all-claimed') {
     return (
       <Button size="lg" className="h-12 w-full cursor-not-allowed" disabled>
-        已领完
+        {t('allClaimed')}
       </Button>
     );
   }

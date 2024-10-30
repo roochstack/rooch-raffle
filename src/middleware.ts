@@ -61,7 +61,7 @@ export const config = {
   matcher: [
     '/(zh|en)/:path*',
     {
-      source: '/((?!api|_next/static|_next/image|favicon.ico|logo.png).*)',
+      source: '/((?!api|_next/static|_next/image|favicon.ico|.*\\.png|.*\\.svg).*)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },

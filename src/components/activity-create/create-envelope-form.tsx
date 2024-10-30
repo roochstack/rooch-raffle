@@ -37,6 +37,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { ActivityFormLayout } from './activity-form-layout';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 const defaultCoverImageUrl = '/cover-6.png';
 
@@ -53,6 +54,9 @@ interface FormValues {
 }
 
 export default function CreateEnvelopeForm() {
+  const t = useTranslations('activities.create.form');
+  const tCommon = useTranslations('common');
+  const tButton = useTranslations('activities.create.button');
   const { create: createEnvelope } = useCreateEnvelope();
   const coinBalancesResp = useCoinBalances();
   const nftQueryResult = useAccountNfts();
@@ -64,7 +68,7 @@ export default function CreateEnvelopeForm() {
   const formSchema = useMemo(() => {
     const schema = z
       .object({
-        activityName: z.string().min(1).max(200),
+        activityName: z.string().min(1, { message: t('validation.nameRequired') }).max(200),
         startTime: z.date(),
         endTime: z.date(),
         coinType: z.string().optional(),
@@ -72,11 +76,11 @@ export default function CreateEnvelopeForm() {
         envelopeType: z.enum(['random', 'average']),
         totalEnvelope: z.union([
           z.literal(''),
-          z.string().regex(/^\d+$/, { message: '个数不能为空' }),
+          z.string().regex(/^\d+$/, { message: t('validation.quantityRequired') }),
         ]),
         totalCoin: z.union([
           z.literal(''),
-          z.string().regex(/^\d+(\.\d+)?$/, { message: '金额不能为空' }),
+          z.string().regex(/^\d+(\.\d+)?$/, { message: t('validation.amountRequired') }),
         ]),
         nfts: z.array(z.string()),
       })
@@ -88,7 +92,7 @@ export default function CreateEnvelopeForm() {
           return true;
         },
         {
-          message: '请选择奖励内容',
+          message: t('validation.rewardRequired'),
           path: ['coinType'],
         }
       )
@@ -100,7 +104,7 @@ export default function CreateEnvelopeForm() {
           return true;
         },
         {
-          message: '金额不能为空',
+          message: t('validation.amountRequired'),
           path: ['totalCoin'],
         }
       )
@@ -112,7 +116,7 @@ export default function CreateEnvelopeForm() {
           return true;
         },
         {
-          message: '红包个数不能为空',
+          message: t('validation.quantityRequired'),
           path: ['totalEnvelope'],
         }
       )
@@ -140,14 +144,14 @@ export default function CreateEnvelopeForm() {
           const numValue = totalCoin * 10 ** coin.decimals;
           return numValue <= coin.balance;
         },
-        { message: '超过了可用余额', path: ['totalCoin'] }
+        { message: t('validation.balanceExceeded'), path: ['totalCoin'] }
       )
       .refine(
         (data) => {
           return data.endTime > data.startTime;
         },
         {
-          message: '结束时间不能早于开始时间',
+          message: t('validation.endTimeInvalid'),
           path: ['endTime'],
         }
       )
@@ -159,13 +163,13 @@ export default function CreateEnvelopeForm() {
           return true;
         },
         {
-          message: 'NFT 不能为空',
+          message: t('validation.nftEmpty'),
           path: ['nfts'],
         }
       );
 
     return schema;
-  }, [coinBalancesResp.data]);
+  }, [t, coinBalancesResp.data]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -192,7 +196,7 @@ export default function CreateEnvelopeForm() {
       };
       reader.readAsDataURL(file);
     } else {
-      alert('请选择不超过 100KB 的图片文件');
+      alert(t('imageUpload.sizeLimit'));
     }
   };
 
@@ -289,9 +293,9 @@ export default function CreateEnvelopeForm() {
                 name="activityName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>红包标题</FormLabel>
+                    <FormLabel>{t('name')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="恭喜发财！" {...field} />
+                      <Input placeholder={t('namePlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -303,7 +307,7 @@ export default function CreateEnvelopeForm() {
                   name="startTime"
                   render={({ field }) => (
                     <FormItem className="md:w-1/2">
-                      <FormLabel>开始</FormLabel>
+                      <FormLabel>{t('time.start')}</FormLabel>
                       <FormControl>
                         <DateTimePicker {...field} format="yyyy-MM-dd HH:mm" />
                       </FormControl>
@@ -316,7 +320,7 @@ export default function CreateEnvelopeForm() {
                   name="endTime"
                   render={({ field }) => (
                     <FormItem className="md:w-1/2">
-                      <FormLabel>结束</FormLabel>
+                      <FormLabel>{t('time.end')}</FormLabel>
                       <FormControl>
                         <DateTimePicker {...field} format="yyyy-MM-dd HH:mm" />
                       </FormControl>
@@ -330,7 +334,7 @@ export default function CreateEnvelopeForm() {
                 name="assetType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>资产类型</FormLabel>
+                    <FormLabel>{t('assetType.label')}</FormLabel>
                     <FormControl>
                       <RadioGroup
                         className="flex"
@@ -348,8 +352,8 @@ export default function CreateEnvelopeForm() {
                               field.value === 'coin' && 'border-primary'
                             )}
                           >
-                            <div className="text-sm">🪙</div>
-                            <div className="text-sm">Coin</div>
+                            <div className="text-sm">{t('assetType.coin.emoji')}</div>
+                            <div className="text-sm">{t('assetType.coin.label')}</div>
                           </Label>
                         </>
 
@@ -362,13 +366,13 @@ export default function CreateEnvelopeForm() {
                               field.value === 'nft' && 'border-primary'
                             )}
                           >
-                            <div className="text-sm">🖼️</div>
-                            <div className="text-sm">NFT</div>
+                            <div className="text-sm">{t('assetType.nft.emoji')}</div>
+                            <div className="text-sm">{t('assetType.nft.label')}</div>
                           </Label>
                         </>
                       </RadioGroup>
                     </FormControl>
-                    <FormDescription>这是领取红包时可以获得的东西</FormDescription>
+                    <FormDescription>{t('assetType.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -380,7 +384,7 @@ export default function CreateEnvelopeForm() {
                   name="envelopeType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>红包类型</FormLabel>
+                      <FormLabel>{t('envelopeType.label')}</FormLabel>
                       <FormControl>
                         <RadioGroup className="flex" {...field}>
                           <div
@@ -401,10 +405,10 @@ export default function CreateEnvelopeForm() {
                               htmlFor="envelopeType-random"
                               className="flex cursor-pointer items-start justify-start space-x-2"
                             >
-                              <div className="text-sm">🎲</div>
+                              <div className="text-sm">{t('envelopeType.random.emoji')}</div>
                               <div>
-                                <div className="text-sm font-bold">拼手气</div>
-                                <div className="text-xs text-gray-500">红包金额随机</div>
+                                <div className="text-sm font-bold">{t('envelopeType.random.title')}</div>
+                                <div className="text-xs text-gray-500">{t('envelopeType.random.description')}</div>
                               </div>
                             </Label>
                           </div>
@@ -426,10 +430,10 @@ export default function CreateEnvelopeForm() {
                                 field.onChange('average');
                               }}
                             >
-                              <div className="text-sm">⚖️</div>
+                              <div className="text-sm">{t('envelopeType.average.emoji')}</div>
                               <div>
-                                <div className="text-sm font-bold">普通</div>
-                                <div className="text-xs text-gray-500">红包金额相同</div>
+                                <div className="text-sm font-bold">{t('envelopeType.average.title')}</div>
+                                <div className="text-xs text-gray-500">{t('envelopeType.average.description')}</div>
                               </div>
                             </Label>
                           </div>
@@ -447,7 +451,7 @@ export default function CreateEnvelopeForm() {
                   name="coinType"
                   render={({ field }) => (
                     <FormItem className="md:w-1/2">
-                      <FormLabel>奖励内容</FormLabel>
+                      <FormLabel>{t('reward.label')}</FormLabel>
                       <FormControl>
                         <Popover>
                           <PopoverTrigger asChild>
@@ -467,9 +471,9 @@ export default function CreateEnvelopeForm() {
                                     )!}
                                   />
                                 ) : coinBalancesResp.isLoading ? (
-                                  'Loading...'
+                                  t('reward.loading')
                                 ) : (
-                                  '选择 Coin'
+                                  t('reward.selectCoin')
                                 )}
                                 <ArrowDownUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
@@ -477,9 +481,9 @@ export default function CreateEnvelopeForm() {
                           </PopoverTrigger>
                           <PopoverContent className="p-0">
                             <Command>
-                              <CommandInput placeholder="Search coin..." className="h-9" />
+                              <CommandInput placeholder={t('reward.searchCoin')} className="h-9" />
                               <CommandList>
-                                <CommandEmpty>No coin found.</CommandEmpty>
+                                <CommandEmpty>{t('reward.noCoinFound')}</CommandEmpty>
                                 <CommandGroup>
                                   {coinBalancesResp.data.map((coin) => (
                                     <CommandItem
@@ -527,12 +531,10 @@ export default function CreateEnvelopeForm() {
                       </FormControl>
                       {field.value && (
                         <FormDescription>
-                          可用余额：
+                          {t('reward.balance')}
                           {formatUnits(
-                            coinBalancesResp.data.find((coin) => coin.coinType === field.value)
-                              ?.balance ?? 0n,
-                            coinBalancesResp.data.find((coin) => coin.coinType === field.value)
-                              ?.decimals
+                            coinBalancesResp.data.find((coin) => coin.coinType === field.value)?.balance ?? 0n,
+                            coinBalancesResp.data.find((coin) => coin.coinType === field.value)?.decimals
                           )}
                         </FormDescription>
                       )}
@@ -547,7 +549,7 @@ export default function CreateEnvelopeForm() {
                   name="nfts"
                   render={({ field }) => (
                     <FormItem className="md:w-1/2">
-                      <FormLabel>奖励内容</FormLabel>
+                      <FormLabel>{t('reward.label')}</FormLabel>
                       <FormControl>
                         <Popover>
                           <PopoverTrigger asChild>
@@ -570,7 +572,7 @@ export default function CreateEnvelopeForm() {
                                 ) : nftQueryResult.isLoading ? (
                                   'Loading...'
                                 ) : (
-                                  '选择 NFT'
+                                  t('reward.selectNFT')
                                 )}
                                 <ArrowDownUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
@@ -580,7 +582,7 @@ export default function CreateEnvelopeForm() {
                             <Command>
                               <CommandInput placeholder="Search NFT..." className="h-9" />
                               <CommandList>
-                                <CommandEmpty>No nft found.</CommandEmpty>
+                                <CommandEmpty>{t('reward.noNFTFound')}</CommandEmpty>
                                 <CommandGroup>
                                   {nftQueryResult.data?.map((nft) => (
                                     <CommandItem
@@ -646,7 +648,7 @@ export default function CreateEnvelopeForm() {
                   name="totalEnvelope"
                   render={({ field }) => (
                     <FormItem className="md:w-1/2">
-                      <FormLabel>红包个数</FormLabel>
+                      <FormLabel>{t('quantity.label')}</FormLabel>
                       <FormControl>
                         <Input type="number" min={1} {...field} />
                       </FormControl>
@@ -662,7 +664,7 @@ export default function CreateEnvelopeForm() {
                   render={({ field }) => (
                     <FormItem className="md:w-1/2">
                       <FormLabel>
-                        {form.watch('envelopeType') === 'random' ? '总金额' : '单个金额'}
+                        {form.watch('envelopeType') === 'random' ? t('amount.label') : t('amount.perAmount')}
                       </FormLabel>
                       <FormControl>
                         <Input type="number" min={0} step={0.000000001} {...field} />
@@ -678,12 +680,12 @@ export default function CreateEnvelopeForm() {
               size="lg"
               className="h-12 w-full min-w-[140px] text-base"
               status={submitStatus}
-              loadingText="Waiting..."
-              successText="创建成功"
-              errorText="创建失败"
+              loadingText={tCommon('loading')}
+              successText={tCommon('success')}
+              errorText={tCommon('error')}
               successIcon={<span className="mr-2 text-base">✅</span>}
             >
-              🧧 创建红包活动
+              {tButton('createEnvelope')}
             </LoadingButton>
           </form>
         </Form>
@@ -722,7 +724,7 @@ export default function CreateEnvelopeForm() {
             }}
             className="inline-flex cursor-pointer items-center justify-center text-sm text-gray-500 transition-all hover:text-gray-700 hover:underline"
           >
-            <span>预览活动页面</span>
+            <span>{tCommon('previewPage')}</span>
             <ArrowUpRightIcon className="ml-1 h-4 w-4" />
           </div>
         </div>
