@@ -24,6 +24,19 @@ const nextConfig = {
   compiler: {
     removeConsole: isProduction ? { exclude: ['error'] } : false,
   },
+  headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cross-Origin-Resource-Policy',
+            value: 'cross-origin'
+          }
+        ]
+      }
+    ];
+  }
 }
 
 export default withNextIntl(nextConfig)
