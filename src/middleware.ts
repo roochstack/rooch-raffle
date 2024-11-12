@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
     { name: 'object-src', values: ["'none'"] },
     { name: 'base-uri', values: ["'self'"] },
     { name: 'form-action', values: ["'self'"] },
-    { name: 'frame-ancestors', values: ["'*'"] },
+    { name: 'frame-ancestors', values: ["'self'", '*'] },
     {
       name: 'connect-src',
       values: ["'self'", ...apiDomains],
