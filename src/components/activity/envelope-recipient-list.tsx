@@ -74,27 +74,29 @@ const EnvelopeRecipientList = ({
           <DialogHeader>
             <DialogTitle>{t('title')}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-2">
+          <div className="space-y-2 max-h-[700px] overflow-y-auto">
             {claimed.map((item, i) => (
               <div key={i} className="flex items-center justify-between">
-                <div className="flex items-center space-x-1">
-                  <div className="inline-block h-6 w-6 rounded-full border-2 border-white bg-gray-200">
-                    <HashAvatar className="h-full w-full" address={item.address} />
-                  </div>
-                  <span className="font-mono text-sm text-gray-700">
-                    {`${item.address.slice(0, 4)}...${item.address.slice(-6)}`}
+                <div className="flex items-center gap-8">
+                  <div className="flex items-center space-x-1">
+                    <div className="inline-block h-6 w-6 rounded-full border-2 border-white bg-gray-200">
+                      <HashAvatar className="h-full w-full" address={item.address} />
+                    </div>
+                    <span className="font-mono text-sm text-gray-700">
+                      {`${item.address.slice(0, 4)}...${item.address.slice(-6)}`}
 
-                    {item.address === walletAddress && (
-                      <span className="ml-2 rounded-sm bg-gray-200 px-1 py-0.5 text-xs text-gray-500">
-                        {tCommon('you')}
-                      </span>
-                    )}
+                      {item.address === walletAddress && (
+                        <span className="ml-2 rounded-sm bg-gray-200 px-1 py-0.5 text-xs text-gray-500">
+                          {tCommon('you')}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                  <span className="text-sm text-gray-500">
+                    {formatUnits(item.amount, coinDecimals)}
+                    <span className="ml-0.5 text-xs">{coinSymbol}</span>
                   </span>
                 </div>
-                <span className="text-sm text-gray-500">
-                  {formatUnits(item.amount, coinDecimals)}
-                  <span className="ml-0.5 text-xs">{coinSymbol}</span>
-                </span>
                 <span className="text-sm text-gray-500">
                   {formatDate(item.claimedAt, 'yyyy-MM-dd HH:mm:ss')}
                 </span>
