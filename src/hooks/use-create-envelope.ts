@@ -52,6 +52,8 @@ export const useCreateEnvelope = () => {
       });
     }
 
+    (tx as any).data.maxGas = 50000000n * 2n;
+
     const response = await client.signAndExecuteTransaction({
       transaction: tx,
       signer: sessionOrWallet!,
