@@ -52,7 +52,7 @@ export const useCreateEnvelope = () => {
       });
     }
 
-    (tx as any).data.maxGas = 50000000n * 2n;
+    (tx as any).data.maxGas = 50000000n * 10n;
 
     const response = await client.signAndExecuteTransaction({
       transaction: tx,
