@@ -33,7 +33,7 @@ export function TopRightActions() {
   return (
     <div className="flex items-center gap-4 text-sm">
       <LanguageSwitcher />
-      <div className="cursor-pointer text-foreground/60 hover:text-foreground/80">
+      <div className="text-foreground/60">
         {NETWORK_NAME}
       </div>
       <div>

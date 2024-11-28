@@ -2,7 +2,6 @@
 
 import { useLocale } from 'next-intl';
 import { useRouter, usePathname } from 'next/navigation';
-import { Button } from './ui/button';
 import { Globe } from 'lucide-react';
 
 type SupportedLocale = 'en' | 'zh';
@@ -19,14 +18,12 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
+    <div
+      className="flex items-center cursor-pointer text-foreground/60 hover:text-foreground/80"
       onClick={toggleLocale}
-      className="hover:bg-accent flex items-center text-foreground/60 hover:text-foreground/80"
     >
-      <Globe className="min-h-4 min-w-4" />
+      <Globe className="h-4 w-4" />
       <span className="ml-1 text-xs">{locale === 'en' ? 'EN' : '中文'}</span>
-    </Button>
+    </div>
   );
 } 
