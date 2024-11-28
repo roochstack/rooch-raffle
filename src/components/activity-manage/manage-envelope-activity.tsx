@@ -12,7 +12,8 @@ import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
 import CoinEnvelopeDetailTable from './coin-envelope-detail-table';
 import NftEnvelopeDetailTable from './nft-envelope-detail-table';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { Locale } from '@/interfaces';
 
 interface ManageActivityProps {
   id: string;
@@ -24,6 +25,7 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
   const claimRemainingNFT = useClaimRemainingNFT();
   const { toast } = useToast();
   const t = useTranslations();
+  const locale = useLocale() as Locale;
 
   if (!envelopeDetail) {
     return <div>Loading...</div>;
@@ -80,7 +82,7 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
                 className="text-sm leading-none text-gray-500"
                 title={formatDate(envelopeDetail.createdAt, 'yyyy-MM-dd HH:mm')}
               >
-                {t('activities.manage.createdAt')} {formatRelativeTime(envelopeDetail.createdAt, 'hours')}
+                {t('activities.manage.createdAt')} {formatRelativeTime(envelopeDetail.createdAt, 'hours', locale)}
               </div>
             </div>
           </div>

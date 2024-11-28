@@ -15,6 +15,7 @@ import EnvelopeRecipientList from '../envelope-recipient-list';
 import EnvelopeStatusButton from '../envelope-status-button';
 import StatusBadge from '../status-badge';
 import { WalletConnectDialog } from '../../wallet-connect-dialog';
+import { useTranslations } from 'next-intl';
 interface ActivityProps {
   data: CoinEnvelopeItem;
   onClaimed: () => void;
@@ -26,8 +27,7 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
   const walletAddress = useWalletHexAddress();
   const { isConnecting: isWalletConnecting, isConnected: isWalletConnected } = useCurrentWallet();
   const [connectModalOpen, setConnectModalOpen] = useState(false);
-
-  console.log({ isWalletConnecting, isWalletConnected });
+  const t = useTranslations();
 
   const coinInfoResp = useCoinInfo(data.coinType);
   const claimedAddressResp = useEnvelopeClaimedInfo(data.claimedAddressTableId);
@@ -88,7 +88,7 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
                   <Skeleton className="h-[30px] w-full" />
                 ) : (
                   <h3 className="flex items-center space-x-2 text-3xl font-bold leading-none text-gray-900">
-                    <span>瓜分</span>
+                    <span>{t('activities.preview.coin.share')}</span>
                     <span>{formatUnits(data.totalCoin, coinInfoResp.data!.decimals)}</span>
                     <span className="inline-flex items-center gap-1">
                       <Popover>
@@ -165,7 +165,9 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
           <div className="space-y-2">
             {claimedAddressResp.isLoading || coinInfoResp.isPending ? (
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">已领取人数</span>
+                <span className="text-sm text-gray-500">
+                  {t('activities.preview.coin.claimedCount')}
+                </span>
                 <Skeleton className="h-3 w-10" />
               </div>
             ) : (
@@ -177,7 +179,9 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
             )}
 
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">已领取金额</span>
+              <span className="text-sm text-gray-500">
+                {t('activities.preview.coin.claimedAmount')}
+              </span>
               {coinInfoResp.isPending || claimedAddressResp.isLoading ? (
                 <Skeleton className="h-3 w-10" />
               ) : (

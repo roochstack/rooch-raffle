@@ -130,3 +130,5 @@ export interface NFT {
   imageUrl: string;
   type: string;
 }
+
+export type Locale = 'zh' | 'en';

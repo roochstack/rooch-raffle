@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { formatDate } from 'date-fns';
-import { ActivityStatus } from '@/interfaces';
+import { ActivityStatus, Locale } from '@/interfaces';
 import { formatRelativeTime } from '@/utils/kit';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface ActivityTimeProps {
   startTime: Date;
@@ -31,6 +31,7 @@ const getElapsedTime = (startTime: Date, endTime: Date) => {
 
 export default function ActivityTime({ startTime, endTime, status }: ActivityTimeProps) {
   const t = useTranslations('time');
+  const locale = useLocale() as Locale;
   const [elapsedTime, setElapsedTime] = useState(() => getElapsedTime(new Date(), endTime!));
 
   useEffect(() => {
@@ -50,7 +51,7 @@ export default function ActivityTime({ startTime, endTime, status }: ActivityTim
   if (status === 'ended') {
     return (
       <span className="text-sm text-gray-500">
-        {t('endedAt', { time: formatRelativeTime(endTime) })}
+        {t('endedAt', { time: formatRelativeTime(endTime, 'hours', locale) })}
       </span>
     );
   }
@@ -58,7 +59,7 @@ export default function ActivityTime({ startTime, endTime, status }: ActivityTim
   if (status === 'not-started') {
     return (
       <span className="text-sm text-gray-500">
-        {t('startAt', { time: formatRelativeTime(startTime) })}
+        {t('startAt', { time: formatRelativeTime(startTime, 'hours', locale) })}
       </span>
     );
   }

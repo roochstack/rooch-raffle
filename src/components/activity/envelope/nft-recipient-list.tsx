@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Skeleton } from '@/components/ui/skeleton';
 import { useWalletHexAddress } from '@/hooks';
 import { ChevronRightIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 
 interface NftRecipientListProps {
@@ -15,6 +16,7 @@ interface NftRecipientListProps {
 const NftRecipientList = ({ claimedAddressList, loading }: NftRecipientListProps) => {
   const [showAll, setShowAll] = useState(false);
   const walletAddress = useWalletHexAddress();
+  const t = useTranslations();
 
   const shortClaimed = useMemo(() => {
     return claimedAddressList.slice(0, 5);
@@ -23,7 +25,7 @@ const NftRecipientList = ({ claimedAddressList, loading }: NftRecipientListProps
   return (
     <div>
       <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-500">已领取人数</span>
+        <span className="text-sm text-gray-500">{t('activities.preview.coin.claimedCount')}</span>
         {loading ? (
           <Skeleton className="h-3 w-10" />
         ) : shortClaimed.length ? (

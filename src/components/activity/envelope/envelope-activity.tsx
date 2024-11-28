@@ -6,6 +6,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useEnvelopeDetail } from '@/hooks/use-envelope-detail';
 import EnvelopeStatusButton from '../envelope-status-button';
 import NFTActivity from './nft-activity';
+import { useTranslations } from 'next-intl';
+
 
 interface ActivityProps {
   id: string;
@@ -13,6 +15,7 @@ interface ActivityProps {
 
 export default function EnvelopeActivity({ id }: ActivityProps) {
   const envelopeResp = useEnvelopeDetail(id);
+  const t = useTranslations();
 
   if (envelopeResp.isPending) {
     return (
@@ -46,12 +49,16 @@ export default function EnvelopeActivity({ id }: ActivityProps) {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">已领取人数</span>
+                <span className="text-sm text-gray-500">
+                  {t('activities.preview.coin.claimedCount')}
+                </span>
                 <Skeleton className="h-3 w-10" />
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">已领取金额</span>
+                <span className="text-sm text-gray-500">
+                  {t('activities.preview.coin.claimedAmount')}
+                </span>
                 <Skeleton className="h-3 w-10" />
               </div>
             </div>

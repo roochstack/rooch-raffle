@@ -1,3 +1,4 @@
+import { Locale } from '@/interfaces';
 import { formatDate } from 'date-fns';
 
 export function formatUnits(raw: bigint | string | number, decimals = 18) {
@@ -25,7 +26,8 @@ export function formatCoinType(coinType: string) {
 
 export function formatRelativeTime(
   time: Date,
-  thresholdUnit: 'minutes' | 'hours' | 'days' = 'hours'
+  thresholdUnit: 'minutes' | 'hours' | 'days' = 'hours',
+  lang: Locale = 'zh'
 ): string {
   const now = Date.now();
   const diff = now - time.getTime();
@@ -35,37 +37,54 @@ export function formatRelativeTime(
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  const suffix = time.getTime() < now ? '前' : '后';
+  const units = {
+    zh: {
+      second: '秒',
+      minute: '分钟',
+      hour: '小时',
+      day: '天',
+      ago: '前',
+      later: '后',
+    },
+    en: {
+      second: 'second',
+      minute: 'minute',
+      hour: 'hour',
+      day: 'day',
+      ago: 'ago',
+      later: 'later',
+    },
+  };
+
+  const { second, minute, hour, day, ago, later } = units[lang];
+  const suffix = time.getTime() < now ? ago : later;
+
+  // Helper function to handle plural forms in English
+  const pluralize = (num: number, unit: string) => (lang === 'en' && num > 1 ? `${unit}s` : unit);
 
   if (thresholdUnit === 'minutes') {
     if (minutes < 1) {
-      return `${seconds} 秒${suffix}`;
+      return `${seconds} ${pluralize(seconds, second)} ${suffix}`;
     } else if (minutes < 60) {
-      return `${minutes} 分钟${suffix}`;
-    } else {
-      return formatDate(time, 'yyyy-MM-dd HH:mm');
+      return `${minutes} ${pluralize(minutes, minute)} ${suffix}`;
     }
   } else if (thresholdUnit === 'hours') {
     if (minutes < 1) {
-      return `${seconds} 秒${suffix}`;
+      return `${seconds} ${pluralize(seconds, second)} ${suffix}`;
     } else if (hours < 1) {
-      return `${minutes} 分钟${suffix}`;
+      return `${minutes} ${pluralize(minutes, minute)} ${suffix}`;
     } else if (hours < 24) {
-      return `${hours} 小时${suffix}`;
-    } else {
-      return formatDate(time, 'yyyy-MM-dd HH:mm');
+      return `${hours} ${pluralize(hours, hour)} ${suffix}`;
     }
   } else if (thresholdUnit === 'days') {
     if (minutes < 1) {
-      return `${seconds} 秒${suffix}`;
+      return `${seconds} ${pluralize(seconds, second)} ${suffix}`;
     } else if (hours < 1) {
-      return `${minutes} 分钟${suffix}`;
+      return `${minutes} ${pluralize(minutes, minute)} ${suffix}`;
     } else if (days < 1) {
-      return `${hours} 小时${suffix}`;
+      return `${hours} ${pluralize(hours, hour)} ${suffix}`;
     } else if (days < 7) {
-      return `${days} 天${suffix}`;
-    } else {
-      return formatDate(time, 'yyyy-MM-dd HH:mm');
+      return `${days} ${pluralize(days, day)} ${suffix}`;
     }
   }
 

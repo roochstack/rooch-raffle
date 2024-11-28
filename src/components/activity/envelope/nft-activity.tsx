@@ -15,6 +15,7 @@ import EnvelopeStatusButton from '../envelope-status-button';
 import StatusBadge from '../status-badge';
 import NftRecipientList from './nft-recipient-list';
 import { CoinImage } from '@/components/coin-image';
+import { useTranslations } from 'next-intl';
 
 interface ActivityProps {
   data: NFTEnvelopeItem;
@@ -28,7 +29,7 @@ export default function NFTActivity({ data, onClaimed }: ActivityProps) {
   const walletAddress = useWalletHexAddress();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const nftsQueryResult = useEnvelopeNFTs(data.nftListTableHandleId);
-
+  const t = useTranslations();
   console.log('nftsQueryResult', nftsQueryResult);
 
   const alreadyClaimed = useMemo(
@@ -80,7 +81,7 @@ export default function NFTActivity({ data, onClaimed }: ActivityProps) {
             <div className="space-y-4">
               <div className="flex items-baseline justify-between">
                 <h3 className="flex items-center space-x-2 text-3xl font-bold leading-none text-gray-900">
-                  <span>瓜分</span>
+                  <span>{t('activities.preview.coin.share')}</span>
                   {nftsQueryResult.isPending ? (
                     <Skeleton className="h-[22px] w-full" />
                   ) : (

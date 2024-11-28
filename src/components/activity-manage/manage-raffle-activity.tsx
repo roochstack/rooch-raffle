@@ -10,7 +10,8 @@ import { formatRelativeTime } from '@/utils/kit';
 import StatusCellContent from '../activity/status-cell-content';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { Locale } from '@/interfaces';
 
 interface ManageActivityProps {
   id: string;
@@ -21,6 +22,7 @@ export function ManageRaffleActivity({ id }: ManageActivityProps) {
   const openBox = useOpenBox();
   const { toast } = useToast();
   const t = useTranslations();
+  const locale = useLocale() as Locale;
 
   const ableToOpen =
     raffleDetailQueryResult.data?.status === 'ended' &&
@@ -64,7 +66,7 @@ export function ManageRaffleActivity({ id }: ManageActivityProps) {
               </Link>
             </div>
             <div className="mt-2 text-sm/6 text-gray-500">
-              Created at {formatRelativeTime(raffleDetailQueryResult.data!.createdAt, 'hours')}
+              Created at {formatRelativeTime(raffleDetailQueryResult.data!.createdAt, 'hours', locale)}
             </div>
           </div>
         </div>
