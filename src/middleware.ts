@@ -7,6 +7,7 @@ import { getRoochNodeUrl } from '@roochnetwork/rooch-sdk/dist/esm/client/network
 import { routing } from './i18n/routing'
 
 const apiDomains = [
+  getRoochNodeUrl('localnet'),
   getRoochNodeUrl('devnet'),
   getRoochNodeUrl('testnet'),
   getRoochNodeUrl('mainnet'),
