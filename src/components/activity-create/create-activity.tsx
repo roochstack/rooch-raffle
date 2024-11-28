@@ -37,7 +37,7 @@ function CreateActivityPage() {
                 value={activityType}
                 onValueChange={(value) => setActivityType(value as CreateActivityType)}
               >
-                <TabsList className="rounded-2 grid w-full grid-cols-2 bg-muted">
+                <TabsList className="rounded-2 bg-muted">
                   <TabsTrigger
                     value="envelope"
                     className="rounded-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-gray-500 data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
@@ -51,21 +51,6 @@ function CreateActivityPage() {
                       {t('tabs.envelope.emoji')}
                     </span>
                     {t('tabs.envelope.title')}
-                  </TabsTrigger>
-                  <TabsTrigger
-                    disabled
-                    value="raffle"
-                    className="rounded-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-gray-500 data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
-                  >
-                    <span
-                      className={cn(
-                        'mr-2 opacity-50 transition-all',
-                        activityType === 'raffle' && 'opacity-100'
-                      )}
-                    >
-                      {t('tabs.raffle.emoji')}
-                    </span>
-                    {t('tabs.raffle.title')}
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
