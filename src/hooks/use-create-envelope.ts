@@ -40,7 +40,7 @@ export const useCreateEnvelope = () => {
           Args.string(params.coverImageUrl),
           Args.u8(params.themeMode), // themeMode
           Args.u8(params.colorMode), // colorMode
-          Args.u8(params.assetType === 'coin' ? 0 : 1), // claimType
+          Args.u8(params.envelopeType === 'random' ? 1 : 0), // claimType
           Args.u64(BigInt(params.totalEnvelope)), // total_envelope
           Args.u256(BigInt(params.totalCoin)), // total_coin
           Args.u64(BigInt(params.startTime.getTime())),
