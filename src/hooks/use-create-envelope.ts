@@ -1,13 +1,14 @@
 import { ENVELOPE_MODULE_NAME, MODULE_ADDRESS } from '@/utils/constants';
 import { Args, Transaction } from '@roochnetwork/rooch-sdk';
 import { useState } from 'react';
-import { useWalletHexAddress } from './app-hooks';
+import { useAppSession, useWalletHexAddress } from './app-hooks';
 import { useCurrentWallet, useRoochClient } from '@roochnetwork/rooch-sdk-kit';
 import { CreateEnvelopeParams } from '@/interfaces';
 
 export const useCreateEnvelope = () => {
   const client = useRoochClient();
   const { wallet } = useCurrentWallet();
+  const { sessionOrWallet } = useAppSession();
   const walletAddress = useWalletHexAddress();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +54,7 @@ export const useCreateEnvelope = () => {
 
     const response = await client.signAndExecuteTransaction({
       transaction: tx,
-      signer: wallet!,
+      signer: sessionOrWallet!,
     });
 
     if (response.execution_info.status.type !== 'executed') {
