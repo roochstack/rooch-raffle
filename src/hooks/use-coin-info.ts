@@ -1,5 +1,5 @@
 import { useRoochClientQuery } from '@roochnetwork/rooch-sdk-kit';
-import { useWalletHexAddress } from './app-hooks';
+import { MODULE_ADDRESS } from '@/utils/constants';
 
 interface CoinMetaInfo {
   coinType: string;
@@ -10,15 +10,13 @@ interface CoinMetaInfo {
 }
 
 export const useCoinInfo = (coinType: string) => {
-  const walletAddress = useWalletHexAddress();
   return useRoochClientQuery(
     'getBalance',
     {
       coinType,
-      owner: walletAddress,
+      owner: MODULE_ADDRESS,
     },
     {
-      enabled: !!walletAddress,
       select(data) {
         const coinMetaInfo: CoinMetaInfo = {
           coinType,

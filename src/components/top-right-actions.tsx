@@ -4,41 +4,29 @@ import { useAppSession, useWalletHexAddress } from '@/hooks';
 import { NETWORK_NAME } from '@/utils/constants';
 import {
   useCurrentWallet,
-  useWallets,
   useWalletStore
 } from '@roochnetwork/rooch-sdk-kit';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { HashAvatar } from './hash-avatar';
 import { Button } from './ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from './ui/dialog';
+
+import { useTranslations } from 'next-intl';
+import { LanguageSwitcher } from './language-switcher';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import { WalletRow } from './wallet-row';
-import { useTranslations } from 'next-intl';
-import { LanguageSwitcher } from './language-switcher';
+import { WalletConnectDialog } from './wallet-connect-dialog';
 
 export function TopRightActions() {
   const { sessionKey, handlerCreateSessionKey, sessionLoading } = useAppSession();
-  const wallets = useWallets();
   const currentWallet = useCurrentWallet();
   const hexAddress = useWalletHexAddress();
   const setWalletDisconnected = useWalletStore((state) => state.setWalletDisconnected);
 
   const [connectModalOpen, setConnectModalOpen] = useState(false);
-
-  const validWallets = useMemo(() => {
-    // waiting issue to be fixed: https://github.com/rooch-network/rooch/issues/2779
-    return wallets.slice(0, 3);
-  }, [wallets]);
 
   const t = useTranslations();
 
@@ -81,21 +69,10 @@ export function TopRightActions() {
           </Button>
         )}
       </div>
-      <Dialog open={connectModalOpen} onOpenChange={setConnectModalOpen}>
-
-        <DialogContent className="sm:max-w-[360px]">
-          <DialogHeader>
-            <DialogTitle className="text-center">
-              {t('wallet.selectWallet')}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-1 py-2">
-            {validWallets.map((wallet) => (
-              <WalletRow key={wallet.getName()} wallet={wallet} closeModal={() => setConnectModalOpen(false)} />
-            ))}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <WalletConnectDialog
+        open={connectModalOpen}
+        onOpenChange={setConnectModalOpen}
+      />
     </div>
   );
 }

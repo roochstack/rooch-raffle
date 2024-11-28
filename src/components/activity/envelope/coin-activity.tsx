@@ -14,7 +14,7 @@ import ActivityTime from '../activity-time';
 import EnvelopeRecipientList from '../envelope-recipient-list';
 import EnvelopeStatusButton from '../envelope-status-button';
 import StatusBadge from '../status-badge';
-
+import { WalletConnectDialog } from '../../wallet-connect-dialog';
 interface ActivityProps {
   data: CoinEnvelopeItem;
   onClaimed: () => void;
@@ -24,7 +24,11 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
   const client = useRoochClient();
   const { sessionKey, sessionOrWallet } = useAppSession();
   const walletAddress = useWalletHexAddress();
-  const { isConnecting: isWalletConnecting } = useCurrentWallet();
+  const { isConnecting: isWalletConnecting, isConnected: isWalletConnected } = useCurrentWallet();
+  const [connectModalOpen, setConnectModalOpen] = useState(false);
+
+  console.log({ isWalletConnecting, isWalletConnected });
+
   const coinInfoResp = useCoinInfo(data.coinType);
   const claimedAddressResp = useEnvelopeClaimedInfo(data.claimedAddressTableId);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -126,6 +130,10 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
                   type={data.status}
                   loading={isSubmitting}
                   onClaim={async () => {
+                    if (!isWalletConnected) {
+                      setConnectModalOpen(true);
+                      throw new Error('Wallet not connected');
+                    }
                     const tx = new Transaction();
                     tx.callFunction({
                       target: `${MODULE_ADDRESS}::${ENVELOPE_MODULE_NAME}::claim_coin_envelope`,
@@ -184,6 +192,8 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
           </div>
         </div>
       </div>
+
+      <WalletConnectDialog open={connectModalOpen} onOpenChange={setConnectModalOpen} />
     </div>
   );
 }
