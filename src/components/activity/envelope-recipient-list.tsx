@@ -58,7 +58,7 @@ const EnvelopeRecipientList = ({
             <div className="flex items-center space-x-1">
               {shortClaimed.length < claimed.length && (
                 <span className="text-sm">
-                  {t('count', { count: claimed.length - shortClaimed.length })}
+                  {t('count', { count: claimed.length })}
                 </span>
               )}
               <ChevronRightIcon className="h-4 w-4" />
