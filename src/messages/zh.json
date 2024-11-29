@@ -27,7 +27,10 @@
     "activityPage": "活动页面",
     "details": "详情",
     "summary": "概览",
-    "participantCount": "{count} 人已参与"
+    "participantCount": "{count} 人已参与",
+    "errors": {
+      "insufficientGas": "没有足够的 RGAS"
+    }
   },
   "time": {
     "endIn": "还有 {time} 结束",

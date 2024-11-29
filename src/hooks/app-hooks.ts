@@ -5,12 +5,16 @@ import {
   useCurrentWallet,
 } from '@roochnetwork/rooch-sdk-kit';
 import { useState } from 'react';
+import { useToast } from './use-toast';
+import { useTranslations } from 'next-intl';
 
 export function useAppSession() {
   const sessionKey = useCurrentSession();
   const { wallet } = useCurrentWallet();
   const { mutateAsync: createSessionKey } = useCreateSessionKey();
   const [sessionLoading, setSessionLoading] = useState(false);
+  const { toast } = useToast();
+  const t = useTranslations();
 
   const handlerCreateSessionKey = () => {
     if (sessionLoading) {
@@ -32,6 +36,12 @@ export function useAppSession() {
         },
         onError: (error: any) => {
           console.error(error);
+          if (error.message.includes('sub status 1004')) {
+            toast({
+              title: '❌ Error',
+              description: t('common.errors.insufficientGas'),
+            });
+          }
         },
       }
     ).finally(() => setSessionLoading(false));

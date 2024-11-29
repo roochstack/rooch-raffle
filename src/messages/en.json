@@ -27,7 +27,10 @@
     "activityPage": "Activity Page",
     "details": "Details",
     "summary": "Summary",
-    "participantCount": "{count} Participants"
+    "participantCount": "{count} Participants",
+    "errors": {
+      "insufficientGas": "No sufficient RGAS"
+    }
   },
   "time": {
     "endIn": "Ends in {time}",

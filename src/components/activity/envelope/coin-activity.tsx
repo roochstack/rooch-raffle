@@ -1,7 +1,7 @@
 'use client';
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useAppSession, useCoinInfo, useEnvelopeClaimedInfo, useWalletHexAddress } from '@/hooks';
+import { useAppSession, useCoinInfo, useEnvelopeClaimedInfo, useToast, useWalletHexAddress } from '@/hooks';
 import { CoinEnvelopeItem } from '@/interfaces';
 import { ENVELOPE_MODULE_NAME, MODULE_ADDRESS } from '@/utils/constants';
 import { formatCoinType, formatUnits } from '@/utils/kit';
@@ -28,6 +28,7 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
   const { isConnecting: isWalletConnecting, isConnected: isWalletConnected } = useCurrentWallet();
   const [connectModalOpen, setConnectModalOpen] = useState(false);
   const t = useTranslations();
+  const { toast } = useToast();
 
   const coinInfoResp = useCoinInfo(data.coinType);
   const claimedAddressResp = useEnvelopeClaimedInfo(data.claimedAddressTableId);
@@ -151,6 +152,16 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
                         claimedAddressResp.refetch();
                         coinInfoResp.refetch();
                       }
+                    } catch (error) {
+                      if (error instanceof Error) {
+                        if (error.message.includes('sub status 1004')) {
+                          toast({
+                            title: '❌ Error',
+                            description: t('common.errors.insufficientGas'),
+                          });
+                        }
+                      }
+                      throw error;
                     } finally {
                       setIsSubmitting(false);
                     }
