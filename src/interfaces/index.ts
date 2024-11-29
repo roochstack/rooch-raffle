@@ -102,7 +102,7 @@ export interface CoinEnvelopeItem {
 
 export type EnvelopeItem = CoinEnvelopeItem | NFTEnvelopeItem;
 
-export type ActivityStatus = 'not-started' | 'ongoing' | 'ended';
+export type ActivityStatus = 'not-started' | 'ongoing' | 'ended' | 'all-claimed';
 
 export interface RaffleItem {
   id: string;

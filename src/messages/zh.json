@@ -291,7 +291,8 @@
     "ongoing": "进行中",
     "ended": "已结束",
     "notStarted": "未开始",
-    "upcoming": "即将开始"
+    "upcoming": "即将开始",
+    "all-claimed": "已领完"
   },
   "session": {
     "create": "创建 Session"

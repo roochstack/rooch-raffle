@@ -118,6 +118,8 @@ export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
   const remainingCoin = Number(get(item, 'decoded_value.value.remaining_coin'));
   const totalEnvelope = Number(get(item, 'decoded_value.value.total_envelope'));
 
+  const formattedStatus = remainingCoin === 0 ? ('all-claimed' as const) : status;
+
   return {
     id,
     name,
@@ -136,7 +138,7 @@ export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
     totalEnvelope,
     startTime,
     endTime,
-    status,
+    status: formattedStatus,
     createdAt,
     updatedAt,
   };

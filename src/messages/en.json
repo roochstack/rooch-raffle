@@ -291,7 +291,8 @@
     "ongoing": "Ongoing",
     "ended": "Ended",
     "notStarted": "Not Started",
-    "upcoming": "Coming Soon"
+    "upcoming": "Coming Soon",
+    "all-claimed": "All Claimed"
   },
   "session": {
     "create": "Create Session"
