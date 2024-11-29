@@ -12,16 +12,20 @@ interface ActivityTimeProps {
   status: ActivityStatus;
 }
 
-const formatTime = (seconds: number) => {
+const formatTime = (seconds: number, lang: 'en' | 'zh' = 'zh') => {
   const days = Math.floor(seconds / 86400);
   const hours = Math.floor((seconds % 86400) / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const secs = Math.floor(seconds % 60);
 
+  const timeStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
   if (days > 0) {
-    return `${days}天 ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return lang === 'zh'
+      ? `${days}天 ${timeStr}`
+      : `${days} day${days > 1 ? 's' : ''} ${timeStr}`;
   } else {
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return timeStr;
   }
 };
 
@@ -45,7 +49,7 @@ export default function ActivityTime({ startTime, endTime, status }: ActivityTim
   }, [status, endTime]);
 
   if (status === 'ongoing') {
-    return <span className="text-sm text-gray-700">{t('endIn', { time: formatTime(elapsedTime) })}</span>;
+    return <span className="text-sm text-gray-700">{t('endIn', { time: formatTime(elapsedTime, locale === 'zh' ? 'zh' : 'en') })}</span>;
   }
 
   if (status === 'ended') {
