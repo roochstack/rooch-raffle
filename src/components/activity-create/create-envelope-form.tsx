@@ -1,7 +1,7 @@
 'use client';
 
 import { ChangeEvent, useMemo, useRef, useState } from 'react';
-import { ArrowDownUpIcon, ArrowUpRightIcon, Check, ImageUpIcon } from 'lucide-react';
+import { ArrowDownUpIcon, ArrowUpRightIcon, Check, ImageIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -38,8 +38,9 @@ import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { ActivityFormLayout } from './activity-form-layout';
 import { useTranslations } from 'next-intl';
 import { Checkbox } from '@/components/ui/checkbox';
+import { getRandomCoverImageUrl } from '@/utils/kit';
+import { CoverImageDialog } from '../cover-image-dialog';
 
-const defaultCoverImageUrl = '/cover-6.png';
 
 interface FormValues {
   activityName: string;
@@ -64,7 +65,8 @@ export default function CreateEnvelopeForm() {
   const [submitStatus, setSubmitStatus] = useState<LoadingButtonStatus>('idle');
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [coverImageUrl, setCoverImageUrl] = useState(defaultCoverImageUrl);
+  const [coverImageUrl, setCoverImageUrl] = useState(getRandomCoverImageUrl());
+  const [coverImageDialogOpen, setCoverImageDialogOpen] = useState(false);
 
   const formSchema = useMemo(() => {
     const schema = z
@@ -276,10 +278,11 @@ export default function CreateEnvelopeForm() {
       <ActivityFormLayout.ImageContainer className="hover:[&_div]:bg-gray-600">
         <img src={coverImageUrl} alt="cover image" className="h-full w-full object-cover" />
         <div
+          title="Change Cover Image"
           className="absolute bottom-4 right-4 cursor-pointer rounded-lg border border-gray-200 bg-gray-900 p-1.5 transition-all"
-          onClick={() => fileInputRef.current?.click()}
+          onClick={() => setCoverImageDialogOpen(true)}
         >
-          <ImageUpIcon className="h-4 w-4 text-gray-200" />
+          <ImageIcon className="h-4 w-4 text-gray-200" />
           <input
             type="file"
             accept="image/*"
@@ -770,6 +773,11 @@ export default function CreateEnvelopeForm() {
             <ArrowUpRightIcon className="ml-1 h-4 w-4" />
           </div>
         </div>
+        <CoverImageDialog
+          open={coverImageDialogOpen}
+          onOpenChange={setCoverImageDialogOpen}
+          onSelect={setCoverImageUrl}
+        />
       </ActivityFormLayout.FormContainer>
     </ActivityFormLayout>
   );

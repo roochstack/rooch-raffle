@@ -1,5 +1,6 @@
 import { Locale } from '@/interfaces';
 import { formatDate } from 'date-fns';
+import { COVER_IMAGE_LIST } from './constants';
 
 export function formatUnits(raw: bigint | string | number, decimals = 18) {
   raw = BigInt(raw);
@@ -93,4 +94,9 @@ export function formatRelativeTime(
 
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function getRandomCoverImageUrl() {
+  const randomIndex = Math.floor(Math.random() * COVER_IMAGE_LIST.length);
+  return `/${COVER_IMAGE_LIST[randomIndex]}`;
 }
