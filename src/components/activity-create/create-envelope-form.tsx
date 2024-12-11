@@ -36,8 +36,8 @@ import { LoadingButton, LoadingButtonStatus } from '../ui/loading-button';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { ActivityFormLayout } from './activity-form-layout';
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const defaultCoverImageUrl = '/cover-6.png';
 
@@ -51,6 +51,7 @@ interface FormValues {
   nfts: string[];
   totalEnvelope: string;
   totalCoin: string;
+  requireTwitterBinding: boolean;
 }
 
 export default function CreateEnvelopeForm() {
@@ -68,7 +69,10 @@ export default function CreateEnvelopeForm() {
   const formSchema = useMemo(() => {
     const schema = z
       .object({
-        activityName: z.string().min(1, { message: t('validation.nameRequired') }).max(200),
+        activityName: z
+          .string()
+          .min(1, { message: t('validation.nameRequired') })
+          .max(200),
         startTime: z.date(),
         endTime: z.date(),
         coinType: z.string().optional(),
@@ -83,6 +87,7 @@ export default function CreateEnvelopeForm() {
           z.string().regex(/^\d+(\.\d+)?$/, { message: t('validation.amountRequired') }),
         ]),
         nfts: z.array(z.string()),
+        requireTwitterBinding: z.boolean(),
       })
       .refine(
         (data) => {
@@ -182,6 +187,7 @@ export default function CreateEnvelopeForm() {
       totalEnvelope: '',
       totalCoin: '',
       nfts: [],
+      requireTwitterBinding: false,
     },
   });
 
@@ -230,7 +236,9 @@ export default function CreateEnvelopeForm() {
       const formattedTotalCoin =
         data.envelopeType === 'random'
           ? BigInt(Number(data.totalCoin) * 10 ** selectedCoin.decimals)
-          : BigInt(Number(data.totalCoin) * Number(data.totalEnvelope) * 10 ** selectedCoin.decimals);
+          : BigInt(
+            Number(data.totalCoin) * Number(data.totalEnvelope) * 10 ** selectedCoin.decimals
+          );
 
       submitData = {
         assetType: 'coin' as const,
@@ -245,6 +253,7 @@ export default function CreateEnvelopeForm() {
         totalEnvelope: data.totalEnvelope,
         startTime: data.startTime,
         endTime: data.endTime,
+        requireTwitterBinding: data.requireTwitterBinding,
       };
     }
 
@@ -407,8 +416,12 @@ export default function CreateEnvelopeForm() {
                             >
                               <div className="text-sm">{t('envelopeType.random.emoji')}</div>
                               <div>
-                                <div className="text-sm font-bold">{t('envelopeType.random.title')}</div>
-                                <div className="text-xs text-gray-500">{t('envelopeType.random.description')}</div>
+                                <div className="text-sm font-bold">
+                                  {t('envelopeType.random.title')}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {t('envelopeType.random.description')}
+                                </div>
                               </div>
                             </Label>
                           </div>
@@ -432,8 +445,12 @@ export default function CreateEnvelopeForm() {
                             >
                               <div className="text-sm">{t('envelopeType.average.emoji')}</div>
                               <div>
-                                <div className="text-sm font-bold">{t('envelopeType.average.title')}</div>
-                                <div className="text-xs text-gray-500">{t('envelopeType.average.description')}</div>
+                                <div className="text-sm font-bold">
+                                  {t('envelopeType.average.title')}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {t('envelopeType.average.description')}
+                                </div>
                               </div>
                             </Label>
                           </div>
@@ -533,8 +550,10 @@ export default function CreateEnvelopeForm() {
                         <FormDescription>
                           {t('reward.balance')}
                           {formatUnits(
-                            coinBalancesResp.data.find((coin) => coin.coinType === field.value)?.balance ?? 0n,
-                            coinBalancesResp.data.find((coin) => coin.coinType === field.value)?.decimals
+                            coinBalancesResp.data.find((coin) => coin.coinType === field.value)
+                              ?.balance ?? 0n,
+                            coinBalancesResp.data.find((coin) => coin.coinType === field.value)
+                              ?.decimals
                           )}
                         </FormDescription>
                       )}
@@ -664,7 +683,9 @@ export default function CreateEnvelopeForm() {
                   render={({ field }) => (
                     <FormItem className="md:w-1/2">
                       <FormLabel>
-                        {form.watch('envelopeType') === 'random' ? t('amount.label') : t('amount.perAmount')}
+                        {form.watch('envelopeType') === 'random'
+                          ? t('amount.label')
+                          : t('amount.perAmount')}
                       </FormLabel>
                       <FormControl>
                         <Input type="number" min={0} step={0.000000001} {...field} />
@@ -674,6 +695,27 @@ export default function CreateEnvelopeForm() {
                   )}
                 />
               )}
+              <FormField
+                control={form.control}
+                name="requireTwitterBinding"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('participationConditions.title')}</FormLabel>
+                    <FormControl>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id={field.name}
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                        <FormLabel htmlFor={field.name}>{t('requireTwitterBinding.label')}</FormLabel>
+                      </div>
+                    </FormControl>
+                    <FormDescription>{t('requireTwitterBinding.description')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
             <LoadingButton
               type="submit"

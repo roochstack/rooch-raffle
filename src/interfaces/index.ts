@@ -13,6 +13,7 @@ export interface CreateCoinEnvelopeParams {
   totalEnvelope: number | string;
   startTime: Date;
   endTime: Date;
+  requireTwitterBinding: boolean;
 }
 
 export interface CreateNFTEnvelopeParams {
@@ -63,6 +64,7 @@ export interface NFTEnvelopeItem {
   assetType: 'nft';
   nftType: string;
   id: string;
+  sender: string;
   name: string;
   description: string;
   status: ActivityStatus;
@@ -80,6 +82,7 @@ export interface NFTEnvelopeItem {
 export interface CoinEnvelopeItem {
   assetType: 'coin';
   id: string;
+  sender: string;
   name: string;
   description: string;
   status: ActivityStatus;

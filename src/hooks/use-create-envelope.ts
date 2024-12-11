@@ -46,13 +46,16 @@ export const useCreateEnvelope = () => {
           Args.u256(BigInt(params.totalCoin)), // total_coin
           Args.u64(BigInt(params.startTime.getTime())),
           Args.u64(BigInt(params.endTime.getTime())),
+          Args.bool(params.requireTwitterBinding),
         ],
         // typeArgs: [params.coinType],
         typeArgs: ['0x3::gas_coin::RGas'],
       });
     }
 
-    (tx as any).data.maxGas = 50000000n * 10n;
+    if (!params.coverImageUrl.startsWith('/')) {
+      (tx as any).data.maxGas = 50000000n * 10n;
+    }
 
     const response = await client.signAndExecuteTransaction({
       transaction: tx,

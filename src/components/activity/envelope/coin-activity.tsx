@@ -1,7 +1,7 @@
 'use client';
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useAppSession, useCoinInfo, useEnvelopeClaimedInfo, useToast, useWalletHexAddress } from '@/hooks';
+import { useAppSession, useCoinInfo, useEnvelopeClaimedInfo, useToast, useTwitterBindingStatus, useWalletHexAddress } from '@/hooks';
 import { CoinEnvelopeItem } from '@/interfaces';
 import { ENVELOPE_MODULE_NAME, MODULE_ADDRESS } from '@/utils/constants';
 import { formatCoinType, formatUnits } from '@/utils/kit';
@@ -16,6 +16,8 @@ import EnvelopeStatusButton from '../envelope-status-button';
 import StatusBadge from '../status-badge';
 import { WalletConnectDialog } from '../../wallet-connect-dialog';
 import { useTranslations } from 'next-intl';
+import TwitterBindingStatus from './twitter-binding-status';
+import TwitterBindingDialog from '@/components/twitter-binding-dialog';
 interface ActivityProps {
   data: CoinEnvelopeItem;
   onClaimed: () => void;
@@ -27,9 +29,11 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
   const walletAddress = useWalletHexAddress();
   const { isConnecting: isWalletConnecting, isConnected: isWalletConnected } = useCurrentWallet();
   const [connectModalOpen, setConnectModalOpen] = useState(false);
+  const [twitterBindingDialogOpen, setTwitterBindingDialogOpen] = useState(false);
   const t = useTranslations();
   const { toast } = useToast();
 
+  const twitterBindingStatusResp = useTwitterBindingStatus(walletAddress);
   const coinInfoResp = useCoinInfo(data.coinType);
   const claimedAddressResp = useEnvelopeClaimedInfo(data.claimedAddressTableId);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -122,52 +126,83 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
                 )}
               </div>
 
-              {isWalletConnecting || claimedAddressResp.isLoading || coinInfoResp.isPending ? (
+              {isWalletConnecting ||
+                claimedAddressResp.isLoading ||
+                coinInfoResp.isPending ||
+                twitterBindingStatusResp.isPending ? (
                 <EnvelopeStatusButton type="waiting" />
               ) : alreadyClaimed ? (
                 <EnvelopeStatusButton type="already-claimed" />
               ) : (
-                <EnvelopeStatusButton
-                  type={data.status}
-                  loading={isSubmitting}
-                  onClaim={async () => {
-                    if (!isWalletConnected) {
-                      setConnectModalOpen(true);
-                      throw new Error('Wallet not connected');
-                    }
-                    const tx = new Transaction();
-                    tx.callFunction({
-                      target: `${MODULE_ADDRESS}::${ENVELOPE_MODULE_NAME}::claim_coin_envelope`,
-                      typeArgs: [data.coinType],
-                      args: [Args.objectId(data.id)],
-                    });
-                    try {
-                      setIsSubmitting(true);
-                      const res = await client.signAndExecuteTransaction({
-                        transaction: tx,
-                        signer: sessionOrWallet!,
+                <div>
+                  <EnvelopeStatusButton
+                    type={data.status}
+                    loading={isSubmitting}
+                    onClaim={async () => {
+                      if (!isWalletConnected) {
+                        setConnectModalOpen(true);
+                        throw new Error('Wallet not connected');
+                      }
+
+                      if (!twitterBindingStatusResp.binded) {
+                        setTwitterBindingDialogOpen(true);
+                        throw new Error('Twitter not bound');
+                      }
+
+
+                      const tx = new Transaction();
+                      tx.callFunction({
+                        target: `${MODULE_ADDRESS}::${ENVELOPE_MODULE_NAME}::claim_coin_envelope`,
+                        typeArgs: [data.coinType],
+                        args: [Args.objectId(data.id)],
                       });
-                      if (res.execution_info.status.type === 'executed') {
-                        onClaimed();
-                        claimedAddressResp.refetch();
-                        coinInfoResp.refetch();
-                      }
-                    } catch (error) {
-                      if (error instanceof Error) {
-                        if (error.message.includes('sub status 1004')) {
-                          toast({
-                            title: '❌ Error',
-                            description: t('common.errors.insufficientGas'),
-                          });
+                      try {
+                        setIsSubmitting(true);
+                        const res = await client.signAndExecuteTransaction({
+                          transaction: tx,
+                          signer: sessionOrWallet!,
+                        });
+                        if (res.execution_info.status.type === 'executed') {
+                          onClaimed();
+                          claimedAddressResp.refetch();
+                          coinInfoResp.refetch();
+                        } else {
+                          /* @ts-ignore */
+                          throw new Error(`abortCode=${res.execution_info.status.abort_code}`);
                         }
+                      } catch (error) {
+                        if (error instanceof Error) {
+                          if (error.message.includes('sub status 1004')) {
+                            toast({
+                              title: '❌ Error',
+                              description: t('common.errors.insufficientGas'),
+                            });
+                          }
+                          if (error.message.includes('abortCode=8')) {
+                            toast({
+                              title: '❌ Error',
+                              description: t('common.errors.twitterBindingRequired'),
+                            });
+                            setTwitterBindingDialogOpen(true);
+                          }
+                        }
+                        throw error;
+                      } finally {
+                        setIsSubmitting(false);
                       }
-                      throw error;
-                    } finally {
-                      setIsSubmitting(false);
-                    }
-                  }}
-                />
+                    }}
+                  />
+                  {twitterBindingStatusResp.isPending ? (
+                    null
+                  ) : (
+                    <TwitterBindingStatus
+                      className="mt-2"
+                      binded={twitterBindingStatusResp.binded!}
+                      creatorAddress={data.sender} />
+                  )}
+                </div>
               )}
+
             </div>
           </div>
 
@@ -209,6 +244,11 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
       </div>
 
       <WalletConnectDialog open={connectModalOpen} onOpenChange={setConnectModalOpen} />
+      <TwitterBindingDialog
+        creatorAddress={data.sender}
+        open={twitterBindingDialogOpen}
+        onClose={() => setTwitterBindingDialogOpen(false)}
+      />
     </div>
   );
 }

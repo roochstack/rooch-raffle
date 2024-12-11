@@ -29,7 +29,8 @@
     "summary": "Summary",
     "participantCount": "{count} Participants",
     "errors": {
-      "insufficientGas": "No sufficient RGAS"
+      "insufficientGas": "No sufficient RGAS",
+      "twitterBindingRequired": "You have not bound the Twitter account, please bind first"
     }
   },
   "time": {
@@ -138,6 +139,14 @@
           "totalAmount": "Total Amount",
           "rewardInfoPlaceholder": "Please enter prize information",
           "totalAmountPlaceholder": "Default unlimited"
+        },
+        "participationConditions": {
+          "title": "Participation Conditions"
+        },
+
+        "requireTwitterBinding": {
+          "label": "Bind X (Twitter)",
+          "description": "If enabled, only wallets linked to X (Twitter) are eligible to participate"
         }
       },
       "button": {
@@ -184,7 +193,15 @@
       },
       "type": "🧧 Red Packet",
       "coinType": "🪙 Coin",
-      "nftType": "🖼️ NFT"
+      "nftType": "🖼️ NFT",
+      "twitterBindingTip1": "Twitter binding required to claim. Bind now",
+      "twitterBindedTip1": "Twitter account bound, ready to claim",
+      "twitterBindingDialog": {
+        "title": "Please bind Twitter",
+        "description": "This activity requires your Rooch address to be bound to Twitter before participation. Click the button below to redirect to the Rooch Portal page to bind your Twitter account.",
+        "cancel": "Cancel",
+        "confirm": "Bind Now"
+      }
     },
     "raffle": {
       "title": "Lucky Draw Details",

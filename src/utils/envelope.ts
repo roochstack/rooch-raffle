@@ -12,6 +12,7 @@ function parseNftTypeFromObjectType(objectType: string) {
 }
 
 function formatMetadata(item: any) {
+  const sender = get(item, 'decoded_value.value.sender') as string;
   const name = get(item, 'decoded_value.value.meta.value.name') as string;
   const description = get(item, 'decoded_value.value.meta.value.desc') as string;
   const coverImageUrl = get(item, 'decoded_value.value.meta.value.image_url') as string;
@@ -33,6 +34,7 @@ function formatMetadata(item: any) {
   const updatedAt = fromUnixTime(Number(updatedAtTimestamp) / 1000);
 
   return {
+    sender,
     name,
     description,
     coverImageUrl,
@@ -49,6 +51,7 @@ function formatMetadata(item: any) {
 
 export function formatNftEnvelopeData(item: any): NFTEnvelopeItem {
   const {
+    sender,
     name,
     description,
     coverImageUrl,
@@ -73,6 +76,7 @@ export function formatNftEnvelopeData(item: any): NFTEnvelopeItem {
 
   return {
     id,
+    sender,
     name,
     description,
     coverImageUrl,
@@ -92,6 +96,7 @@ export function formatNftEnvelopeData(item: any): NFTEnvelopeItem {
 
 export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
   const {
+    sender,
     name,
     description,
     coverImageUrl,
@@ -122,6 +127,7 @@ export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
 
   return {
     id,
+    sender,
     name,
     description,
     coverImageUrl,

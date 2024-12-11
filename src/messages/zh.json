@@ -29,7 +29,8 @@
     "summary": "概览",
     "participantCount": "{count} 人已参与",
     "errors": {
-      "insufficientGas": "没有足够的 RGAS"
+      "insufficientGas": "没有足够的 RGAS",
+      "twitterBindingRequired": "您还没有绑定 Twitter 账号，无法领取"
     }
   },
   "time": {
@@ -138,6 +139,15 @@
           "totalAmount": "人数限制",
           "rewardInfoPlaceholder": "请输入奖品信息",
           "totalAmountPlaceholder": "默认无限制"
+        },
+
+        "participationConditions": {
+          "title": "参与条件"
+        },
+
+        "requireTwitterBinding": {
+          "label": "绑定 X (Twitter)",
+          "description": "选中后，只有绑定过 X 的钱包地址才能参与"
         }
       },
       "button": {
@@ -184,7 +194,15 @@
       },
       "type": "🧧 红包",
       "coinType": "🪙 Coin",
-      "nftType": "🖼️ NFT"
+      "nftType": "🖼️ NFT",
+      "twitterBindingTip1": "绑定 Twitter 后可领取，去绑定",
+      "twitterBindedTip1": "已绑定 Twitter, 可领取",
+      "twitterBindingDialog": {
+        "title": "请绑定 Twitter",
+        "description": "该活动需要您的 Rooch 地址绑定 Twitter 后才能参与，点击下方的跳转按钮，前往 Rooch Portal 页面绑定您的 Twitter 账号。",
+        "cancel": "取消",
+        "confirm": "这就去"
+      }
     },
     "raffle": {
       "title": "抽奖详情",

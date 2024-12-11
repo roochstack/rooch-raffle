@@ -20,6 +20,14 @@ export default function StatusCellContent({ status }: { status: ActivityStatus }
     );
   }
 
+  if (status === 'all-claimed') {
+    return (
+      <div className="inline-flex items-center gap-x-1.5 rounded-md bg-green-400/10 px-1.5 py-0.5 text-sm/5 font-medium text-green-700 group-data-[hover]:bg-green-400/20 sm:text-xs/5 forced-colors:outline">
+        <span>{t('all-claimed')}</span>
+      </div>
+    );
+  }
+
   if (status === 'ended') {
     return (
       <div className="inline-flex items-center gap-x-1.5 rounded-md bg-gray-600/10 px-1.5 py-0.5 text-sm/5 font-medium text-gray-700 group-data-[hover]:bg-gray-400/20 sm:text-xs/5 forced-colors:outline">
