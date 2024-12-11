@@ -36,7 +36,7 @@ import { LoadingButton, LoadingButtonStatus } from '../ui/loading-button';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { ActivityFormLayout } from './activity-form-layout';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Checkbox } from '@/components/ui/checkbox';
 import { getRandomCoverImageUrl } from '@/utils/kit';
 import { CoverImageDialog } from '../cover-image-dialog';
@@ -56,6 +56,7 @@ interface FormValues {
 }
 
 export default function CreateEnvelopeForm() {
+  const locale = useLocale();
   const t = useTranslations('activities.create.form');
   const tCommon = useTranslations('common');
   const tButton = useTranslations('activities.create.button');
@@ -765,7 +766,7 @@ export default function CreateEnvelopeForm() {
                 searchParams.set('coinSymbol', coin.symbol);
               }
 
-              window.open(`/activities/envelope/preview?${searchParams.toString()}`, '_blank');
+              window.open(`/${locale}/activities/envelope/preview?${searchParams.toString()}`, '_blank');
             }}
             className="inline-flex cursor-pointer items-center justify-center text-sm text-gray-500 transition-all hover:text-gray-700 hover:underline"
           >
