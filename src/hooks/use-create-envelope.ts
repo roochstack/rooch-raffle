@@ -48,8 +48,7 @@ export const useCreateEnvelope = () => {
           Args.u64(BigInt(params.endTime.getTime())),
           Args.bool(params.requireTwitterBinding),
         ],
-        // typeArgs: [params.coinType],
-        typeArgs: ['0x3::gas_coin::RGas'],
+        typeArgs: [params.coinType],
       });
     }
 
