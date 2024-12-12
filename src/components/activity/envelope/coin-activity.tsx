@@ -191,6 +191,12 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
                             });
                             setTwitterBindingDialogOpen(true);
                           }
+                          if (error.message.includes('abortCode=9')) {
+                            toast({
+                              title: '❌ Error',
+                              description: t('common.errors.twitterAccountAlreadyClaimed'),
+                            });
+                          }
                         }
                         throw error;
                       } finally {

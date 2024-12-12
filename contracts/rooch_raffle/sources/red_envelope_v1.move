@@ -1,4 +1,4 @@
-module rooch_raffle::red_envelope_v1_beta1 {
+module rooch_raffle::red_envelope_v1_beta2 {
     use std::option;
     use std::string::String;
     use std::vector;
@@ -39,6 +39,7 @@ module rooch_raffle::red_envelope_v1_beta1 {
     const ErrorNotSender: u64 = 6;
     const ErrorWrongAddNFTTime: u64 = 7;
     const ErrorNotBindedTwitter: u64 = 8;
+    const ErrorTwitterAccountAlreadyClaimed: u64 = 9;
 
 
     struct NFTEnvelope<phantom T: key+store> has key, store {
@@ -59,6 +60,7 @@ module rooch_raffle::red_envelope_v1_beta1 {
         total_envelope: u64,
         total_coin: u256,
         claimed_address: Table<address, u256>,
+        claimed_twitter_author_id: Table<String, u256>,
         remaining_coin: u256,
         coin_store: Object<CoinStore<CoinType>>,
         meta: EnvelopeMeta,
@@ -238,6 +240,7 @@ module rooch_raffle::red_envelope_v1_beta1 {
             total_coin,
             remaining_coin: total_coin,
             claimed_address: table::new(),
+            claimed_twitter_author_id: table::new(),
             coin_store: envelope_coin_store,
             require_twitter_binding,
             meta: EnvelopeMeta {
@@ -273,6 +276,10 @@ module rooch_raffle::red_envelope_v1_beta1 {
         if (envelope.require_twitter_binding) {
             let account_id = twitter_account::resolve_author_id_by_address(sender());
             assert!(option::is_some(&account_id), ErrorNotBindedTwitter);
+            assert!(
+                !table::contains(&envelope.claimed_twitter_author_id, option::extract(&mut account_id)),
+                ErrorTwitterAccountAlreadyClaimed
+            );
         };
 
         let claim_value = 0;
@@ -304,7 +311,16 @@ module rooch_raffle::red_envelope_v1_beta1 {
             time: now_time
         });
         envelope.remaining_coin = coin_store::balance(&envelope.coin_store);
+
         table::add(&mut envelope.claimed_address, sender(), claim_value);
+        if (envelope.require_twitter_binding) {
+            let author_id = twitter_account::resolve_author_id_by_address(sender());
+            table::add(
+                &mut envelope.claimed_twitter_author_id,
+                option::extract(&mut author_id),
+                claim_value
+            );
+        };
     }
 
     public entry fun recovery_coin_envelope<CoinType: key+store>(

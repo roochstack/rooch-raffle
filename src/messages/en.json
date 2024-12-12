@@ -30,7 +30,8 @@
     "participantCount": "{count} Participants",
     "errors": {
       "insufficientGas": "No sufficient RGAS",
-      "twitterBindingRequired": "You have not bound the Twitter account, please bind first"
+      "twitterBindingRequired": "You have not bound the Twitter account, please bind first",
+      "twitterAccountAlreadyClaimed": "Your Twitter account has already claimed this red packet, please try another one"
     }
   },
   "time": {
