@@ -64,19 +64,40 @@ export default async function Image({ params }: { params: { id: string, locale: 
             }}
           />
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div style={{ fontSize: 30, fontWeight: 600, color: '#6b7280', textAlign: 'center' }}>Rooch Raffle</div>
-            <div style={{ fontSize: 70, marginTop: '-60px', fontWeight: 600, color: '#111827', textAlign: 'center' }}>{detail.name}</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ fontSize: 20, fontWeight: 600, color: '#6b7280', textAlign: 'center' }}>Rooch Raffle</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{
+                  fontSize: 70, marginTop: '40px', fontWeight: 600, color: '#111827', textAlign: 'center',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  maxWidth: '500px',
+
+                  // line-clamp-2
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                }}>
+                  {detail.name}
+                </div>
+                <div style={{ fontSize: 40, color: '#6b7280', textAlign: 'center' }}>{claimText}</div>
+              </div>
+            </div>
             <button
               style={{
+                marginTop: '60px',
+                textAlign: 'center',
                 backgroundColor: '#030712',
                 color: '#fff',
                 borderRadius: '9999px',
                 padding: '1rem 2rem',
                 fontSize: 40,
                 fontWeight: 600,
+                maxWidth: '280px',
               }}
             >
-              {claimText}
+              Claim Now
             </button>
           </div>
         </div>
