@@ -1,10 +1,11 @@
 import { useRoochClient } from '@roochnetwork/rooch-sdk-kit';
 import { useCallback } from 'react';
 import { Args, Transaction } from '@roochnetwork/rooch-sdk';
-import { ENVELOPE_MODULE_NAME, MODULE_ADDRESS } from '@/utils/constants';
+import { MODULE_ADDRESS } from '@/utils/constants';
 import { useAppSession } from './app-hooks';
 
 interface ClaimRemainingNFTParams {
+  moduleName: string;
   envelopeId: string;
   nftType: string;
 }
@@ -14,12 +15,12 @@ export function useClaimRemainingNFT() {
   const { sessionOrWallet } = useAppSession();
 
   const claimRemainingNFT = useCallback(
-    async ({ envelopeId, nftType }: ClaimRemainingNFTParams) => {
+    async ({ moduleName, envelopeId, nftType }: ClaimRemainingNFTParams) => {
       const tx = new Transaction();
 
       tx.callFunction({
         address: MODULE_ADDRESS,
-        module: ENVELOPE_MODULE_NAME,
+        module: moduleName,
         function: 'recovery_nft_envelope',
         args: [Args.objectId(envelopeId)],
         typeArgs: [nftType],

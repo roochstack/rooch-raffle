@@ -62,6 +62,7 @@ export interface ClaimedItem {
 
 export interface NFTEnvelopeItem {
   assetType: 'nft';
+  moduleName: string;
   nftType: string;
   id: string;
   sender: string;
@@ -81,6 +82,7 @@ export interface NFTEnvelopeItem {
 
 export interface CoinEnvelopeItem {
   assetType: 'coin';
+  moduleName: string;
   id: string;
   sender: string;
   name: string;

@@ -158,7 +158,7 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
 
                       const tx = new Transaction();
                       tx.callFunction({
-                        target: `${MODULE_ADDRESS}::${ENVELOPE_MODULE_NAME}::claim_coin_envelope`,
+                        target: `${MODULE_ADDRESS}::${data.moduleName || ENVELOPE_MODULE_NAME}::claim_coin_envelope`,
                         typeArgs: [data.coinType],
                         args: [Args.objectId(data.id)],
                       });

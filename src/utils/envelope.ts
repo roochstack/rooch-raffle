@@ -12,6 +12,10 @@ function parseNftTypeFromObjectType(objectType: string) {
 }
 
 function formatMetadata(item: any) {
+  // {address}::{moduleName}::structName<CoinType>
+  const objectType = item.object_type;
+  const moduleName = objectType.split('::')[1];
+
   const sender = get(item, 'decoded_value.value.sender') as string;
   const name = get(item, 'decoded_value.value.meta.value.name') as string;
   const description = get(item, 'decoded_value.value.meta.value.desc') as string;
@@ -34,6 +38,7 @@ function formatMetadata(item: any) {
   const updatedAt = fromUnixTime(Number(updatedAtTimestamp) / 1000);
 
   return {
+    moduleName,
     sender,
     name,
     description,
@@ -51,6 +56,7 @@ function formatMetadata(item: any) {
 
 export function formatNftEnvelopeData(item: any): NFTEnvelopeItem {
   const {
+    moduleName,
     sender,
     name,
     description,
@@ -75,6 +81,7 @@ export function formatNftEnvelopeData(item: any): NFTEnvelopeItem {
   ) as string;
 
   return {
+    moduleName,
     id,
     sender,
     name,
@@ -96,6 +103,7 @@ export function formatNftEnvelopeData(item: any): NFTEnvelopeItem {
 
 export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
   const {
+    moduleName,
     sender,
     name,
     description,
@@ -126,6 +134,7 @@ export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
   const formattedStatus = remainingCoin === 0 ? ('all-claimed' as const) : status;
 
   return {
+    moduleName,
     id,
     sender,
     name,

@@ -97,6 +97,7 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
                 onClick={async () => {
                   try {
                     await claimRemainingCoin({
+                      moduleName: envelopeDetail.moduleName,
                       envelopeId: id,
                       coinType: envelopeDetail.coinType,
                     });
@@ -122,6 +123,7 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
               onClick={async () => {
                 try {
                   await claimRemainingNFT({
+                    moduleName: envelopeDetail.moduleName,
                     envelopeId: id,
                     nftType: envelopeDetail.nftType,
                   });

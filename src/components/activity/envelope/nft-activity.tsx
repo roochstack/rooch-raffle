@@ -131,7 +131,7 @@ export default function NFTActivity({ data, onClaimed }: ActivityProps) {
                   onClaim={async () => {
                     const tx = new Transaction();
                     tx.callFunction({
-                      target: `${MODULE_ADDRESS}::${ENVELOPE_MODULE_NAME}::claim_nft_envelope`,
+                      target: `${MODULE_ADDRESS}::${data.moduleName || ENVELOPE_MODULE_NAME}::claim_nft_envelope`,
                       typeArgs: [data.nftType],
                       args: [Args.objectId(data.id)],
                     });
