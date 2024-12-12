@@ -137,3 +137,11 @@ export interface NFT {
 }
 
 export type Locale = 'zh' | 'en';
+
+export interface CoinMetaInfo {
+  coinType: string;
+  name: string;
+  decimals: number;
+  imageUrl: string;
+  symbol: string;
+}

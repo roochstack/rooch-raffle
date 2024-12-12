@@ -1,14 +1,6 @@
 import { useRoochClientQuery } from '@roochnetwork/rooch-sdk-kit';
 import { MODULE_ADDRESS } from '@/utils/constants';
-
-interface CoinMetaInfo {
-  coinType: string;
-  name: string;
-  decimals: number;
-  imageUrl: string;
-  symbol: string;
-}
-
+import { CoinMetaInfo } from '@/interfaces';
 export const useCoinInfo = (coinType: string) => {
   return useRoochClientQuery(
     'getBalance',
