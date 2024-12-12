@@ -14,6 +14,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '../../ui/skeleton';
 import { useTranslations } from 'next-intl';
+import { formatCoverImageUrl } from '@/utils/kit';
 interface ActivityProps {
   id: string;
 }
@@ -51,7 +52,7 @@ export default function RaffleActivity({ id }: ActivityProps) {
       <div
         className="fixed left-0 top-0 h-full w-full bg-cover bg-center opacity-15 blur-[80px] brightness-125 saturate-200"
         style={{
-          backgroundImage: `url(${raffleResp.data?.coverImageUrl})`,
+          backgroundImage: `url(${formatCoverImageUrl(raffleResp.data?.coverImageUrl || '')})`,
         }}
       />
 
@@ -60,7 +61,7 @@ export default function RaffleActivity({ id }: ActivityProps) {
           <Skeleton className="h-[488px] min-w-[488px] rounded-lg object-cover shadow-xl drop-shadow-lg" />
         ) : (
           <img
-            src={raffleResp.data!.coverImageUrl}
+            src={formatCoverImageUrl(raffleResp.data!.coverImageUrl)}
             alt="preview-activity"
             className="pointer-events-none z-[-1] h-auto w-1/2 rounded-lg object-cover shadow-xl drop-shadow-lg"
           />
@@ -114,14 +115,16 @@ export default function RaffleActivity({ id }: ActivityProps) {
                           className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground/80"
                           onClick={toggleDescExpand}
                         >
-                          {t('activities.raffle.description.collapse')} <ChevronUpIcon className="h-3 w-3" />
+                          {t('activities.raffle.description.collapse')}{' '}
+                          <ChevronUpIcon className="h-3 w-3" />
                         </span>
                       ) : (
                         <span
                           className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground"
                           onClick={toggleDescExpand}
                         >
-                          {t('activities.raffle.description.expand')} <ChevronDownIcon className="h-3 w-3" />
+                          {t('activities.raffle.description.expand')}{' '}
+                          <ChevronDownIcon className="h-3 w-3" />
                         </span>
                       )}
                       <Separator className="flex-1 bg-transparent" />
@@ -168,7 +171,9 @@ export default function RaffleActivity({ id }: ActivityProps) {
           <div className="space-y-2">
             {raffleResp.isLoading ? (
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">{t('activities.raffle.participants.count')}</span>
+                <span className="text-sm text-gray-500">
+                  {t('activities.raffle.participants.count')}
+                </span>
                 <Skeleton className="h-3 w-10" />
               </div>
             ) : (

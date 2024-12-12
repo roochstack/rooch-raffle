@@ -100,3 +100,14 @@ export function getRandomCoverImageUrl() {
   const randomIndex = Math.floor(Math.random() * COVER_IMAGE_LIST.length);
   return `/${COVER_IMAGE_LIST[randomIndex]}`;
 }
+
+export function formatCoverImageUrl(path: string) {
+  if (path && !path.startsWith('/')) {
+    path = `/${path}`;
+  }
+  if (path && !path.includes('/covers')) {
+    return `/covers${path}`;
+  }
+
+  return path;
+}

@@ -9,6 +9,7 @@ import { EnvelopeItem } from '@/interfaces';
 import { useRouter } from 'next/navigation';
 import { NFTClaimedCount } from '@/components/activity-list/nft-claimed-count';
 import { Badge } from '@/components/ui/badge';
+import { formatCoverImageUrl } from '@/utils/kit';
 
 interface EnvelopeCardProps {
   envelope: EnvelopeItem;
@@ -33,7 +34,7 @@ export const EnvelopeCard = ({ envelope, className }: EnvelopeCardProps) => {
           alt="raffle cover image"
           className="h-20 w-20 rounded-md object-cover"
           height="80"
-          src={envelope.coverImageUrl}
+          src={formatCoverImageUrl(envelope.coverImageUrl)}
           width="80"
         />
 

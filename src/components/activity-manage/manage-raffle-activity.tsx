@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useOpenBox, useRaffleDetail } from '@/hooks';
 import { useToast } from '@/hooks/use-toast';
-import { formatRelativeTime } from '@/utils/kit';
+import { formatCoverImageUrl, formatRelativeTime } from '@/utils/kit';
 import StatusCellContent from '../activity/status-cell-content';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
@@ -48,7 +48,7 @@ export function ManageRaffleActivity({ id }: ManageActivityProps) {
             alt="raffle cover image"
             className="h-20 w-20 cursor-pointer rounded-md object-cover"
             height="64"
-            src={raffleDetailQueryResult.data!.coverImageUrl}
+            src={formatCoverImageUrl(raffleDetailQueryResult.data!.coverImageUrl)}
             width="64"
           />
           <div className="w-full">

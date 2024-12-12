@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { useAccountNfts, useCoinBalances } from '@/hooks';
 import { useCreateEnvelope } from '@/hooks/use-create-envelope';
 import { cn } from '@/lib/utils';
-import { formatUnits } from '@/utils/kit';
+import { formatCoverImageUrl, formatUnits } from '@/utils/kit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CoinLabel } from '../coin-label';
 import {
@@ -40,7 +40,6 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Checkbox } from '@/components/ui/checkbox';
 import { getRandomCoverImageUrl } from '@/utils/kit';
 import { CoverImageDialog } from '../cover-image-dialog';
-
 
 interface FormValues {
   activityName: string;
@@ -240,8 +239,8 @@ export default function CreateEnvelopeForm() {
         data.envelopeType === 'random'
           ? BigInt(Number(data.totalCoin) * 10 ** selectedCoin.decimals)
           : BigInt(
-            Number(data.totalCoin) * Number(data.totalEnvelope) * 10 ** selectedCoin.decimals
-          );
+              Number(data.totalCoin) * Number(data.totalEnvelope) * 10 ** selectedCoin.decimals
+            );
 
       submitData = {
         assetType: 'coin' as const,
@@ -277,7 +276,11 @@ export default function CreateEnvelopeForm() {
   return (
     <ActivityFormLayout>
       <ActivityFormLayout.ImageContainer className="hover:[&_div]:bg-gray-600">
-        <img src={coverImageUrl} alt="cover image" className="h-full w-full object-cover" />
+        <img
+          src={formatCoverImageUrl(coverImageUrl)}
+          alt="cover image"
+          className="h-full w-full object-cover"
+        />
         <div
           title="Change Cover Image"
           className="absolute bottom-4 right-4 cursor-pointer rounded-lg border border-gray-200 bg-gray-900 p-1.5 transition-all"
@@ -712,7 +715,9 @@ export default function CreateEnvelopeForm() {
                           checked={field.value}
                           onCheckedChange={field.onChange}
                         />
-                        <FormLabel htmlFor={field.name}>{t('requireTwitterBinding.label')}</FormLabel>
+                        <FormLabel htmlFor={field.name}>
+                          {t('requireTwitterBinding.label')}
+                        </FormLabel>
                       </div>
                     </FormControl>
                     <FormDescription>{t('requireTwitterBinding.description')}</FormDescription>
@@ -766,7 +771,10 @@ export default function CreateEnvelopeForm() {
                 searchParams.set('coinSymbol', coin.symbol);
               }
 
-              window.open(`/${locale}/activities/envelope/preview?${searchParams.toString()}`, '_blank');
+              window.open(
+                `/${locale}/activities/envelope/preview?${searchParams.toString()}`,
+                '_blank'
+              );
             }}
             className="inline-flex cursor-pointer items-center justify-center text-sm text-gray-500 transition-all hover:text-gray-700 hover:underline"
           >

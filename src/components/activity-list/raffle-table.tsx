@@ -10,6 +10,7 @@ import { Button } from '../ui/button';
 import StatusCellContent from '../activity/status-cell-content';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslations } from 'next-intl';
+import { formatCoverImageUrl } from '@/utils/kit';
 
 const skeletonArray = Array.from({ length: 3 });
 
@@ -88,7 +89,7 @@ export function RaffleTable() {
             <Image
               alt="raffle cover image"
               className="h-20 w-20 rounded-md object-cover"
-              src={raffle.coverImageUrl}
+              src={formatCoverImageUrl(raffle.coverImageUrl)}
               height="80"
               width="80"
             />

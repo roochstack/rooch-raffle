@@ -1,8 +1,7 @@
-'use client';
-
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { COVER_IMAGE_LIST } from '@/utils/constants';
 import Image from 'next/image';
+import { formatCoverImageUrl } from '@/utils/kit';
 
 interface CoverImageDialogProps {
   open: boolean;
@@ -14,18 +13,18 @@ export function CoverImageDialog({ open, onOpenChange, onSelect }: CoverImageDia
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
+        <div className="grid grid-cols-2 gap-4 p-4 sm:grid-cols-3 md:grid-cols-4">
           {COVER_IMAGE_LIST.map((image) => (
             <button
               key={image}
-              className="relative aspect-square w-full overflow-hidden rounded-lg border hover:border-primary transition-colors"
+              className="relative aspect-square w-full overflow-hidden rounded-lg border transition-colors hover:border-primary"
               onClick={() => {
                 onSelect(`/${image}`);
                 onOpenChange(false);
               }}
             >
               <Image
-                src={`/${image}`}
+                src={formatCoverImageUrl(image)}
                 alt={image}
                 fill
                 className="object-cover"
@@ -37,4 +36,4 @@ export function CoverImageDialog({ open, onOpenChange, onSelect }: CoverImageDia
       </DialogContent>
     </Dialog>
   );
-} 
+}

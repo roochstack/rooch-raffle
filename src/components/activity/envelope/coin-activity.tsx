@@ -1,10 +1,17 @@
 'use client';
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useAppSession, useCoinInfo, useEnvelopeClaimedInfo, useToast, useTwitterBindingStatus, useWalletHexAddress } from '@/hooks';
+import {
+  useAppSession,
+  useCoinInfo,
+  useEnvelopeClaimedInfo,
+  useToast,
+  useTwitterBindingStatus,
+  useWalletHexAddress,
+} from '@/hooks';
 import { CoinEnvelopeItem } from '@/interfaces';
 import { ENVELOPE_MODULE_NAME, MODULE_ADDRESS } from '@/utils/constants';
-import { formatCoinType, formatUnits } from '@/utils/kit';
+import { formatCoinType, formatCoverImageUrl, formatUnits } from '@/utils/kit';
 import { Args, Transaction } from '@roochnetwork/rooch-sdk';
 import { useCurrentWallet, useRoochClient } from '@roochnetwork/rooch-sdk-kit';
 import { useMemo, useState } from 'react';
@@ -51,13 +58,13 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
       <div
         className="fixed left-0 top-0 h-full w-full bg-cover bg-center opacity-15 blur-[80px] brightness-125 saturate-200"
         style={{
-          backgroundImage: `url(${data.coverImageUrl})`,
+          backgroundImage: `url(${formatCoverImageUrl(data.coverImageUrl)})`,
         }}
       />
 
       <div className="container mt-16 flex max-w-5xl flex-col px-4 md:mt-[-100px] md:flex-row md:gap-14 md:px-6 xl:gap-20">
         <img
-          src={data.coverImageUrl}
+          src={formatCoverImageUrl(data.coverImageUrl)}
           alt="preview-activity"
           className="pointer-events-none z-[-1] mb-8 h-auto w-full rounded-lg object-cover shadow-xl drop-shadow-lg sm:mb-0 md:w-1/2 md:max-w-[488px]"
         />
@@ -149,7 +156,6 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
                         throw new Error('Twitter not bound');
                       }
 
-
                       const tx = new Transaction();
                       tx.callFunction({
                         target: `${MODULE_ADDRESS}::${ENVELOPE_MODULE_NAME}::claim_coin_envelope`,
@@ -192,17 +198,15 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
                       }
                     }}
                   />
-                  {twitterBindingStatusResp.isPending ? (
-                    null
-                  ) : (
+                  {twitterBindingStatusResp.isPending ? null : (
                     <TwitterBindingStatus
                       className="mt-2"
                       binded={twitterBindingStatusResp.binded!}
-                      creatorAddress={data.sender} />
+                      creatorAddress={data.sender}
+                    />
                   )}
                 </div>
               )}
-
             </div>
           </div>
 

@@ -16,6 +16,7 @@ import StatusBadge from '../status-badge';
 import NftRecipientList from './nft-recipient-list';
 import { CoinImage } from '@/components/coin-image';
 import { useTranslations } from 'next-intl';
+import { formatCoverImageUrl } from '@/utils/kit';
 
 interface ActivityProps {
   data: NFTEnvelopeItem;
@@ -42,13 +43,13 @@ export default function NFTActivity({ data, onClaimed }: ActivityProps) {
       <div
         className="fixed left-0 top-0 h-full w-full bg-cover bg-center opacity-15 blur-[80px] brightness-125 saturate-200"
         style={{
-          backgroundImage: `url(${data.coverImageUrl})`,
+          backgroundImage: `url(${formatCoverImageUrl(data.coverImageUrl)})`,
         }}
       />
 
       <div className="container mt-16 flex max-w-5xl flex-col px-4 md:mt-[-100px] md:flex-row md:gap-14 md:px-6 xl:gap-20">
         <img
-          src={data.coverImageUrl}
+          src={formatCoverImageUrl(data.coverImageUrl)}
           alt="preview-activity"
           className="pointer-events-none z-[-1] mb-8 h-auto w-full rounded-lg object-cover shadow-xl drop-shadow-lg sm:mb-0 md:w-1/2 md:max-w-[488px]"
         />
@@ -101,10 +102,7 @@ export default function NFTActivity({ data, onClaimed }: ActivityProps) {
                             {nftsQueryResult.data?.map((nft) => (
                               <div key={nft.id} className="flex items-center">
                                 {nft.imageUrl && (
-                                  <CoinImage
-                                    imageUrl={nft.imageUrl}
-                                    className="mr-2 h-8 w-8"
-                                  />
+                                  <CoinImage imageUrl={nft.imageUrl} className="mr-2 h-8 w-8" />
                                 )}
                                 <div>
                                   <div className="leading-none">{nft.name}</div>

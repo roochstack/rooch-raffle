@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { useClaimRemainingCoin, useClaimRemainingNFT, useEnvelopeDetail, useToast } from '@/hooks';
-import { formatRelativeTime } from '@/utils/kit';
+import { formatCoverImageUrl, formatRelativeTime } from '@/utils/kit';
 import StatusCellContent from '../activity/status-cell-content';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
@@ -49,7 +49,7 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
             alt="raffle cover image"
             className="h-20 w-20 cursor-pointer rounded-md object-cover"
             height="64"
-            src={envelopeDetail.coverImageUrl}
+            src={formatCoverImageUrl(envelopeDetail.coverImageUrl)}
             width="64"
           />
 
