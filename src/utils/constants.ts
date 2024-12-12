@@ -16,6 +16,8 @@ export const ENVELOPE_USER_TABLE_HANDLE_ID_LIST =
 
 export const OG_NFT_MODULE_NAME = process.env.NEXT_PUBLIC_OG_NFT_MODULE_NAME as string;
 
+export const VERCEL_URL = process.env.VERCEL_URL as string;
+
 export const COVER_IMAGE_LIST = [
   'cover-632551.png',
   'cover-8707ce.png',

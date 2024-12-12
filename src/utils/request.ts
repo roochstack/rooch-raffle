@@ -6,9 +6,6 @@ export const fetchEnvelopeData = async (id: string) => {
   const res = await fetch(`https://main-seed.rooch.network/`, {
     method: 'POST',
     cache: 'force-cache',
-    next: {
-      revalidate: false,
-    },
     headers: {
       'Content-Type': 'application/json',
     },
@@ -35,9 +32,6 @@ export const fetchEnvelopeData = async (id: string) => {
 export const fetchCoinInfo = async (coinType: string) => {
   const res = await fetch('https://main-seed.rooch.network/', {
     cache: 'force-cache',
-    next: {
-      revalidate: false,
-    },
     headers: {
       'Content-Type': 'application/json',
     },

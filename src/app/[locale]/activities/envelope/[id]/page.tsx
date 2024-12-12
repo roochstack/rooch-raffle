@@ -18,12 +18,16 @@ export async function generateMetadata(
   try {
     const detail = await fetchEnvelopeData(id)
     const coinInfo = await fetchCoinInfo(detail.coinType)
+
+    const activityTitle = `${detail.name} - ${t('activities.preview.coin.share')} ${formatUnits(detail.totalCoin, coinInfo.decimals!)} ${coinInfo.symbol}`
+    const activityDescription = `Rooch Raffle - Transparent Lucky Draw and Red Packet Experience`
+
     return {
-      title: `${detail.name} - Rooch Raffle`,
-      description: `${t('activities.preview.coin.share')} ${formatUnits(detail.totalCoin, coinInfo.decimals!)} ${coinInfo.symbol}`,
+      title: activityTitle,
+      description: activityDescription,
       openGraph: {
         images: [formatCoverImageUrl(detail.coverImageUrl)],
-      },
+      }
     };
   } catch (error) {
     console.error(error);
