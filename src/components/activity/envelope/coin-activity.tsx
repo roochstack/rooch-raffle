@@ -242,9 +242,9 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
                 <Skeleton className="h-3 w-10" />
               ) : (
                 <span className="space-x-1 text-sm leading-none text-gray-500">
-                  <span>{formatUnits(allClaimedAmount, coinInfoResp.data!.decimals)}</span>
+                  <span>{formatUnits(allClaimedAmount, coinInfoResp.data!.decimals, 4)}</span>
                   <span>/</span>
-                  <span>{formatUnits(data.totalCoin, coinInfoResp.data!.decimals)}</span>
+                  <span>{formatUnits(data.totalCoin, coinInfoResp.data!.decimals, 4)}</span>
                   <span className="text-xs">{coinInfoResp.data!.symbol}</span>
                 </span>
               )}

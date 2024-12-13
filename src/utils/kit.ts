@@ -2,14 +2,26 @@ import { Locale } from '@/interfaces';
 import { formatDate } from 'date-fns';
 import { COVER_IMAGE_LIST } from './constants';
 
-export function formatUnits(raw: bigint | string | number, decimals = 18) {
+export function formatUnits(
+  raw: bigint | string | number,
+  decimals = 18,
+  fractionDigits = decimals
+) {
   raw = BigInt(raw);
   const base = BigInt(10 ** decimals);
   const integerPart = raw / base;
   const remainder = raw % base;
 
   // Format the decimal part, ensuring it has the number of digits specified by `decimals`
-  const decimal = remainder.toString().padStart(decimals, '0').replace(/0+$/, '');
+  let decimal = remainder.toString().padStart(decimals, '0');
+
+  // Retain only the specified number of fraction digits
+  if (fractionDigits < decimals) {
+    decimal = decimal.slice(0, fractionDigits);
+  }
+
+  // Remove trailing zeros
+  decimal = decimal.replace(/0+$/, '');
 
   return decimal.length > 0 ? `${integerPart}.${decimal}` : integerPart.toString();
 }

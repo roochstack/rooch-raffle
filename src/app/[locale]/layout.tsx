@@ -51,11 +51,13 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body className={`${inter.className} ${geistSans.variable} ${geistMono.variable} relative min-h-screen antialiased`}>
+      <body
+
+        className={`${inter.className} ${geistSans.variable} ${geistMono.variable} relative min-h-screen antialiased bg-background`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>
             <GlobalHeader />
-            {children}
+            <main vaul-drawer-wrapper="">{children}</main>
             <GlobalFooter />
           </Providers>
           <Toaster />
