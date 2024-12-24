@@ -35,4 +35,5 @@ export const COVER_IMAGE_LIST = [
   'cover-fdadb8.svg',
   'cover-163bc5.png',
   'cover-782e76.png',
+  'cover-f43a70.webp',
 ];
