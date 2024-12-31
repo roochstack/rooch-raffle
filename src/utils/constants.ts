@@ -36,4 +36,5 @@ export const COVER_IMAGE_LIST = [
   'cover-163bc5.png',
   'cover-782e76.png',
   'cover-d2f90e.jpg',
+  'cover-af860a.jpg',
 ];
