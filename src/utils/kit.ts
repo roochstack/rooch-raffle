@@ -44,8 +44,9 @@ export function formatRelativeTime(
 ): string {
   const now = Date.now();
   const diff = now - time.getTime();
+  const diffAbs = Math.abs(diff);
 
-  const seconds = Math.floor(diff / 1000);
+  const seconds = Math.floor(diffAbs / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
