@@ -1,5 +1,5 @@
 {
-  "name": "rooch-lucky",
+  "name": "rooch-raffle",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -40,6 +40,7 @@
     "@radix-ui/react-tooltip": "^1.1.2",
     "@roochnetwork/rooch-sdk": "^0.2.7",
     "@roochnetwork/rooch-sdk-kit": "^0.2.7",
+    "@supabase/supabase-js": "^2.47.12",
     "@tanstack/react-query": "^5.56.2",
     "@types/canvas-confetti": "^1.6.4",
     "canvas-confetti": "^1.9.3",
@@ -78,5 +79,6 @@
     "prettier-plugin-tailwindcss": "^0.6.6",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@9.15.3+sha256.c1da43727ccbc1ed42aff4fd6bdb4b1e91e65a818e6efff5b240fbf070ba4eaf"
 }

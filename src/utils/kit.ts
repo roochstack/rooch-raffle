@@ -118,9 +118,25 @@ export function formatCoverImageUrl(path: string) {
   if (path && !path.startsWith('/')) {
     path = `/${path}`;
   }
+  if (path && path.startsWith('/images')) {
+    return path;
+  }
   if (path && !path.includes('/covers')) {
     return `/covers${path}`;
   }
 
   return path;
+}
+
+export function uuid() {
+  return crypto.randomUUID();
+}
+
+export function preloadImage(url: string) {
+  const img = new Image();
+  img.src = url;
+  return new Promise((resolve, reject) => {
+    img.onload = () => resolve(img);
+    img.onerror = (e) => reject(e);
+  });
 }

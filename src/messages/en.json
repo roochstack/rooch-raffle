@@ -144,7 +144,6 @@
         "participationConditions": {
           "title": "Participation Conditions"
         },
-
         "requireTwitterBinding": {
           "label": "Bind X (Twitter)",
           "description": "If enabled, only wallets linked to X (Twitter) are eligible to participate"
@@ -317,5 +316,11 @@
   },
   "session": {
     "create": "Create Session"
-  }
+  },
+  "moving_frail_flea_buzz": "Upload cover image, or select an image from below.",
+  "teal_pink_panda_spark": "Image size is too large",
+  "busy_clear_kangaroo_win": "Image size cannot exceed 3MB",
+  "knotty_east_horse_fulfill": "❌ Upload failed",
+  "jolly_acidic_fox_quell": "Please try again later",
+  "key_late_wasp_race": "Uploading..."
 }
