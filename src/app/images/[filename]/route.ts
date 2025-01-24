@@ -20,9 +20,7 @@ export const GET = async (
   const ext = filename.split('.').pop();
   const { data: imageData, error: imageError } = await supabaseClient.storage
     .from('images')
-    .download(`user_uploaded/${filename}`, {
-      transform: { width: 500 },
-    });
+    .download(`user_uploaded/${filename}`);
 
   if (imageError) {
     return new NextResponse('Not found', { status: 404 });
