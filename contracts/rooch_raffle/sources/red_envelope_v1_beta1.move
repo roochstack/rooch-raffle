@@ -322,12 +322,16 @@ module rooch_raffle::red_envelope_v1_beta1 {
     public fun get_envelope_object_ids_of_user(user: address): vector<ObjectID> {
         let object_id_vec = vector::empty<ObjectID>();
         let envelope_table = account::borrow_resource<EnvelopeTable>(DEPLOYER);
-        let object_id_table_vec = table::borrow(&envelope_table.user_table, user);
-        let i = 0;
-        while (i < table_vec::length(object_id_table_vec)) {
-            vector::push_back(&mut object_id_vec, *table_vec::borrow(object_id_table_vec, i));
-            i = i + 1;
+
+        if (table::contains(&envelope_table.user_table, user)) {
+            let object_id_table_vec = table::borrow(&envelope_table.user_table, user);
+            let i = 0;
+            while (i < table_vec::length(object_id_table_vec)) {
+                vector::push_back(&mut object_id_vec, *table_vec::borrow(object_id_table_vec, i));
+                i = i + 1;
+            };
         };
+
         object_id_vec
     }
 
