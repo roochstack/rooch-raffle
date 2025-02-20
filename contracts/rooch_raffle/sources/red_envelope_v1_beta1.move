@@ -1,4 +1,4 @@
-module rooch_raffle::red_envelope_v1 {
+module rooch_raffle::red_envelope_v1_beta1 {
     use std::option;
     use std::string::String;
     use std::vector;
@@ -26,6 +26,7 @@ module rooch_raffle::red_envelope_v1 {
     use rooch_framework::coin_store::CoinStore;
     use rooch_framework::transaction;
     use rooch_framework::transaction::TransactionSequenceInfo;
+    use twitter_binding::twitter_account;
 
     const U64MAX: u64 = 18446744073709551615;
     const DEPLOYER: address = @rooch_raffle;
@@ -37,6 +38,7 @@ module rooch_raffle::red_envelope_v1 {
     const ErrorBitcoinClientError: u64 = 5;
     const ErrorNotSender: u64 = 6;
     const ErrorWrongAddNFTTime: u64 = 7;
+    const ErrorNotBindedTwitter: u64 = 8;
 
 
     struct NFTEnvelope<phantom T: key+store> has key, store {
@@ -60,6 +62,7 @@ module rooch_raffle::red_envelope_v1 {
         remaining_coin: u256,
         coin_store: Object<CoinStore<CoinType>>,
         meta: EnvelopeMeta,
+        require_twitter_binding: bool
     }
 
     struct EnvelopeMeta has drop, copy, store {
@@ -216,6 +219,7 @@ module rooch_raffle::red_envelope_v1 {
         total_coin: u256,
         start_time: u64,
         end_time: u64,
+        require_twitter_binding: bool
     ) {
         assert!(claim_type <= 1, ErrorNotSupportType);
         if (end_time <= start_time) {
@@ -235,6 +239,7 @@ module rooch_raffle::red_envelope_v1 {
             remaining_coin: total_coin,
             claimed_address: table::new(),
             coin_store: envelope_coin_store,
+            require_twitter_binding,
             meta: EnvelopeMeta {
                 name,
                 desc,
@@ -264,6 +269,12 @@ module rooch_raffle::red_envelope_v1 {
         assert!(envelope.start_time <= now_time, ErrorWrongOpenTime);
         assert!(envelope.end_time >= now_time, ErrorWrongOpenTime);
         assert!(!table::contains(&envelope.claimed_address, sender()), ErrorAlreadyClaimed);
+
+        if (envelope.require_twitter_binding) {
+            let account_id = twitter_account::resolve_author_id_by_address(sender());
+            assert!(option::is_some(&account_id), ErrorNotBindedTwitter);
+        };
+
         let claim_value = 0;
         if (envelope.claim_type == 0) {
             // Equal distribution
