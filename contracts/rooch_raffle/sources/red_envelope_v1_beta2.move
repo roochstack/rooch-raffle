@@ -1,8 +1,10 @@
-module rooch_raffle::red_envelope_v1 {
+module rooch_raffle::red_envelope_v1_beta2 {
     use std::option;
     use std::string::String;
     use std::vector;
 
+    use rooch_raffle::red_envelope_v1 as red_envelope_v1;
+    use rooch_raffle::red_envelope_v1_beta1 as red_envelope_v1_beta1;
     use bitcoin_move::bitcoin;
     use bitcoin_move::types;
     use bitcoin_move::types::Header;
@@ -26,6 +28,7 @@ module rooch_raffle::red_envelope_v1 {
     use rooch_framework::coin_store::CoinStore;
     use rooch_framework::transaction;
     use rooch_framework::transaction::TransactionSequenceInfo;
+    use twitter_binding::twitter_account;
 
     const U64MAX: u64 = 18446744073709551615;
     const DEPLOYER: address = @rooch_raffle;
@@ -37,6 +40,8 @@ module rooch_raffle::red_envelope_v1 {
     const ErrorBitcoinClientError: u64 = 5;
     const ErrorNotSender: u64 = 6;
     const ErrorWrongAddNFTTime: u64 = 7;
+    const ErrorNotBindedTwitter: u64 = 8;
+    const ErrorTwitterAccountAlreadyClaimed: u64 = 9;
 
 
     struct NFTEnvelope<phantom T: key+store> has key, store {
@@ -57,9 +62,11 @@ module rooch_raffle::red_envelope_v1 {
         total_envelope: u64,
         total_coin: u256,
         claimed_address: Table<address, u256>,
+        claimed_twitter_author_id: Table<String, u256>,
         remaining_coin: u256,
         coin_store: Object<CoinStore<CoinType>>,
         meta: EnvelopeMeta,
+        require_twitter_binding: bool
     }
 
     struct EnvelopeMeta has drop, copy, store {
@@ -216,6 +223,7 @@ module rooch_raffle::red_envelope_v1 {
         total_coin: u256,
         start_time: u64,
         end_time: u64,
+        require_twitter_binding: bool
     ) {
         assert!(claim_type <= 1, ErrorNotSupportType);
         if (end_time <= start_time) {
@@ -234,7 +242,9 @@ module rooch_raffle::red_envelope_v1 {
             total_coin,
             remaining_coin: total_coin,
             claimed_address: table::new(),
+            claimed_twitter_author_id: table::new(),
             coin_store: envelope_coin_store,
+            require_twitter_binding,
             meta: EnvelopeMeta {
                 name,
                 desc,
@@ -264,6 +274,16 @@ module rooch_raffle::red_envelope_v1 {
         assert!(envelope.start_time <= now_time, ErrorWrongOpenTime);
         assert!(envelope.end_time >= now_time, ErrorWrongOpenTime);
         assert!(!table::contains(&envelope.claimed_address, sender()), ErrorAlreadyClaimed);
+
+        if (envelope.require_twitter_binding) {
+            let account_id = twitter_account::resolve_author_id_by_address(sender());
+            assert!(option::is_some(&account_id), ErrorNotBindedTwitter);
+            assert!(
+                !table::contains(&envelope.claimed_twitter_author_id, option::extract(&mut account_id)),
+                ErrorTwitterAccountAlreadyClaimed
+            );
+        };
+
         let claim_value = 0;
         if (envelope.claim_type == 0) {
             // Equal distribution
@@ -293,7 +313,16 @@ module rooch_raffle::red_envelope_v1 {
             time: now_time
         });
         envelope.remaining_coin = coin_store::balance(&envelope.coin_store);
+
         table::add(&mut envelope.claimed_address, sender(), claim_value);
+        if (envelope.require_twitter_binding) {
+            let author_id = twitter_account::resolve_author_id_by_address(sender());
+            table::add(
+                &mut envelope.claimed_twitter_author_id,
+                option::extract(&mut author_id),
+                claim_value
+            );
+        };
     }
 
     public entry fun recovery_coin_envelope<CoinType: key+store>(
@@ -308,7 +337,7 @@ module rooch_raffle::red_envelope_v1 {
         account_coin_store::deposit(sender(), reward_coin);
     }
 
-    public fun get_envelope_object_ids_of_user(user: address): vector<ObjectID> {
+    fun internal_get_envelope_object_ids_of_user(user: address): vector<ObjectID> {
         let object_id_vec = vector::empty<ObjectID>();
         let envelope_table = account::borrow_resource<EnvelopeTable>(DEPLOYER);
         let object_id_table_vec = table::borrow(&envelope_table.user_table, user);
@@ -317,6 +346,13 @@ module rooch_raffle::red_envelope_v1 {
             vector::push_back(&mut object_id_vec, *table_vec::borrow(object_id_table_vec, i));
             i = i + 1;
         };
+        object_id_vec
+    }
+
+    public fun get_envelope_object_ids_of_user(user: address): vector<ObjectID> {
+        let object_id_vec = internal_get_envelope_object_ids_of_user(user);
+        vector::append(&mut object_id_vec, red_envelope_v1::get_envelope_object_ids_of_user(user));
+        vector::append(&mut object_id_vec, red_envelope_v1_beta1::get_envelope_object_ids_of_user(user));
         object_id_vec
     }
 
