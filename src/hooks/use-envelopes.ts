@@ -1,71 +1,54 @@
 import { useWalletHexAddress } from '@/hooks/app-hooks';
 import { EnvelopeItem } from '@/interfaces';
-import { ENVELOPE_USER_TABLE_HANDLE_ID_LIST } from '@/utils/constants';
+import { chunkArray } from '@/utils/array';
+import { ENVELOPE_MODULE_NAME, MODULE_ADDRESS } from '@/utils/constants';
 import { formatEnvelopeData } from '@/utils/envelope';
-import { RoochClient } from '@roochnetwork/rooch-sdk';
+import { Args, RoochClient } from '@roochnetwork/rooch-sdk';
 import { useRoochClient } from '@roochnetwork/rooch-sdk-kit';
 import { get } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 
-async function getData(
+async function getEnvelopesData(
   client: RoochClient,
-  { tableHandleId, walletAddress }: { tableHandleId: string; walletAddress: string }
-) {
-  const userTableQueryResult = await client.listStates({
-    accessPath: `table/${tableHandleId}`,
-    limit: '200',
-    stateOption: {
-      decode: true,
-      showDisplay: true,
-    },
+  walletAddress: string
+): Promise<EnvelopeItem[]> {
+  const envelopeObjectIdsQueryResult = await client.executeViewFunction({
+    address: MODULE_ADDRESS,
+    module: ENVELOPE_MODULE_NAME,
+    function: 'get_envelope_object_ids_of_user',
+    args: [Args.address(walletAddress)],
   });
 
-  const currentState = userTableQueryResult.data.find(
-    (d) => get(d, 'state.decoded_value.value.name') === walletAddress
+  const envelopeObjectIds = get(
+    envelopeObjectIdsQueryResult,
+    'return_values[0].decoded_value.value',
+    []
+  ) as string[];
+
+  if (envelopeObjectIds.length === 0) {
+    return [];
+  }
+
+  const chunkedEnvelopeObjectIds = chunkArray(envelopeObjectIds, 200);
+
+  const envelopeQueryResults = await Promise.all(
+    chunkedEnvelopeObjectIds.map(async (_envelopeObjectIds) => {
+      return client.queryObjectStates({
+        filter: {
+          object_id: _envelopeObjectIds.join(','),
+        },
+        limit: '200',
+        queryOption: {
+          decode: true,
+          showDisplay: true,
+        },
+      });
+    })
   );
 
-  if (!currentState) {
-    return [];
-  }
-
-  const currentUserTableVecHandleId = get(
-    currentState,
-    'state.decoded_value.value.value.value.contents.value.handle.value.id'
+  return envelopeQueryResults.flatMap((envelopeQueryResult) =>
+    envelopeQueryResult.data.map(formatEnvelopeData)
   );
-
-  if (!currentUserTableVecHandleId) {
-    return [];
-  }
-
-  const objectIdQueryResult = await client.listStates({
-    accessPath: `table/${currentUserTableVecHandleId}`,
-    limit: '200',
-    stateOption: {
-      decode: true,
-      showDisplay: true,
-    },
-  });
-
-  const objectIds = objectIdQueryResult.data.map((item) => {
-    return get(item, 'state.decoded_value.value.value') as string;
-  });
-
-  if (!objectIds.length) {
-    return [];
-  }
-
-  const envelopeQueryResult = await client.queryObjectStates({
-    filter: {
-      object_id: objectIds.join(','),
-    },
-    limit: '200',
-    queryOption: {
-      decode: true,
-      showDisplay: true,
-    },
-  });
-
-  return envelopeQueryResult.data.map(formatEnvelopeData);
 }
 
 export const useEnvelopes = () => {
@@ -78,12 +61,8 @@ export const useEnvelopes = () => {
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await Promise.all(
-        ENVELOPE_USER_TABLE_HANDLE_ID_LIST.map(async (tableHandleId) => {
-          return getData(client, { tableHandleId, walletAddress });
-        })
-      );
-      setData(data.flat().sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()));
+      const envelopes = await getEnvelopesData(client, walletAddress);
+      setData(envelopes.flat().sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()));
     } catch (error) {
       console.error(error);
     } finally {

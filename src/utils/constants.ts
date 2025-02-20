@@ -8,11 +8,6 @@ export const RAFFLE_BOX_TABLE_HANDLE_ID = process.env
   .NEXT_PUBLIC_RAFFLE_BOX_TABLE_HANDLE_ID as string;
 
 export const ENVELOPE_MODULE_NAME = process.env.NEXT_PUBLIC_ENVELOPE_MODULE_NAME as string;
-export const ENVELOPE_USER_TABLE_HANDLE_ID = process.env
-  .NEXT_PUBLIC_ENVELOPE_USER_TABLE_HANDLE_ID as string;
-
-export const ENVELOPE_USER_TABLE_HANDLE_ID_LIST =
-  process.env.NEXT_PUBLIC_ENVELOPE_USER_TABLE_HANDLE_ID!.split(',');
 
 export const OG_NFT_MODULE_NAME = process.env.NEXT_PUBLIC_OG_NFT_MODULE_NAME as string;
 
