@@ -126,6 +126,7 @@ export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
     item,
     'decoded_value.value.claimed_address.value.handle.value.id'
   ) as string;
+  const requireTwitterBinding = get(item, 'decoded_value.value.require_twitter_binding') as boolean;
 
   const totalCoin = Number(get(item, 'decoded_value.value.total_coin'));
   const remainingCoin = Number(get(item, 'decoded_value.value.remaining_coin'));
@@ -156,6 +157,7 @@ export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
     status: formattedStatus,
     createdAt,
     updatedAt,
+    requireTwitterBinding,
   };
 }
 

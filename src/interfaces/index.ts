@@ -103,6 +103,7 @@ export interface CoinEnvelopeItem {
   endTime: Date;
   createdAt: Date;
   updatedAt: Date;
+  requireTwitterBinding: boolean;
 }
 
 export type EnvelopeItem = CoinEnvelopeItem | NFTEnvelopeItem;
