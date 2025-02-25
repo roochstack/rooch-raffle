@@ -201,6 +201,31 @@
         "description": "该活动需要您的 Rooch 地址绑定 Twitter 后才能参与，点击下方的跳转按钮，前往 Rooch Portal 页面绑定您的 Twitter 账号。",
         "cancel": "取消",
         "confirm": "这就去"
+      },
+      "edit": {
+        "title": "编辑活动",
+        "editButton": {
+          "edit": "编辑",
+          "walletNotConnected": "钱包未连接，无法编辑",
+          "ongoing": "活动进行中，无法编辑",
+          "ended": "活动已结束，无法编辑",
+          "notOwner": "您不是该活动的所有者，无法编辑"
+        }
+      },
+      "extendEndTime": {
+        "title": "延长结束时间",
+        "extendEndTimeButton": {
+          "walletNotConnected": "钱包未连接，无法延长结束时间",
+          "notOwner": "您不是该活动的所有者，无法延长结束时间",
+          "ended": "活动已结束，无法延长结束时间",
+          "notStarted": "活动尚未开始，无法延长结束时间",
+          "extendEndTime": "延长结束时间"
+        },
+        "form": {
+          "validation": {
+            "endTimeRequired": "结束时间不能早于当前结束时间"
+          }
+        }
       }
     },
     "raffle": {

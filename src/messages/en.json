@@ -201,6 +201,31 @@
         "description": "This activity requires your Rooch address to be bound to Twitter before participation. Click the button below to redirect to the Rooch Portal page to bind your Twitter account.",
         "cancel": "Cancel",
         "confirm": "Bind Now"
+      },
+      "edit": {
+        "title": "Edit Activity",
+        "editButton": {
+          "edit": "Edit",
+          "walletNotConnected": "Wallet not connected. Cannot edit",
+          "ongoing": "Activity Ongoing. Cannot edit",
+          "ended": "Activity Ended. Cannot edit",
+          "notOwner": "You are not the owner of this activity. Cannot edit"
+        }
+      },
+      "extendEndTime": {
+        "title": "Extend End Time",
+        "extendEndTimeButton": {
+          "extendEndTime": "Extend End Time",
+          "walletNotConnected": "Wallet not connected. Cannot extend end time",
+          "notOwner": "You are not the owner of this activity. Cannot extend end time",
+          "ended": "Activity Ended. Cannot extend end time",
+          "notStarted": "Activity Not Started. Cannot extend end time"
+        },
+        "form": {
+          "validation": {
+            "endTimeRequired": "End time cannot be earlier than current end time"
+          }
+        }
       }
     },
     "raffle": {

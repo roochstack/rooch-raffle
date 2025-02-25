@@ -40,6 +40,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Checkbox } from '@/components/ui/checkbox';
 import { getRandomCoverImageUrl } from '@/utils/kit';
 import { CoverImageDialog } from '../cover-image-dialog';
+import { useActivityImageUpload } from '@/hooks/use-image-upload';
 
 interface FormValues {
   activityName: string;
@@ -193,20 +194,13 @@ export default function CreateEnvelopeForm() {
     },
   });
 
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.size <= 100 * 1024) {
-      // 限制文件大小不超过 100KB
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64String = event.target?.result as string;
-        setCoverImageUrl(base64String);
-      };
-      reader.readAsDataURL(file);
-    } else {
+  const handleImageUpload = useActivityImageUpload({
+    onImageChange: setCoverImageUrl,
+    sizeLimit: 100,
+    onSizeExceeded: () => {
       alert(t('imageUpload.sizeLimit'));
-    }
-  };
+    },
+  });
 
   const onSubmit = async (data: FormValues) => {
     if (submitStatus === 'success') {
@@ -763,6 +757,7 @@ export default function CreateEnvelopeForm() {
               searchParams.set('startTimeTimestamp', startTime.getTime().toString());
               searchParams.set('endTimeTimestamp', endTime.getTime().toString());
               searchParams.set('nftCount', nfts.length.toString());
+              searchParams.set('coverImageUrl', coverImageUrl);
 
               const coin = coinBalancesResp.data.find((c) => c.coinType === coinType);
               if (coin) {
