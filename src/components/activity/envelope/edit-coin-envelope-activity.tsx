@@ -18,7 +18,7 @@ import { useCoinBalances, useWalletHexAddress } from '@/hooks';
 import { useActivityImageUpload } from '@/hooks/use-image-upload';
 import { useUpdateEnvelope } from '@/hooks/use-update-envelope';
 import { CoinEnvelopeItem } from '@/interfaces';
-import { formatCoverImageUrl } from '@/utils/kit';
+import { formatCoverImageUrl, formatUnits } from '@/utils/kit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowUpRightIcon, ImageIcon } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
@@ -32,6 +32,7 @@ import { useCurrentWallet } from '@roochnetwork/rooch-sdk-kit';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import EnvelopeStatusEditButton from './envelope-status-edit-button';
+import { CoinSelect } from '@/components/ui/coin-select';
 
 interface ActivityProps {
   data: CoinEnvelopeItem;
@@ -46,6 +47,7 @@ interface FormValues {
   envelopeType: 'random' | 'average';
   totalEnvelope: string;
   totalCoin: string;
+  coinType: string;
 }
 
 export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
@@ -98,6 +100,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
       activityName: data.name,
       startTime: new Date(data.startTime),
       endTime: new Date(data.endTime),
+      coinType: data.coinType,
       requireTwitterBinding: data.requireTwitterBinding,
       assetType: data.assetType,
       envelopeType: data.envelopeType,
@@ -253,14 +256,14 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                                   value: 'coin',
                                   id: 'assetType-coin',
                                   emoji: t('assetType.coin.emoji'),
-                                  label: t('assetType.coin.label')
+                                  label: t('assetType.coin.label'),
                                 },
                                 {
                                   value: 'nft',
                                   id: 'assetType-nft',
                                   emoji: t('assetType.nft.emoji'),
-                                  label: t('assetType.nft.label')
-                                }
+                                  label: t('assetType.nft.label'),
+                                },
                               ]}
                               value={field.value}
                               onValueChange={field.onChange}
@@ -272,41 +275,83 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                       )}
                     />
 
-                    <FormField
-                      disabled={true}
-                      control={form.control}
-                      name="envelopeType"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('envelopeType.label')}</FormLabel>
-                          <FormControl>
-                            <RadioCardGroup
-                              disabled={field.disabled}
-                              variant="detailed"
-                              options={[
-                                {
-                                  value: 'random',
-                                  id: 'envelopeType-random',
-                                  emoji: t('envelopeType.random.emoji'),
-                                  label: t('envelopeType.random.title'),
-                                  description: t('envelopeType.random.description')
-                                },
-                                {
-                                  value: 'average',
-                                  id: 'envelopeType-average',
-                                  emoji: t('envelopeType.average.emoji'),
-                                  label: t('envelopeType.average.title'),
-                                  description: t('envelopeType.average.description')
-                                }
-                              ]}
-                              value={field.value}
-                              onValueChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    {data.assetType === 'coin' && (
+                      <FormField
+                        disabled={true}
+                        control={form.control}
+                        name="envelopeType"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t('envelopeType.label')}</FormLabel>
+                            <FormControl>
+                              <RadioCardGroup
+                                disabled={field.disabled}
+                                variant="detailed"
+                                options={[
+                                  {
+                                    value: 'random',
+                                    id: 'envelopeType-random',
+                                    emoji: t('envelopeType.random.emoji'),
+                                    label: t('envelopeType.random.title'),
+                                    description: t('envelopeType.random.description'),
+                                  },
+                                  {
+                                    value: 'average',
+                                    id: 'envelopeType-average',
+                                    emoji: t('envelopeType.average.emoji'),
+                                    label: t('envelopeType.average.title'),
+                                    description: t('envelopeType.average.description'),
+                                  },
+                                ]}
+                                value={field.value}
+                                onValueChange={field.onChange}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+
+                    {data.assetType === 'coin' && data.coinType && (
+                      <FormField
+                        disabled={true}
+                        control={form.control}
+                        name="coinType"
+                        render={({ field }) => (
+                          <FormItem className="md:w-1/2">
+                            <FormLabel>{t('reward.label')}</FormLabel>
+                            <FormControl>
+                              <CoinSelect
+                                value={field.value}
+                                coinBalances={coinBalancesResp.data}
+                                isLoading={coinBalancesResp.isLoading}
+                                placeholder={t('reward.selectCoin')}
+                                searchPlaceholder={t('reward.searchCoin')}
+                                noResultText={t('reward.noCoinFound')}
+                                name="coinType"
+                                form={form}
+                              />
+                            </FormControl>
+                            {field.value && (
+                              <FormDescription>
+                                {t('reward.balance')}
+                                {formatUnits(
+                                  coinBalancesResp.data.find(
+                                    (coin) => coin.coinType === field.value
+                                  )?.balance ?? 0n,
+                                  coinBalancesResp.data.find(
+                                    (coin) => coin.coinType === field.value
+                                  )?.decimals
+                                )}
+                              </FormDescription>
+                            )}
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+
                     <FormField
                       disabled={true}
                       control={form.control}
@@ -321,6 +366,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                         </FormItem>
                       )}
                     />
+
                     <FormField
                       disabled={true}
                       control={form.control}
@@ -363,7 +409,9 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                               </FormLabel>
                             </div>
                           </FormControl>
-                          <FormDescription>{t('requireTwitterBinding.description')}</FormDescription>
+                          <FormDescription>
+                            {t('requireTwitterBinding.description')}
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -387,9 +435,11 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                       <EnvelopeStatusEditButton type="ongoing" submitStatus={submitStatus} />
                     )}
 
-                  {isWalletConnected && walletAddress === data.sender && data.status === 'ended' && (
-                    <EnvelopeStatusEditButton type="ended" submitStatus={submitStatus} />
-                  )}
+                  {isWalletConnected &&
+                    walletAddress === data.sender &&
+                    data.status === 'ended' && (
+                      <EnvelopeStatusEditButton type="ended" submitStatus={submitStatus} />
+                    )}
 
                   {isWalletConnected &&
                     walletAddress === data.sender &&
@@ -439,7 +489,6 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
             </ActivityFormLayout.FormContainer>
           </ActivityFormLayout>
         </div>
-
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { CoinLabel } from '../coin-label';
+import { CoinSelect } from '@/components/ui/coin-select';
 import { CoverImageDialog } from '../cover-image-dialog';
 import {
   Command,
@@ -413,81 +413,16 @@ export default function CreateEnvelopeForm() {
                     <FormItem className="md:w-1/2">
                       <FormLabel>{t('reward.label')}</FormLabel>
                       <FormControl>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                className={cn(
-                                  'flex w-full justify-between',
-                                  !field.value && 'font-normal text-muted-foreground'
-                                )}
-                              >
-                                {field.value ? (
-                                  <CoinLabel
-                                    {...coinBalancesResp.data.find(
-                                      (coin) => coin.coinType === field.value
-                                    )!}
-                                  />
-                                ) : coinBalancesResp.isLoading ? (
-                                  t('reward.loading')
-                                ) : (
-                                  t('reward.selectCoin')
-                                )}
-                                <ArrowDownUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="p-0">
-                            <Command>
-                              <CommandInput placeholder={t('reward.searchCoin')} className="h-9" />
-                              <CommandList>
-                                <CommandEmpty>{t('reward.noCoinFound')}</CommandEmpty>
-                                <CommandGroup>
-                                  {coinBalancesResp.data.map((coin) => (
-                                    <CommandItem
-                                      value={coin.name}
-                                      key={coin.coinType}
-                                      onSelect={() => {
-                                        form.setValue('coinType', coin.coinType);
-                                      }}
-                                    >
-                                      <div className="flex w-full">
-                                        {coin.iconString && (
-                                          <span
-                                            dangerouslySetInnerHTML={{
-                                              __html: coin.iconString,
-                                            }}
-                                            className="mr-2 h-4 w-4"
-                                          />
-                                        )}
-
-                                        <div>
-                                          <div className="flex items-center justify-between">
-                                            <div className="leading-none">{coin.name}</div>
-                                          </div>
-                                          <div className="mt-1 text-xs text-gray-500">
-                                            {formatUnits(coin.balance, coin.decimals)}
-                                          </div>
-                                        </div>
-
-                                        <Check
-                                          className={cn(
-                                            'ml-auto h-4 w-4',
-                                            coin.coinType === field.value
-                                              ? 'opacity-100'
-                                              : 'opacity-0'
-                                          )}
-                                        />
-                                      </div>
-                                    </CommandItem>
-                                  ))}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
+                        <CoinSelect
+                          value={field.value}
+                          coinBalances={coinBalancesResp.data}
+                          isLoading={coinBalancesResp.isLoading}
+                          placeholder={t('reward.selectCoin')}
+                          searchPlaceholder={t('reward.searchCoin')}
+                          noResultText={t('reward.noCoinFound')}
+                          name="coinType"
+                          form={form}
+                        />
                       </FormControl>
                       {field.value && (
                         <FormDescription>

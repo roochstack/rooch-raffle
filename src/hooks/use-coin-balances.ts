@@ -1,6 +1,7 @@
 import { BalanceInfoView } from '@roochnetwork/rooch-sdk';
 import { useRoochClientQuery } from '@roochnetwork/rooch-sdk-kit';
 import { useWalletHexAddress } from './app-hooks';
+import { normalizeCoinType } from '@/utils';
 
 interface CoinBalance {
   coinType: string;
@@ -23,7 +24,7 @@ export const useCoinBalances = () => {
       // The type in rooch-sdk is missing fields
       const item = _item as BalanceInfoView & { icon_url?: string };
       return {
-        coinType: item.coin_type,
+        coinType: normalizeCoinType(item.coin_type),
         balance: BigInt(item.balance),
         decimals: item.decimals,
         name: item.name,

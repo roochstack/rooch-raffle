@@ -1,6 +1,7 @@
 import { ActivityStatus, CoinEnvelopeItem, EnvelopeItem, NFTEnvelopeItem } from '@/interfaces';
 import { fromUnixTime } from 'date-fns';
 import { get } from 'lodash';
+import { normalizeCoinType } from './coin';
 
 function parseNftTypeFromObjectType(objectType: string) {
   const pattern = /<(0x[a-f0-9]+::[^:]+::[^>]+)>/;
@@ -120,7 +121,8 @@ export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
 
   const rawClaimType = get(item, 'decoded_value.value.claim_type') as number;
   const envelopeType = rawClaimType === 0 ? ('random' as const) : ('average' as const);
-  const coinType = get(item, 'decoded_value.value.coin_type') as string;
+  const rawCoinType = get(item, 'decoded_value.value.coin_type') as string;
+  const coinType = normalizeCoinType(rawCoinType);
   const coinStoreObjectId = get(item, 'decoded_value.value.coin_store.value.id') as string;
   const claimedAddressTableId = get(
     item,
