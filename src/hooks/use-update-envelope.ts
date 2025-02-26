@@ -63,15 +63,15 @@ export function useExtendEnvelopeEndTime() {
   const { sessionOrWallet } = useAppSession();
 
   const extendEnvelopeEndTime = useCallback(
-    async (id: string, endTime: Date, coinType: TypeTag) => {
+    async (id: string, data: Pick<UpdateEnvelopeParams, 'endTime' | 'coinType'>) => {
       const tx = new Transaction();
 
       tx.callFunction({
         address: MODULE_ADDRESS,
         module: ENVELOPE_MODULE_NAME,
         function: 'extend_coin_envelope_end_time',
-        args: [Args.objectId(id), Args.u64(BigInt(endTime.getTime()))],
-        typeArgs: [coinType],
+        args: [Args.objectId(id), Args.u64(BigInt(data.endTime.getTime()))],
+        typeArgs: [data.coinType],
       });
 
       const response = await client.signAndExecuteTransaction({

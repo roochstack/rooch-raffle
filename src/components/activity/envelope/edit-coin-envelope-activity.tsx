@@ -16,11 +16,11 @@ import {
 import { LoadingButtonStatus } from '@/components/ui/loading-button';
 import { useCoinBalances, useWalletHexAddress } from '@/hooks';
 import { useActivityImageUpload } from '@/hooks/use-image-upload';
-import { useUpdateEnvelope } from '@/hooks/use-update-envelope';
+import { useExtendEnvelopeEndTime, useUpdateEnvelope } from '@/hooks/use-update-envelope';
 import { CoinEnvelopeItem } from '@/interfaces';
 import { formatCoverImageUrl, formatUnits } from '@/utils/kit';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowUpRightIcon, ImageIcon } from 'lucide-react';
+import { ArrowUpRightIcon, ImageIcon, Terminal } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -33,6 +33,7 @@ import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import EnvelopeStatusEditButton from './envelope-status-edit-button';
 import { CoinSelect } from '@/components/ui/coin-select';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface ActivityProps {
   data: CoinEnvelopeItem;
@@ -54,7 +55,9 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
   const locale = useLocale();
   const coinBalancesResp = useCoinBalances();
   const updateEnvelope = useUpdateEnvelope();
+  const extendEnvelopeEndTime = useExtendEnvelopeEndTime();
   const walletAddress = useWalletHexAddress();
+
   const { isConnected: isWalletConnected } = useCurrentWallet();
   const [coverImageUrl, setCoverImageUrl] = useState(data.coverImageUrl);
   const [coverImageDialogOpen, setCoverImageDialogOpen] = useState(false);
@@ -64,6 +67,10 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
   const t = useTranslations('activities.create.form');
   const tCommon = useTranslations('common');
   const tEdit = useTranslations('activities.envelope.edit');
+
+  const nameEditable = data.status === 'not-started';
+  const startTimeEditable = data.status === 'not-started';
+  const twitterBindingEditable = data.status === 'not-started';
 
   useEffect(() => {
     if (coinBalancesResp.data.length === 0) {
@@ -133,6 +140,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
     },
   });
 
+  const updateHandler = data.status === 'not-started' ? updateEnvelope : extendEnvelopeEndTime;
   const onSubmit = async (formData: FormValues) => {
     if (submitStatus === 'success') {
       return;
@@ -157,7 +165,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
 
     try {
       setSubmitStatus('loading');
-      await updateEnvelope(data.id, submitData);
+      await updateHandler(data.id, submitData);
       setSubmitStatus('success');
       window.setTimeout(() => {
         router.push(`/activities/envelope/manage/${data.id}`);
@@ -179,9 +187,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
       <div className="fixed left-0 top-0 z-[-1] h-44 w-full bg-gradient-to-b from-[#f0f4fa] to-muted/0"></div>
       <div className="h-full w-full">
         <div className="container mx-auto max-w-5xl space-y-6 overflow-hidden p-6 pt-11 md:flex-row">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">{tEdit('title')}</h1>
-          </div>
+          <h1 className="text-3xl font-bold">{tEdit('title')}</h1>
           <ActivityFormLayout>
             <ActivityFormLayout.ImageContainer className="hover:[&_div]:bg-gray-600">
               <img
@@ -206,6 +212,13 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
             </ActivityFormLayout.ImageContainer>
 
             <ActivityFormLayout.FormContainer>
+              <div className="px-6">
+                <Alert variant="warning">
+                  <Terminal className="h-4 w-4" />
+                  <AlertTitle>{tEdit('extendEndTimeWarning.title')}</AlertTitle>
+                  <AlertDescription>{tEdit('extendEndTimeWarning.content')}</AlertDescription>
+                </Alert>
+              </div>
               <Form {...form}>
                 <form
                   className="space-y-10 rounded-lg bg-white p-6 shadow-sm"
@@ -213,6 +226,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                 >
                   <div className="space-y-6">
                     <FormField
+                      disabled={!nameEditable}
                       control={form.control}
                       name="activityName"
                       render={({ field }) => (
@@ -227,6 +241,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                     />
                     <div className="flex gap-4 max-md:flex-col md:items-center">
                       <FormField
+                        disabled={!startTimeEditable}
                         control={form.control}
                         name="startTime"
                         render={({ field }) => (
@@ -413,6 +428,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                       )}
                     />
                     <FormField
+                      disabled={!twitterBindingEditable}
                       control={form.control}
                       name="requireTwitterBinding"
                       render={({ field }) => (
@@ -421,6 +437,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                           <FormControl>
                             <div className="flex items-center space-x-2">
                               <Checkbox
+                                disabled={field.disabled}
                                 id={field.name}
                                 checked={field.value}
                                 onCheckedChange={field.onChange}

@@ -205,22 +205,18 @@
       "edit": {
         "title": "编辑活动",
         "editButton": {
-          "edit": "编辑",
+          "edit": "确认修改",
           "walletNotConnected": "钱包未连接，无法编辑",
           "ongoing": "活动进行中，无法编辑",
           "ended": "活动已结束，无法编辑",
           "notOwner": "您不是该活动的所有者，无法编辑"
+        },
+        "extendEndTimeWarning": {
+          "title": "注意",
+          "content": "活动已开始，您只可以更新活动结束时间"
         }
       },
       "extendEndTime": {
-        "title": "延长结束时间",
-        "extendEndTimeButton": {
-          "walletNotConnected": "钱包未连接，无法延长结束时间",
-          "notOwner": "您不是该活动的所有者，无法延长结束时间",
-          "ended": "活动已结束，无法延长结束时间",
-          "notStarted": "活动尚未开始，无法延长结束时间",
-          "extendEndTime": "延长结束时间"
-        },
         "form": {
           "validation": {
             "endTimeRequired": "结束时间不能早于当前结束时间"
@@ -260,7 +256,7 @@
       },
       "participants": {
         "count": "已参与人数",
-        "noParticipants": "��人参与",
+        "noParticipants": "无人参与",
         "list": "参与列表"
       }
     },

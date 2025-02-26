@@ -8,13 +8,12 @@ interface StatusButtonProps {
 }
 
 export default function EnvelopeStatusEditButton({ type, submitStatus }: StatusButtonProps) {
-  const tCommon = useTranslations('common');
-  const tButton = useTranslations('activities.envelope.edit.editButton');
+  const t = useTranslations();
 
   if (type === 'wallet-not-connected') {
     return (
       <Button size="lg" className="h-12 w-full min-w-[140px] text-base" disabled>
-        {tButton('walletNotConnected')}
+        {t('activities.envelope.edit.editButton.walletNotConnected')}
       </Button>
     );
   }
@@ -22,15 +21,7 @@ export default function EnvelopeStatusEditButton({ type, submitStatus }: StatusB
   if (type === 'not-owner') {
     return (
       <Button size="lg" className="h-12 w-full min-w-[140px] text-base" disabled>
-        {tButton('notOwner')}
-      </Button>
-    );
-  }
-
-  if (type === 'ongoing') {
-    return (
-      <Button size="lg" className="h-12 w-full min-w-[140px] text-base" disabled>
-        {tButton('ongoing')}
+        {t('activities.envelope.edit.editButton.notOwner')}
       </Button>
     );
   }
@@ -38,24 +29,24 @@ export default function EnvelopeStatusEditButton({ type, submitStatus }: StatusB
   if (type === 'ended') {
     return (
       <Button size="lg" className="h-12 w-full min-w-[140px] text-base" disabled>
-        {tButton('ended')}
+        {t('activities.envelope.edit.editButton.ended')}
       </Button>
     );
   }
 
-  if (type === 'not-started') {
+  if (type === 'not-started' || type === 'ongoing') {
     return (
       <LoadingButton
         type="submit"
         size="lg"
         className="h-12 w-full min-w-[140px] text-base"
         status={submitStatus}
-        loadingText={tCommon('loading')}
-        successText={tCommon('success')}
-        errorText={tCommon('error')}
+        loadingText={t('common.loading')}
+        successText={t('common.success')}
+        errorText={t('common.error')}
         successIcon={<span className="mr-2 text-base">✅</span>}
       >
-        {tButton('edit')}
+        {t('activities.envelope.edit.editButton.edit')}
       </LoadingButton>
     );
   }
