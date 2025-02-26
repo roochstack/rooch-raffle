@@ -1,16 +1,24 @@
-"use client";
+'use client';
 
-import { Check, ArrowDownUp as ArrowDownUpIcon } from "lucide-react";
-import { formatUnits } from "@/utils/kit";
-import { useState } from "react";
-import { UseFormReturn } from "react-hook-form";
-import { cn } from "@/lib/utils";
+import { Check, ArrowDownUp as ArrowDownUpIcon } from 'lucide-react';
+import { formatUnits } from '@/utils/kit';
+import { useState } from 'react';
+import { UseFormReturn } from 'react-hook-form';
+import { cn } from '@/lib/utils';
 
-import { Button } from "./button";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./command";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { FormControl } from "./form";
-import { CoinLabel } from "../coin-label";
+import { Button } from './button';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from './command';
+import { Popover, PopoverContent, PopoverTrigger } from './popover';
+import { FormControl } from './form';
+import { CoinLabel } from '../coin-label';
+import { useTranslations } from 'next-intl';
 
 export interface CoinData {
   coinType: string;
@@ -30,6 +38,7 @@ interface CoinSelectProps {
   noResultText?: string;
   name?: string;
   form?: UseFormReturn<any>;
+  disabled?: boolean;
 }
 
 export function CoinSelect({
@@ -37,12 +46,14 @@ export function CoinSelect({
   onValueChange,
   coinBalances,
   isLoading = false,
-  placeholder = "选择货币",
-  searchPlaceholder = "搜索货币",
-  noResultText = "未找到货币",
+  placeholder = '选择货币',
+  searchPlaceholder = '搜索货币',
+  noResultText = '未找到货币',
   name,
   form,
+  disabled = false,
 }: CoinSelectProps) {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
 
   const handleSelect = (coinType: string) => {
@@ -58,7 +69,14 @@ export function CoinSelect({
   const selectedCoin = coinBalances.find((coin) => coin.coinType === value);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!disabled) {
+          setOpen(isOpen);
+        }
+      }}
+    >
       <PopoverTrigger asChild>
         <FormControl>
           <Button
@@ -66,13 +84,20 @@ export function CoinSelect({
             role="combobox"
             className={cn(
               'flex w-full justify-between',
-              !value && 'font-normal text-muted-foreground'
+              !value && 'font-normal text-muted-foreground',
+              disabled && 'cursor-not-allowed opacity-50'
             )}
+            disabled={disabled}
+            onClick={(e) => {
+              if (disabled) {
+                e.preventDefault();
+              }
+            }}
           >
             {value && selectedCoin ? (
               <CoinLabel {...selectedCoin} />
             ) : isLoading ? (
-              "加载中..."
+              t('common.loading')
             ) : (
               placeholder
             )}
@@ -114,9 +139,7 @@ export function CoinSelect({
                     <Check
                       className={cn(
                         'ml-auto h-4 w-4',
-                        coin.coinType === value
-                          ? 'opacity-100'
-                          : 'opacity-0'
+                        coin.coinType === value ? 'opacity-100' : 'opacity-0'
                       )}
                     />
                   </div>
@@ -128,4 +151,4 @@ export function CoinSelect({
       </PopoverContent>
     </Popover>
   );
-} 
+}
