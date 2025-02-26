@@ -66,10 +66,26 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
   const tEdit = useTranslations('activities.envelope.edit');
 
   useEffect(() => {
-    if (data.totalCoin && data.totalEnvelope && data.envelopeType === 'average') {
-      form.setValue('totalCoin', (Number(data.totalCoin) / Number(data.totalEnvelope)).toString());
+    if (coinBalancesResp.data.length === 0) {
+      return;
     }
-  }, [data]);
+
+    const matchedCoin = coinBalancesResp.data.find((coin) => coin.coinType === data.coinType);
+
+    if (!matchedCoin) {
+      return;
+    }
+
+    if (data.totalCoin && data.totalEnvelope && data.envelopeType === 'average') {
+      form.setValue(
+        'totalCoin',
+        (Number(data.totalCoin) / Number(data.totalEnvelope) / 10 ** matchedCoin.decimals)
+          .toFixed(matchedCoin.decimals)
+          // Remove trailing zeros
+          .replace(/\.?0+$/, '')
+      );
+    }
+  }, [data, coinBalancesResp]);
 
   const formSchema = useMemo(() => {
     const schema = z
@@ -105,11 +121,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
       assetType: data.assetType,
       envelopeType: data.envelopeType,
       totalEnvelope: data.totalEnvelope.toString(),
-      // TODO，显示总金额
-      totalCoin:
-        data.envelopeType === 'random'
-          ? data.totalCoin.toString()
-          : (Number(data.totalCoin) / Number(data.totalEnvelope)).toString(),
+      totalCoin: data.envelopeType === 'random' ? data.totalCoin.toString() : '',
     },
   });
 
@@ -324,6 +336,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                             <FormControl>
                               <CoinSelect
                                 value={field.value}
+                                disabled={field.disabled}
                                 coinBalances={coinBalancesResp.data}
                                 isLoading={coinBalancesResp.isLoading}
                                 placeholder={t('reward.selectCoin')}
@@ -379,13 +392,21 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                               : t('amount.perAmount')}
                           </FormLabel>
                           <FormControl>
-                            <Input
-                              type="number"
-                              min={0}
-                              step={0.000000001}
-                              {...field}
-                              readOnly={true}
-                            />
+                            {data.envelopeType === 'average' && coinBalancesResp.isPending ? (
+                              <Input
+                                disabled={field.disabled}
+                                value={tCommon('loading')}
+                                readOnly={true}
+                              />
+                            ) : (
+                              <Input
+                                type="number"
+                                min={0}
+                                step={0.000000001}
+                                {...field}
+                                readOnly={true}
+                              />
+                            )}
                           </FormControl>
                           <FormMessage />
                         </FormItem>

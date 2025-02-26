@@ -36,6 +36,7 @@ export const useCoinBalances = () => {
     return {
       data,
       isLoading: balancesResp.isLoading,
+      isPending: balancesResp.isPending,
       isError: balancesResp.isError,
     };
   }
@@ -43,6 +44,7 @@ export const useCoinBalances = () => {
   return {
     data: [] as CoinBalance[],
     isLoading: balancesResp.isLoading,
+    isPending: balancesResp.isPending,
     isError: balancesResp.isError,
     refetch: balancesResp.refetch,
   };
