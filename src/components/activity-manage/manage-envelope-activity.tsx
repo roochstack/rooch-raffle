@@ -11,7 +11,7 @@ import StatusCellContent from '../activity/status-cell-content';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
 import { Skeleton } from '../ui/skeleton';
-import CoinEnvelopeDetailTable from './coin-envelope-detail-table';
+import CoinEnvelopeDetails from './coin-envelope-details';
 import NftEnvelopeDetailTable from './nft-envelope-detail-table';
 import { useLocale, useTranslations } from 'next-intl';
 import { Locale } from '@/interfaces';
@@ -215,15 +215,12 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
         )}
 
         <div>
-          <div className="rounded-lg bg-white p-4 shadow-sm">
-            <div className="text-base/7 font-semibold text-gray-950 sm:text-sm/6">
+          <div className="rounded-lg bg-white p-4">
+            <h2 className="mb-2 text-xl font-semibold text-gray-950">
               {t('activities.manage.summary')}
-            </div>
-            <hr className="mt-4 w-full border-t border-gray-950/10" />
+            </h2>
             {envelopeDetail.assetType === 'nft' && <NftEnvelopeDetailTable data={envelopeDetail} />}
-            {envelopeDetail.assetType === 'coin' && (
-              <CoinEnvelopeDetailTable data={envelopeDetail} />
-            )}
+            {envelopeDetail.assetType === 'coin' && <CoinEnvelopeDetails data={envelopeDetail} />}
           </div>
         </div>
       </div>

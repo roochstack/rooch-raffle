@@ -17,6 +17,7 @@
     "submit": "提交",
     "copy": "复制",
     "copied": "已复制",
+    "copyFailed": "复制失败",
     "error": "错误",
     "success": "成功",
     "waiting": "等待中...",
@@ -343,5 +344,7 @@
   "busy_clear_kangaroo_win": "图片大小不能超过 3MB",
   "knotty_east_horse_fulfill": "❌ 上传失败",
   "jolly_acidic_fox_quell": "请稍后再试",
-  "key_late_wasp_race": "上传中..."
+  "key_late_wasp_race": "上传中...",
+  "crazy_only_cougar_yell": "绑定 X (Twitter)",
+  "weary_fuzzy_ostrich_catch": "创建时间"
 }

@@ -17,6 +17,7 @@
     "submit": "Submit",
     "copy": "Copy",
     "copied": "Copied",
+    "copyFailed": "Copy failed",
     "error": "Error",
     "success": "Success",
     "waiting": "Waiting...",
@@ -343,5 +344,7 @@
   "busy_clear_kangaroo_win": "Image size cannot exceed 3MB",
   "knotty_east_horse_fulfill": "❌ Upload failed",
   "jolly_acidic_fox_quell": "Please try again later",
-  "key_late_wasp_race": "Uploading..."
+  "key_late_wasp_race": "Uploading...",
+  "crazy_only_cougar_yell": "Bind X (Twitter)",
+  "weary_fuzzy_ostrich_catch": "Created at"
 }
