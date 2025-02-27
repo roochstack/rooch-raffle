@@ -34,6 +34,7 @@ import { useMemo, useState } from 'react';
 import EnvelopeStatusEditButton from './envelope-status-edit-button';
 import { CoinSelect } from '@/components/ui/coin-select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import pickBy from 'lodash/pickBy';
 
 interface ActivityProps {
   data: CoinEnvelopeItem;
@@ -490,18 +491,26 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
               <div className="mt-4 flex justify-center">
                 <div
                   onClick={() => {
-                    const { activityName, startTime, endTime } = form.getValues();
+                    const updatedData = {
+                      ...data,
+                      ...pickBy(form.getValues(), (value) => value !== undefined),
+                    };
 
                     const searchParams = new URLSearchParams();
-                    searchParams.set('assetType', data.assetType);
-                    searchParams.set('totalCoin', data.totalCoin.toString());
-                    searchParams.set('totalEnvelope', data.totalEnvelope.toString());
-                    searchParams.set('activityName', activityName);
-                    searchParams.set('startTimeTimestamp', startTime.getTime().toString());
-                    searchParams.set('endTimeTimestamp', endTime.getTime().toString());
+                    searchParams.set('assetType', updatedData.assetType);
+                    searchParams.set('totalCoin', updatedData.totalCoin.toString());
+                    searchParams.set('totalEnvelope', updatedData.totalEnvelope.toString());
+                    searchParams.set('activityName', updatedData.name);
+                    searchParams.set(
+                      'startTimeTimestamp',
+                      updatedData.startTime.getTime().toString()
+                    );
+                    searchParams.set('endTimeTimestamp', updatedData.endTime.getTime().toString());
                     searchParams.set('coverImageUrl', coverImageUrl);
 
-                    const coin = coinBalancesResp.data.find((c) => c.coinType === data.coinType);
+                    const coin = coinBalancesResp.data.find(
+                      (c) => c.coinType === updatedData.coinType
+                    );
                     if (coin) {
                       searchParams.set('coinType', coin.coinType);
                       searchParams.set('coinName', coin.name);
