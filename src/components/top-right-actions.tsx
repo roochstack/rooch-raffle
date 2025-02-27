@@ -41,36 +41,7 @@ export function TopRightActions() {
       <div>
         {currentWallet.isConnected ? (
           <div className="flex items-center gap-2">
-            {sessionKey ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger className="rounded-full">
-                  <div className="flex h-5 w-5 items-center justify-center rounded-full text-foreground/60 transition-all hover:text-foreground/80 hover:shadow-sm">
-                    <UserRoundIcon strokeWidth={2} className="h-4 w-4" />
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    className="font-mono text-xs"
-                    onClick={() => {
-                      navigator.clipboard.writeText(hexAddress);
-                      toast({
-                        title: t('common.copied'),
-                      });
-                    }}
-                  >
-                    <div>{shortHexAddress}</div>
-                    <CopyIcon className="ml-1 h-3 w-3" />
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Link href="/activities">{t('navigation.myActivities')}</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setWalletDisconnected()}>
-                    {t('common.disconnect')}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
+            {!sessionKey && (
               <Button
                 size="sm"
                 variant="outline"
@@ -80,6 +51,34 @@ export function TopRightActions() {
                 {t('session.create')}
               </Button>
             )}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="rounded-full">
+                <div className="flex h-5 w-5 items-center justify-center rounded-full text-foreground/60 transition-all hover:text-foreground/80 hover:shadow-sm">
+                  <UserRoundIcon strokeWidth={2} className="h-4 w-4" />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem
+                  className="font-mono text-xs"
+                  onClick={() => {
+                    navigator.clipboard.writeText(hexAddress);
+                    toast({
+                      title: t('common.copied'),
+                    });
+                  }}
+                >
+                  <div>{shortHexAddress}</div>
+                  <CopyIcon className="ml-1 h-3 w-3" />
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link href="/activities">{t('navigation.myActivities')}</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setWalletDisconnected()}>
+                  {t('common.disconnect')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         ) : currentWallet.isConnecting ? (
           <Button size="sm" disabled>
