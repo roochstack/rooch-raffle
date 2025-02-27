@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl';
 import { useEnvelopes } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { ArrowUpRightIcon } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { Empty } from '../empty';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EnvelopeCard } from '@/components/activity-list/envelope-card';
