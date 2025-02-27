@@ -11,7 +11,7 @@ import { formatCoverImageUrl, formatUnits, getRandomCoverImageUrl } from '@/util
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowDownUpIcon, ArrowUpRightIcon, Check, ImageIcon } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -231,8 +231,8 @@ export default function CreateEnvelopeForm() {
         data.envelopeType === 'random'
           ? BigInt(Number(data.totalCoin) * 10 ** selectedCoin.decimals)
           : BigInt(
-            Number(data.totalCoin) * Number(data.totalEnvelope) * 10 ** selectedCoin.decimals
-          );
+              Number(data.totalCoin) * Number(data.totalEnvelope) * 10 ** selectedCoin.decimals
+            );
 
       submitData = {
         assetType: 'coin' as const,
@@ -350,14 +350,14 @@ export default function CreateEnvelopeForm() {
                             value: 'coin',
                             id: 'assetType-coin',
                             emoji: t('assetType.coin.emoji'),
-                            label: t('assetType.coin.label')
+                            label: t('assetType.coin.label'),
                           },
                           {
                             value: 'nft',
                             id: 'assetType-nft',
                             emoji: t('assetType.nft.emoji'),
-                            label: t('assetType.nft.label')
-                          }
+                            label: t('assetType.nft.label'),
+                          },
                         ]}
                         value={field.value}
                         onValueChange={field.onChange}
@@ -385,15 +385,15 @@ export default function CreateEnvelopeForm() {
                               id: 'envelopeType-random',
                               emoji: t('envelopeType.random.emoji'),
                               label: t('envelopeType.random.title'),
-                              description: t('envelopeType.random.description')
+                              description: t('envelopeType.random.description'),
                             },
                             {
                               value: 'average',
                               id: 'envelopeType-average',
                               emoji: t('envelopeType.average.emoji'),
                               label: t('envelopeType.average.title'),
-                              description: t('envelopeType.average.description')
-                            }
+                              description: t('envelopeType.average.description'),
+                            },
                           ]}
                           value={field.value}
                           onValueChange={field.onChange}
