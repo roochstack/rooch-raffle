@@ -66,6 +66,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const t = useTranslations('activities.create.form');
+  const tRoot = useTranslations();
   const tCommon = useTranslations('common');
   const tEdit = useTranslations('activities.envelope.edit');
 
@@ -103,7 +104,12 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
           .min(1, { message: t('validation.nameRequired') })
           .max(200),
         startTime: z.date(),
-        endTime: z.date(),
+        endTime:
+          data.status === 'not-started'
+            ? z.date()
+            : z.date().min(data.endTime, {
+                message: tRoot('soft_basic_robin_clap'),
+              }),
         requireTwitterBinding: z.boolean(),
       })
       .refine(
