@@ -63,7 +63,13 @@ export const DateTimePicker = React.forwardRef<HTMLDivElement, DateTimePickerPro
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">
-          <Calendar mode="single" selected={date} onSelect={(d) => handleSelect(d)} initialFocus />
+          <Calendar
+            mode="single"
+            defaultMonth={date}
+            selected={date}
+            onSelect={(d) => handleSelect(d)}
+            initialFocus
+          />
           <div className="border-t border-border p-3">
             <TimePicker setDate={setDate} date={date} />
           </div>
