@@ -1,6 +1,7 @@
 import { ActivityStatus, CoinEnvelopeItem, EnvelopeItem, NFTEnvelopeItem } from '@/interfaces';
 import { fromUnixTime } from 'date-fns';
 import { get } from 'lodash';
+import { normalizeCoinType } from './coin';
 
 function parseNftTypeFromObjectType(objectType: string) {
   const pattern = /<(0x[a-f0-9]+::[^:]+::[^>]+)>/;
@@ -119,13 +120,15 @@ export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
   } = formatMetadata(item);
 
   const rawClaimType = get(item, 'decoded_value.value.claim_type') as number;
-  const envelopeType = rawClaimType === 0 ? ('random' as const) : ('average' as const);
-  const coinType = get(item, 'decoded_value.value.coin_type') as string;
+  const envelopeType = rawClaimType === 1 ? ('random' as const) : ('average' as const);
+  const rawCoinType = get(item, 'decoded_value.value.coin_type') as string;
+  const coinType = normalizeCoinType(rawCoinType);
   const coinStoreObjectId = get(item, 'decoded_value.value.coin_store.value.id') as string;
   const claimedAddressTableId = get(
     item,
     'decoded_value.value.claimed_address.value.handle.value.id'
   ) as string;
+  const requireTwitterBinding = get(item, 'decoded_value.value.require_twitter_binding') as boolean;
 
   const totalCoin = Number(get(item, 'decoded_value.value.total_coin'));
   const remainingCoin = Number(get(item, 'decoded_value.value.remaining_coin'));
@@ -156,6 +159,7 @@ export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
     status: formattedStatus,
     createdAt,
     updatedAt,
+    requireTwitterBinding,
   };
 }
 

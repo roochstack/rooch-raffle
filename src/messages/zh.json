@@ -17,6 +17,7 @@
     "submit": "提交",
     "copy": "复制",
     "copied": "已复制",
+    "copyFailed": "复制失败",
     "error": "错误",
     "success": "成功",
     "waiting": "等待中...",
@@ -201,6 +202,31 @@
         "description": "该活动需要您的 Rooch 地址绑定 Twitter 后才能参与，点击下方的跳转按钮，前往 Rooch Portal 页面绑定您的 Twitter 账号。",
         "cancel": "取消",
         "confirm": "这就去"
+      },
+      "edit": {
+        "title": "编辑活动",
+        "editButton": {
+          "edit": "确认修改",
+          "walletNotConnected": "钱包未连接，无法编辑",
+          "ongoing": "活动进行中，无法编辑",
+          "ended": "活动已结束，无法编辑",
+          "notOwner": "您不是该活动的所有者，无法编辑"
+        },
+        "editWarning": {
+          "title": "注意",
+          "content": "活动尚未开始，您可以更新活动名称、封面图片、开始/结束时间、参与条件"
+        },
+        "extendEndTimeWarning": {
+          "title": "注意",
+          "content": "活动已开始，您只可以更新活动结束时间"
+        }
+      },
+      "extendEndTime": {
+        "form": {
+          "validation": {
+            "endTimeRequired": "结束时间不能早于当前结束时间"
+          }
+        }
       }
     },
     "raffle": {
@@ -235,7 +261,7 @@
       },
       "participants": {
         "count": "已参与人数",
-        "noParticipants": "��人参与",
+        "noParticipants": "无人参与",
         "list": "参与列表"
       }
     },
@@ -322,5 +348,8 @@
   "busy_clear_kangaroo_win": "图片大小不能超过 3MB",
   "knotty_east_horse_fulfill": "❌ 上传失败",
   "jolly_acidic_fox_quell": "请稍后再试",
-  "key_late_wasp_race": "上传中..."
+  "key_late_wasp_race": "上传中...",
+  "crazy_only_cougar_yell": "绑定 X (Twitter)",
+  "weary_fuzzy_ostrich_catch": "创建时间",
+  "great_raw_duck_greet": "无"
 }

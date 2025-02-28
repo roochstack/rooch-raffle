@@ -151,7 +151,7 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
                         throw new Error('Wallet not connected');
                       }
 
-                      if (!twitterBindingStatusResp.binded) {
+                      if (data.requireTwitterBinding && !twitterBindingStatusResp.binded) {
                         setTwitterBindingDialogOpen(true);
                         throw new Error('Twitter not bound');
                       }

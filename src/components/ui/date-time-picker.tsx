@@ -15,11 +15,13 @@ interface DateTimePickerProps {
   onChange?: (date: Date | undefined) => void;
   format?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 export const DateTimePicker = React.forwardRef<HTMLDivElement, DateTimePickerProps>(
-  ({ value, onChange, className, format = 'PPP HH:mm:ss' }, ref) => {
+  ({ value, onChange, className, format = 'PPP HH:mm:ss', disabled = false }, ref) => {
     const [date, setDate] = React.useState<Date | undefined>(value);
+    const [open, setOpen] = React.useState(false);
 
     React.useEffect(() => {
       if (onChange) {
@@ -44,15 +46,17 @@ export const DateTimePicker = React.forwardRef<HTMLDivElement, DateTimePickerPro
     };
 
     return (
-      <Popover>
+      <Popover open={disabled ? false : open} onOpenChange={disabled ? undefined : setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant={'outline'}
             className={cn(
               'w-full justify-start text-left font-normal',
               !date && 'text-muted-foreground',
+              disabled && 'cursor-not-allowed opacity-50',
               className
             )}
+            disabled={disabled}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {date ? formatDate(date, format) : <span>Pick a date</span>}

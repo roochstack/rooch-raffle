@@ -4,11 +4,12 @@ import { useSearchParams } from 'next/navigation';
 import CoinActivityPreview from './coin-activity-preview';
 import NftActivityPreview from './nft-activity-preview';
 import { Suspense } from 'react';
+import { formatCoverImageUrl } from '@/utils/kit';
 
 function EnvelopeActivityPreviewPage() {
   const searchParams = useSearchParams();
   const assetType = searchParams.get('assetType');
-  const coverImageUrl = searchParams.get('coverImageUrl');
+  const coverImageUrl = formatCoverImageUrl(searchParams.get('coverImageUrl') ?? '');
   const activityName = searchParams.get('activityName');
   const status = 'not-started';
   const startTimeTimestamp = searchParams.get('startTimeTimestamp');

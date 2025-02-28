@@ -1,5 +1,6 @@
-import { getRoochNodeUrl } from '@roochnetwork/rooch-sdk'
-import { createNetworkConfig } from '@roochnetwork/rooch-sdk-kit'
+import { getRoochNodeUrl } from '@roochnetwork/rooch-sdk';
+import { createNetworkConfig } from '@roochnetwork/rooch-sdk-kit';
+import { normalizeCoinType } from './coin';
 
 const { networkConfig, useNetworkVariable, useNetworkVariables } = createNetworkConfig({
   mainnet: {
@@ -14,6 +15,6 @@ const { networkConfig, useNetworkVariable, useNetworkVariables } = createNetwork
   localnet: {
     url: getRoochNodeUrl('localnet'),
   },
-})
+});
 
-export { useNetworkVariable, useNetworkVariables, networkConfig }
+export { useNetworkVariable, useNetworkVariables, networkConfig, normalizeCoinType };

@@ -3,14 +3,15 @@
 import { formatDate } from 'date-fns';
 import { ArrowUpRightIcon } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { Badge } from '@/components/ui/badge';
 import { useClaimRemainingCoin, useClaimRemainingNFT, useEnvelopeDetail, useToast } from '@/hooks';
 import { formatCoverImageUrl, formatRelativeTime } from '@/utils/kit';
 import StatusCellContent from '../activity/status-cell-content';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
-import CoinEnvelopeDetailTable from './coin-envelope-detail-table';
+import { Skeleton } from '../ui/skeleton';
+import CoinEnvelopeDetails from './coin-envelope-details';
 import NftEnvelopeDetailTable from './nft-envelope-detail-table';
 import { useLocale, useTranslations } from 'next-intl';
 import { Locale } from '@/interfaces';
@@ -28,10 +29,66 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
   const locale = useLocale() as Locale;
 
   if (!envelopeDetail) {
-    return <div>Loading...</div>;
-  }
+    return (
+      <div className="relative pt-14">
+        <style jsx global>
+          {`
+            body {
+              background-color: hsl(var(--muted) / 0.4);
+            }
+          `}
+        </style>
+        <div className="fixed left-0 top-0 z-[-1] h-44 w-full bg-gradient-to-b from-[#f0f4fa] to-muted/0"></div>
+        <div className="mx-auto max-w-5xl space-y-6 p-6 pt-11">
+          <div className="flex items-stretch gap-x-6">
+            <Skeleton className="h-20 w-20 rounded-md" />
 
-  console.log('envelopeDetail', envelopeDetail);
+            <div className="flex w-full flex-col justify-around">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-x-2">
+                  <Skeleton className="h-7 w-56" />
+                  <Skeleton className="h-6 w-20" />
+                </div>
+                <Skeleton className="h-9 w-32" />
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="flex items-center space-x-1.5">
+                  <Skeleton className="h-5 w-16" />
+                  <Skeleton className="h-5 w-16" />
+                </div>
+
+                <Skeleton className="h-4 w-40" />
+              </div>
+            </div>
+          </div>
+          <Separator />
+
+          <Skeleton className="h-10 w-32" />
+
+          <div>
+            <div className="rounded-lg bg-white p-4 shadow-sm">
+              <div className="text-base/7 font-semibold text-gray-950 sm:text-sm/6">
+                {t('activities.manage.summary')}
+              </div>
+              <hr className="mt-4 w-full border-t border-gray-950/10" />
+
+              <div className="mt-4 space-y-4">
+                {Array(5)
+                  .fill(0)
+                  .map((_, index) => (
+                    <div key={index} className="flex justify-between py-2">
+                      <Skeleton className="h-5 w-1/3" />
+                      <Skeleton className="h-5 w-1/3" />
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative pt-14">
@@ -59,13 +116,24 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
                 <h1 className="text-2xl font-bold leading-none">{envelopeDetail?.name}</h1>
                 <StatusCellContent status={envelopeDetail.status} />
               </div>
-              <Link
-                href={`/activities/envelope/${id}`}
-                className="inline-flex cursor-pointer items-center justify-center rounded-md border-b border-transparent bg-gray-200/60 px-2.5 py-2 text-sm font-semibold leading-none text-gray-600 transition-all hover:bg-gray-600 hover:text-white"
-              >
-                <span>{t('activities.manage.activityPage')}</span>
-                <ArrowUpRightIcon className="ml-1 h-3.5 w-3.5" />
-              </Link>
+              <div className="flex items-center gap-x-2">
+                {envelopeDetail.status !== 'ended' && (
+                  <Link
+                    href={`/activities/envelope/${id}/edit`}
+                    className="inline-flex cursor-pointer items-center justify-center rounded-md border-b border-transparent bg-gray-200/60 px-2.5 py-2 text-sm font-semibold leading-none text-gray-600 transition-all hover:bg-gray-600 hover:text-white"
+                  >
+                    <span>{t('activities.envelope.edit.title')}</span>
+                    <ArrowUpRightIcon className="ml-1 h-3.5 w-3.5" />
+                  </Link>
+                )}
+                <Link
+                  href={`/activities/envelope/${id}`}
+                  className="inline-flex cursor-pointer items-center justify-center rounded-md border-b border-transparent bg-gray-200/60 px-2.5 py-2 text-sm font-semibold leading-none text-gray-600 transition-all hover:bg-gray-600 hover:text-white"
+                >
+                  <span>{t('activities.manage.activityPage')}</span>
+                  <ArrowUpRightIcon className="ml-1 h-3.5 w-3.5" />
+                </Link>
+              </div>
             </div>
 
             <div className="flex items-center gap-4">
@@ -74,7 +142,9 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
                   {t('activities.envelope.type')}
                 </Badge>
                 <Badge variant="secondary" className="px-2">
-                  {envelopeDetail.assetType === 'coin' ? t('activities.envelope.coinType') : t('activities.envelope.nftType')}
+                  {envelopeDetail.assetType === 'coin'
+                    ? t('activities.envelope.coinType')
+                    : t('activities.envelope.nftType')}
                 </Badge>
               </div>
 
@@ -82,7 +152,8 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
                 className="text-sm leading-none text-gray-500"
                 title={formatDate(envelopeDetail.createdAt, 'yyyy-MM-dd HH:mm')}
               >
-                {t('activities.manage.createdAt')} {formatRelativeTime(envelopeDetail.createdAt, 'hours', locale)}
+                {t('activities.manage.createdAt')}{' '}
+                {formatRelativeTime(envelopeDetail.createdAt, 'hours', locale)}
               </div>
             </div>
           </div>
@@ -144,15 +215,12 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
         )}
 
         <div>
-          <div className="rounded-lg bg-white p-4 shadow-sm">
-            <div className="text-base/7 font-semibold text-gray-950 sm:text-sm/6">
+          <div className="rounded-lg bg-white p-4">
+            <h2 className="mb-2 text-xl font-semibold text-gray-950">
               {t('activities.manage.summary')}
-            </div>
-            <hr className="mt-4 w-full border-t border-gray-950/10" />
+            </h2>
             {envelopeDetail.assetType === 'nft' && <NftEnvelopeDetailTable data={envelopeDetail} />}
-            {envelopeDetail.assetType === 'coin' && (
-              <CoinEnvelopeDetailTable data={envelopeDetail} />
-            )}
+            {envelopeDetail.assetType === 'coin' && <CoinEnvelopeDetails data={envelopeDetail} />}
           </div>
         </div>
       </div>

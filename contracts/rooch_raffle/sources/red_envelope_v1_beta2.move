@@ -42,6 +42,9 @@ module rooch_raffle::red_envelope_v1_beta2 {
     const ErrorWrongAddNFTTime: u64 = 7;
     const ErrorNotBindedTwitter: u64 = 8;
     const ErrorTwitterAccountAlreadyClaimed: u64 = 9;
+    const ErrorEnvelopeAlreadyStarted: u64 = 10;
+    const ErrorEnvelopeNotOngoing: u64 = 11;
+    const ErrorWrongParams: u64 = 12;
 
 
     struct NFTEnvelope<phantom T: key+store> has key, store {
@@ -358,6 +361,43 @@ module rooch_raffle::red_envelope_v1_beta2 {
         vector::append(&mut object_id_vec, red_envelope_v1::get_envelope_object_ids_of_user(user));
         vector::append(&mut object_id_vec, red_envelope_v1_beta1::get_envelope_object_ids_of_user(user));
         object_id_vec
+    }
+
+    public entry fun update_coin_envelope<CoinType: key+store>(
+        envelope_obj: &mut Object<CoinEnvelope<CoinType>>,
+        name: String,
+        desc: String,
+        image_url: String,
+        theme_mode: u8,
+        color_mode: u8,
+        start_time: u64,
+        end_time: u64,
+        require_twitter_binding: bool
+    ) {
+        let envelope = object::borrow_mut(envelope_obj);
+        
+        assert!(envelope.sender == sender(), ErrorNotSender);
+        assert!(envelope.start_time > now_milliseconds(), ErrorEnvelopeAlreadyStarted);
+
+        envelope.meta.name = name;
+        envelope.meta.desc = desc;
+        envelope.meta.image_url = image_url;
+        envelope.meta.theme_mode = theme_mode;
+        envelope.meta.color_mode = color_mode;
+        envelope.start_time = start_time;
+        envelope.end_time = end_time;
+        envelope.require_twitter_binding = require_twitter_binding;
+    }
+
+    public entry fun extend_coin_envelope_end_time<CoinType: key+store>(
+        envelope_obj: &mut Object<CoinEnvelope<CoinType>>,
+        end_time: u64
+    ) {
+        let envelope = object::borrow_mut(envelope_obj);
+        assert!(envelope.sender == sender(), ErrorNotSender);
+        assert!(envelope.end_time < end_time, ErrorWrongParams);
+        assert!(envelope.start_time < now_milliseconds() && envelope.end_time > now_milliseconds(), ErrorEnvelopeNotOngoing);
+        envelope.end_time = end_time;
     }
 
     fun latest_block_height(): u64 {

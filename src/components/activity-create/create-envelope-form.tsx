@@ -1,19 +1,22 @@
 'use client';
 
-import { ChangeEvent, useMemo, useRef, useState } from 'react';
-import { ArrowDownUpIcon, ArrowUpRightIcon, Check, ImageIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { useAccountNfts, useCoinBalances } from '@/hooks';
 import { useCreateEnvelope } from '@/hooks/use-create-envelope';
+import { useActivityImageUpload } from '@/hooks/use-image-upload';
 import { cn } from '@/lib/utils';
-import { formatCoverImageUrl, formatUnits } from '@/utils/kit';
+import { formatCoverImageUrl, formatUnits, getRandomCoverImageUrl } from '@/utils/kit';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CoinLabel } from '../coin-label';
+import { ArrowDownUpIcon, ArrowUpRightIcon, Check, ImageIcon } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
+import { useMemo, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { CoinSelect } from '@/components/ui/coin-select';
+import { CoverImageDialog } from '../cover-image-dialog';
 import {
   Command,
   CommandEmpty,
@@ -34,12 +37,8 @@ import {
 } from '../ui/form';
 import { LoadingButton, LoadingButtonStatus } from '../ui/loading-button';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { RadioCardGroup } from '../ui/radio-card-group';
 import { ActivityFormLayout } from './activity-form-layout';
-import { useLocale, useTranslations } from 'next-intl';
-import { Checkbox } from '@/components/ui/checkbox';
-import { getRandomCoverImageUrl } from '@/utils/kit';
-import { CoverImageDialog } from '../cover-image-dialog';
 
 interface FormValues {
   activityName: string;
@@ -193,25 +192,20 @@ export default function CreateEnvelopeForm() {
     },
   });
 
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.size <= 100 * 1024) {
-      // 限制文件大小不超过 100KB
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64String = event.target?.result as string;
-        setCoverImageUrl(base64String);
-      };
-      reader.readAsDataURL(file);
-    } else {
+  const handleImageUpload = useActivityImageUpload({
+    onImageChange: setCoverImageUrl,
+    sizeLimit: 100,
+    onSizeExceeded: () => {
       alert(t('imageUpload.sizeLimit'));
-    }
-  };
+    },
+  });
 
   const onSubmit = async (data: FormValues) => {
     if (submitStatus === 'success') {
       return;
     }
+
+    console.log('onSubmit', data);
 
     data.startTime.setSeconds(0);
     data.startTime.setMilliseconds(0);
@@ -258,6 +252,8 @@ export default function CreateEnvelopeForm() {
         requireTwitterBinding: data.requireTwitterBinding,
       };
     }
+
+    console.log('submitData', submitData);
 
     try {
       console.log('onSubmit', data);
@@ -352,41 +348,24 @@ export default function CreateEnvelopeForm() {
                   <FormItem>
                     <FormLabel>{t('assetType.label')}</FormLabel>
                     <FormControl>
-                      <RadioGroup
-                        className="flex"
-                        {...field}
-                        onValueChange={(v) => {
-                          field.onChange(v);
-                        }}
-                      >
-                        <>
-                          <RadioGroupItem value="coin" id="assetType-coin" className="sr-only" />
-                          <Label
-                            htmlFor="assetType-coin"
-                            className={cn(
-                              'flex min-w-[124px] cursor-pointer items-start justify-start space-x-2 rounded-lg border py-2 pl-3 pr-4 transition-all hover:border-primary',
-                              field.value === 'coin' && 'border-primary'
-                            )}
-                          >
-                            <div className="text-sm">{t('assetType.coin.emoji')}</div>
-                            <div className="text-sm">{t('assetType.coin.label')}</div>
-                          </Label>
-                        </>
-
-                        <>
-                          <RadioGroupItem value="nft" id="assetType-nft" className="sr-only" />
-                          <Label
-                            htmlFor="assetType-nft"
-                            className={cn(
-                              'flex min-w-[124px] cursor-pointer items-start justify-start space-x-2 rounded-lg border py-2 pl-3 pr-4 transition-all hover:border-primary',
-                              field.value === 'nft' && 'border-primary'
-                            )}
-                          >
-                            <div className="text-sm">{t('assetType.nft.emoji')}</div>
-                            <div className="text-sm">{t('assetType.nft.label')}</div>
-                          </Label>
-                        </>
-                      </RadioGroup>
+                      <RadioCardGroup
+                        options={[
+                          {
+                            value: 'coin',
+                            id: 'assetType-coin',
+                            emoji: t('assetType.coin.emoji'),
+                            label: t('assetType.coin.label'),
+                          },
+                          {
+                            value: 'nft',
+                            id: 'assetType-nft',
+                            emoji: t('assetType.nft.emoji'),
+                            label: t('assetType.nft.label'),
+                          },
+                        ]}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      />
                     </FormControl>
                     <FormDescription>{t('assetType.description')}</FormDescription>
                     <FormMessage />
@@ -402,66 +381,27 @@ export default function CreateEnvelopeForm() {
                     <FormItem>
                       <FormLabel>{t('envelopeType.label')}</FormLabel>
                       <FormControl>
-                        <RadioGroup className="flex" {...field}>
-                          <div
-                            className={cn(
-                              'flex cursor-pointer items-start space-x-2 rounded-lg border py-2 pl-1 pr-4 transition-all hover:border-primary',
-                              field.value === 'random' && 'border-primary'
-                            )}
-                          >
-                            <RadioGroupItem
-                              value="random"
-                              id="envelopeType-random"
-                              className="sr-only"
-                            />
-                            <Label
-                              onClick={() => {
-                                field.onChange('random');
-                              }}
-                              htmlFor="envelopeType-random"
-                              className="flex cursor-pointer items-start justify-start space-x-2"
-                            >
-                              <div className="text-sm">{t('envelopeType.random.emoji')}</div>
-                              <div>
-                                <div className="text-sm font-bold">
-                                  {t('envelopeType.random.title')}
-                                </div>
-                                <div className="text-xs text-gray-500">
-                                  {t('envelopeType.random.description')}
-                                </div>
-                              </div>
-                            </Label>
-                          </div>
-                          <div
-                            className={cn(
-                              'flex cursor-pointer items-start space-x-2 rounded-lg border py-2 pl-1 pr-4 transition-all hover:border-primary',
-                              field.value === 'average' && 'border-primary'
-                            )}
-                          >
-                            <RadioGroupItem
-                              value="average"
-                              id="envelopeType-average"
-                              className="sr-only"
-                            />
-                            <Label
-                              htmlFor="envelopeType-average"
-                              className="flex cursor-pointer items-start justify-start space-x-2"
-                              onClick={() => {
-                                field.onChange('average');
-                              }}
-                            >
-                              <div className="text-sm">{t('envelopeType.average.emoji')}</div>
-                              <div>
-                                <div className="text-sm font-bold">
-                                  {t('envelopeType.average.title')}
-                                </div>
-                                <div className="text-xs text-gray-500">
-                                  {t('envelopeType.average.description')}
-                                </div>
-                              </div>
-                            </Label>
-                          </div>
-                        </RadioGroup>
+                        <RadioCardGroup
+                          variant="detailed"
+                          options={[
+                            {
+                              value: 'random',
+                              id: 'envelopeType-random',
+                              emoji: t('envelopeType.random.emoji'),
+                              label: t('envelopeType.random.title'),
+                              description: t('envelopeType.random.description'),
+                            },
+                            {
+                              value: 'average',
+                              id: 'envelopeType-average',
+                              emoji: t('envelopeType.average.emoji'),
+                              label: t('envelopeType.average.title'),
+                              description: t('envelopeType.average.description'),
+                            },
+                          ]}
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -477,81 +417,16 @@ export default function CreateEnvelopeForm() {
                     <FormItem className="md:w-1/2">
                       <FormLabel>{t('reward.label')}</FormLabel>
                       <FormControl>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                className={cn(
-                                  'flex w-full justify-between',
-                                  !field.value && 'font-normal text-muted-foreground'
-                                )}
-                              >
-                                {field.value ? (
-                                  <CoinLabel
-                                    {...coinBalancesResp.data.find(
-                                      (coin) => coin.coinType === field.value
-                                    )!}
-                                  />
-                                ) : coinBalancesResp.isLoading ? (
-                                  t('reward.loading')
-                                ) : (
-                                  t('reward.selectCoin')
-                                )}
-                                <ArrowDownUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="p-0">
-                            <Command>
-                              <CommandInput placeholder={t('reward.searchCoin')} className="h-9" />
-                              <CommandList>
-                                <CommandEmpty>{t('reward.noCoinFound')}</CommandEmpty>
-                                <CommandGroup>
-                                  {coinBalancesResp.data.map((coin) => (
-                                    <CommandItem
-                                      value={coin.name}
-                                      key={coin.coinType}
-                                      onSelect={() => {
-                                        form.setValue('coinType', coin.coinType);
-                                      }}
-                                    >
-                                      <div className="flex w-full">
-                                        {coin.iconString && (
-                                          <span
-                                            dangerouslySetInnerHTML={{
-                                              __html: coin.iconString,
-                                            }}
-                                            className="mr-2 h-4 w-4"
-                                          />
-                                        )}
-
-                                        <div>
-                                          <div className="flex items-center justify-between">
-                                            <div className="leading-none">{coin.name}</div>
-                                          </div>
-                                          <div className="mt-1 text-xs text-gray-500">
-                                            {formatUnits(coin.balance, coin.decimals)}
-                                          </div>
-                                        </div>
-
-                                        <Check
-                                          className={cn(
-                                            'ml-auto h-4 w-4',
-                                            coin.coinType === field.value
-                                              ? 'opacity-100'
-                                              : 'opacity-0'
-                                          )}
-                                        />
-                                      </div>
-                                    </CommandItem>
-                                  ))}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
+                        <CoinSelect
+                          value={field.value}
+                          coinBalances={coinBalancesResp.data}
+                          isLoading={coinBalancesResp.isLoading}
+                          placeholder={t('reward.selectCoin')}
+                          searchPlaceholder={t('reward.searchCoin')}
+                          noResultText={t('reward.noCoinFound')}
+                          name="coinType"
+                          form={form}
+                        />
                       </FormControl>
                       {field.value && (
                         <FormDescription>
@@ -763,6 +638,7 @@ export default function CreateEnvelopeForm() {
               searchParams.set('startTimeTimestamp', startTime.getTime().toString());
               searchParams.set('endTimeTimestamp', endTime.getTime().toString());
               searchParams.set('nftCount', nfts.length.toString());
+              searchParams.set('coverImageUrl', coverImageUrl);
 
               const coin = coinBalancesResp.data.find((c) => c.coinType === coinType);
               if (coin) {
