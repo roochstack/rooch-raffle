@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "inlang.vs-code-extension",
+    "esbenp.prettier-vscode",
+    "movebit.aptos-move-analyzer",
+    "github.copilot",
+    "eamodio.gitlens"
+  ]
+}
