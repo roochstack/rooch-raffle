@@ -120,7 +120,7 @@ export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
   } = formatMetadata(item);
 
   const rawClaimType = get(item, 'decoded_value.value.claim_type') as number;
-  const envelopeType = rawClaimType === 0 ? ('random' as const) : ('average' as const);
+  const envelopeType = rawClaimType === 1 ? ('random' as const) : ('average' as const);
   const rawCoinType = get(item, 'decoded_value.value.coin_type') as string;
   const coinType = normalizeCoinType(rawCoinType);
   const coinStoreObjectId = get(item, 'decoded_value.value.coin_store.value.id') as string;

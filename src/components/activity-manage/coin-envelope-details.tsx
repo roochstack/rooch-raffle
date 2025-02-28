@@ -36,6 +36,15 @@ export default function CoinEnvelopeDetails({ data }: CoinEnvelopeDetailsProps) 
           .replace(/\.?0+$/, '')
       );
     }
+
+    console.log('data.totalCoin', data.totalCoin);
+
+    return (
+      (Number(data.totalCoin) / 10 ** matchedCoin.decimals)
+        .toFixed(matchedCoin.decimals)
+        // Remove trailing zeros
+        .replace(/\.?0+$/, '')
+    );
   }, [data.totalCoin, data.totalEnvelope, data.envelopeType, coinBalancesResp.data]);
 
   return (
@@ -131,11 +140,13 @@ export default function CoinEnvelopeDetails({ data }: CoinEnvelopeDetailsProps) 
           {t('activities.create.form.participationConditions.title')}
         </dt>
         <dd className="sm: pb-3 pt-1 text-gray-950 sm:border-gray-950/5 sm:py-3 sm:[&:nth-child(2)]:border-none">
-          {data.requireTwitterBinding && (
+          {data.requireTwitterBinding ? (
             <span className="flex items-center gap-2">
               <TwitterIcon className="h-4 w-4" />
               {t('crazy_only_cougar_yell')}
             </span>
+          ) : (
+            <span>{t('great_raw_duck_greet')}</span>
           )}
         </dd>
       </dl>

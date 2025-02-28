@@ -205,6 +205,8 @@ export default function CreateEnvelopeForm() {
       return;
     }
 
+    console.log('onSubmit', data);
+
     data.startTime.setSeconds(0);
     data.startTime.setMilliseconds(0);
     data.endTime.setSeconds(0);
@@ -250,6 +252,8 @@ export default function CreateEnvelopeForm() {
         requireTwitterBinding: data.requireTwitterBinding,
       };
     }
+
+    console.log('submitData', submitData);
 
     try {
       console.log('onSubmit', data);

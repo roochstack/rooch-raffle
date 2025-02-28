@@ -212,6 +212,10 @@
           "ended": "活动已结束，无法编辑",
           "notOwner": "您不是该活动的所有者，无法编辑"
         },
+        "editWarning": {
+          "title": "注意",
+          "content": "活动尚未开始，您可以更新活动名称、封面图片、开始/结束时间、参与条件"
+        },
         "extendEndTimeWarning": {
           "title": "注意",
           "content": "活动已开始，您只可以更新活动结束时间"
@@ -346,5 +350,6 @@
   "jolly_acidic_fox_quell": "请稍后再试",
   "key_late_wasp_race": "上传中...",
   "crazy_only_cougar_yell": "绑定 X (Twitter)",
-  "weary_fuzzy_ostrich_catch": "创建时间"
+  "weary_fuzzy_ostrich_catch": "创建时间",
+  "great_raw_duck_greet": "无"
 }

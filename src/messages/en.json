@@ -212,6 +212,10 @@
           "ended": "Activity Ended. Cannot edit",
           "notOwner": "You are not the owner of this activity. Cannot edit"
         },
+        "editWarning": {
+          "title": "Note",
+          "content": "Activity has not started. You can update the activity name, cover image, start/end time, and participation conditions."
+        },
         "extendEndTimeWarning": {
           "title": "Note",
           "content": "Activity has started. You can only update the end time"
@@ -346,5 +350,6 @@
   "jolly_acidic_fox_quell": "Please try again later",
   "key_late_wasp_race": "Uploading...",
   "crazy_only_cougar_yell": "Bind X (Twitter)",
-  "weary_fuzzy_ostrich_catch": "Created at"
+  "weary_fuzzy_ostrich_catch": "Created at",
+  "great_raw_duck_greet": "None"
 }

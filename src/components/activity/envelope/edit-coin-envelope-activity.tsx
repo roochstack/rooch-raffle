@@ -213,13 +213,24 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
             </ActivityFormLayout.ImageContainer>
 
             <ActivityFormLayout.FormContainer>
-              <div className="px-6">
-                <Alert variant="warning">
-                  <Terminal className="h-4 w-4" />
-                  <AlertTitle>{tEdit('extendEndTimeWarning.title')}</AlertTitle>
-                  <AlertDescription>{tEdit('extendEndTimeWarning.content')}</AlertDescription>
-                </Alert>
-              </div>
+              {data.status === 'not-started' && (
+                <div className="px-6">
+                  <Alert variant="warning">
+                    <Terminal className="h-4 w-4" />
+                    <AlertTitle>{tEdit('editWarning.title')}</AlertTitle>
+                    <AlertDescription>{tEdit('editWarning.content')}</AlertDescription>
+                  </Alert>
+                </div>
+              )}
+              {data.status === 'ongoing' && (
+                <div className="px-6">
+                  <Alert variant="warning">
+                    <Terminal className="h-4 w-4" />
+                    <AlertTitle>{tEdit('extendEndTimeWarning.title')}</AlertTitle>
+                    <AlertDescription>{tEdit('extendEndTimeWarning.content')}</AlertDescription>
+                  </Alert>
+                </div>
+              )}
               <Form {...form}>
                 <form
                   className="space-y-10 rounded-lg bg-white p-6 shadow-sm"
@@ -227,14 +238,17 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                 >
                   <div className="space-y-6">
                     <FormField
-                      disabled={!nameEditable}
                       control={form.control}
                       name="activityName"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t('name')}</FormLabel>
                           <FormControl>
-                            <Input placeholder={t('namePlaceholder')} {...field} />
+                            <Input
+                              disabled={!nameEditable}
+                              placeholder={t('namePlaceholder')}
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -242,14 +256,17 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                     />
                     <div className="flex gap-4 max-md:flex-col md:items-center">
                       <FormField
-                        disabled={!startTimeEditable}
                         control={form.control}
                         name="startTime"
                         render={({ field }) => (
                           <FormItem className="md:w-1/2">
                             <FormLabel>{t('time.start')}</FormLabel>
                             <FormControl>
-                              <DateTimePicker {...field} format="yyyy-MM-dd HH:mm" />
+                              <DateTimePicker
+                                disabled={!startTimeEditable}
+                                {...field}
+                                format="yyyy-MM-dd HH:mm"
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -270,7 +287,6 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                       />
                     </div>
                     <FormField
-                      disabled={true}
                       control={form.control}
                       name="assetType"
                       render={({ field }) => (
@@ -278,7 +294,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                           <FormLabel>{t('assetType.label')}</FormLabel>
                           <FormControl>
                             <RadioCardGroup
-                              disabled={field.disabled}
+                              disabled={true}
                               options={[
                                 {
                                   value: 'coin',
@@ -305,7 +321,6 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
 
                     {data.assetType === 'coin' && (
                       <FormField
-                        disabled={true}
                         control={form.control}
                         name="envelopeType"
                         render={({ field }) => (
@@ -313,7 +328,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                             <FormLabel>{t('envelopeType.label')}</FormLabel>
                             <FormControl>
                               <RadioCardGroup
-                                disabled={field.disabled}
+                                disabled={true}
                                 variant="detailed"
                                 options={[
                                   {
@@ -343,7 +358,6 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
 
                     {data.assetType === 'coin' && data.coinType && (
                       <FormField
-                        disabled={true}
                         control={form.control}
                         name="coinType"
                         render={({ field }) => (
@@ -351,8 +365,8 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                             <FormLabel>{t('reward.label')}</FormLabel>
                             <FormControl>
                               <CoinSelect
+                                disabled={true}
                                 value={field.value}
-                                disabled={field.disabled}
                                 coinBalances={coinBalancesResp.data}
                                 isLoading={coinBalancesResp.isLoading}
                                 placeholder={t('reward.selectCoin')}
@@ -382,14 +396,19 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                     )}
 
                     <FormField
-                      disabled={true}
                       control={form.control}
                       name="totalEnvelope"
                       render={({ field }) => (
                         <FormItem className="md:w-1/2">
                           <FormLabel>{t('quantity.label')}</FormLabel>
                           <FormControl>
-                            <Input type="number" min={1} {...field} readOnly={true} />
+                            <Input
+                              disabled={true}
+                              type="number"
+                              min={1}
+                              {...field}
+                              readOnly={true}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -397,7 +416,6 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                     />
 
                     <FormField
-                      disabled={true}
                       control={form.control}
                       name="totalCoin"
                       render={({ field }) => (
@@ -409,13 +427,10 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                           </FormLabel>
                           <FormControl>
                             {data.envelopeType === 'average' && coinBalancesResp.isPending ? (
-                              <Input
-                                disabled={field.disabled}
-                                value={tCommon('loading')}
-                                readOnly={true}
-                              />
+                              <Input disabled={true} value={tCommon('loading')} readOnly={true} />
                             ) : (
                               <Input
+                                disabled={true}
                                 type="number"
                                 min={0}
                                 step={0.000000001}
@@ -429,7 +444,6 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                       )}
                     />
                     <FormField
-                      disabled={!twitterBindingEditable}
                       control={form.control}
                       name="requireTwitterBinding"
                       render={({ field }) => (
@@ -438,7 +452,7 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                           <FormControl>
                             <div className="flex items-center space-x-2">
                               <Checkbox
-                                disabled={field.disabled}
+                                disabled={!twitterBindingEditable}
                                 id={field.name}
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
