@@ -16,3 +16,29 @@ export function normalizeCoinType(coinType: string): string {
     }
   );
 }
+
+/**
+ * Format a number by removing trailing zeros after decimal point
+ * @param value The number to format
+ * @param decimals Number of decimal places
+ * @returns Formatted string number without trailing zeros
+ */
+export function formatNumberWithoutTrailingZeros(value: number, decimals: number): string {
+  return (
+    value
+      .toFixed(decimals)
+      // Remove trailing zeros and decimal point if no decimals
+      .replace(/\.?0+$/, '')
+  );
+}
+
+/**
+ * Format a coin amount by its decimals
+ * @param amount The amount to format
+ * @param decimals Number of decimal places
+ * @returns Formatted string number
+ */
+export function formatCoinAmount(amount: number | bigint, decimals: number): string {
+  const value = Number(amount) / 10 ** decimals;
+  return formatNumberWithoutTrailingZeros(value, decimals);
+}

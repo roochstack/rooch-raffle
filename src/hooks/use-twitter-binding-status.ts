@@ -17,7 +17,6 @@ export function useTwitterBindingStatus(userAddress: string) {
     },
     {
       select: (data) => {
-        console.log(data);
         return data.data.length > 0;
       },
     }
