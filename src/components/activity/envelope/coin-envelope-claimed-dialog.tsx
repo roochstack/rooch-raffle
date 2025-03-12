@@ -1,20 +1,20 @@
 'use client';
 
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { motion } from 'framer-motion';
-import { useTranslations } from 'next-intl';
-import confetti from 'canvas-confetti';
+import SlotCounter, { SlotCounterRef } from '@/components/slot-counter';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { useWalletHexAddress } from '@/hooks/app-hooks';
 import { CoinMetaInfo } from '@/interfaces';
-import SlotCounter from 'react-slot-counter';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { cn } from '@/lib/utils';
+import confetti from 'canvas-confetti';
 import { ArrowUpRightIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface ClaimedDialogProps {
   open: boolean;
   onClose: () => void;
-  claimedAmountFormatted: String | null;
+  claimedAmountFormatted: string | null;
   claimedRankPercentage: number | null;
   coinInfo?: CoinMetaInfo;
 }
@@ -29,130 +29,142 @@ export function CoinEnvelopeClaimedDialog({
   const t = useTranslations('activities.envelope.claimed');
   const [showPercentage, setShowPercentage] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const slotCounterRef = useRef<SlotCounterRef>(null);
+  const walletAddress = useWalletHexAddress();
 
-  // 触发撒花效果
   useEffect(() => {
-    if (open && showConfetti) {
-      // 首次撒花 - 使用多个配置创建庆祝效果
-      // 从中心向四周发散的彩花
+    if (!open || !claimedAmountFormatted) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      if (slotCounterRef.current) {
+        // slotCounterRef.current.refreshStyles();
+        // slotCounterRef.current.startAnimation();
+      }
+    }, 0);
+
+    // 组件卸载时清除轮询
+    return () => {
+      clearTimeout(timer);
+      // clearInterval(checkSlotCounterInterval);
+    };
+  }, [open, claimedAmountFormatted]);
+
+  const triggerConfetti = useCallback(() => {
+    // 首次撒花 - 使用多个配置创建庆祝效果
+    // 从中心向四周发散的彩花
+    confetti({
+      particleCount: 150,
+      spread: 180,
+      origin: { x: 0.5, y: 0.5 },
+      gravity: 0.5,
+      ticks: 300,
+      colors: ['#FF5252', '#FFD740', '#448AFF', '#69F0AE'],
+    });
+
+    // 从顶部散落的彩花
+    setTimeout(() => {
       confetti({
-        particleCount: 150,
-        spread: 180,
-        origin: { x: 0.5, y: 0.5 },
-        gravity: 0.5,
+        particleCount: 100,
+        startVelocity: 30,
+        spread: 120,
+        origin: { x: 0.5, y: 0 },
+        gravity: 1,
+        ticks: 200,
+        shapes: ['circle', 'square'],
+      });
+    }, 250);
+
+    // 从左右两侧喷射的彩花
+    setTimeout(() => {
+      // 左侧
+      confetti({
+        particleCount: 80,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.65 },
         ticks: 300,
-        colors: ['#FF5252', '#FFD740', '#448AFF', '#69F0AE'],
       });
 
-      // 从顶部散落的彩花
-      setTimeout(() => {
-        confetti({
-          particleCount: 100,
-          startVelocity: 30,
-          spread: 120,
-          origin: { x: 0.5, y: 0 },
-          gravity: 1,
-          ticks: 200,
-          shapes: ['circle', 'square'],
-        });
-      }, 250);
-
-      // 从左右两侧喷射的彩花
-      setTimeout(() => {
-        // 左侧
-        confetti({
-          particleCount: 80,
-          angle: 60,
-          spread: 55,
-          origin: { x: 0, y: 0.65 },
-          ticks: 300,
-        });
-
-        // 右侧
-        confetti({
-          particleCount: 80,
-          angle: 120,
-          spread: 55,
-          origin: { x: 1, y: 0.65 },
-          ticks: 300,
-        });
-      }, 400);
-    }
-  }, [open, showConfetti]);
+      // 右侧
+      confetti({
+        particleCount: 80,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.65 },
+        ticks: 300,
+      });
+    }, 400);
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md border-none bg-transparent p-0 shadow-none">
-        {open && (
-          <>
-            <motion.div
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.5, opacity: 0 }}
-              className="overflow-hidden rounded-2xl bg-gradient-to-b from-red-50 to-white p-8 text-center shadow-xl"
-            >
-              <motion.div
-                animate={{ y: [-10, 10, -10] }}
-                transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-                className="mb-6 text-6xl"
-              >
-                {coinInfo?.imageUrl ? (
-                  <span
-                    className="inline-block h-24 w-24"
-                    dangerouslySetInnerHTML={{ __html: coinInfo.imageUrl }}
-                  />
-                ) : (
-                  '🎉'
-                )}
-              </motion.div>
+      <DialogContent className="max-w-[350px] p-0 pb-4">
+        <>
+          <div className="overflow-hidden rounded-2xl text-center">
+            <div className="mb-6 bg-gray-50 py-7 text-5xl">🎉</div>
 
-              <h2 className="mb-8 text-2xl font-bold text-red-600">{t('title')}</h2>
-              <div className="mb-8 space-y-6">
-                <div className="space-y-2">
-                  <div className="text-sm text-gray-500">{t('congratulations')}</div>
-                  <div className="text-3xl font-bold text-red-600">
-                    {coinInfo?.symbol && <span>{coinInfo.symbol} </span>}
-                    <SlotCounter
-                      value={String(claimedAmountFormatted)}
-                      duration={2.5}
-                      startValue={'0'.repeat(String(claimedAmountFormatted).length)}
-                      startFromLastDigit
-                      useMonospaceWidth
-                      charClassName="font-mono"
-                      separatorClassName="font-mono"
-                      onAnimationEnd={() => {
-                        setShowPercentage(true);
-                        setShowConfetti(true);
-                      }}
-                    />
+            <h2 className="mb-8 text-2xl font-bold">{t('title')}</h2>
+            <div className="mb-8">
+              <div className="space-y-2">
+                <div className="text-sm text-gray-500">{t('congratulations')}</div>
+                <div className="inline-flex h-[30px] items-center justify-center text-3xl/none text-red-500">
+                  <div className="flex items-center">
+                    {coinInfo?.imageUrl && (
+                      <span
+                        className="mr-0.5 inline-block h-6 w-6"
+                        dangerouslySetInnerHTML={{ __html: coinInfo.imageUrl }}
+                      />
+                    )}
+                    {coinInfo?.symbol && (
+                      <span className="font-normal tracking-tighter">{coinInfo.symbol} </span>
+                    )}
                   </div>
-                </div>
-
-                <div className="space-y-2">
-                  {open && showPercentage && (
-                    <div className="text-sm text-gray-500">
-                      {t('topPercentage', { percentage: claimedRankPercentage })}
-                    </div>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Link
-                    href={`/index`}
-                    className="inline-flex cursor-pointer items-center justify-center rounded-md border-b border-transparent px-2.5 py-2 text-sm font-semibold leading-none text-gray-600 transition-all hover:bg-gray-600 hover:text-white"
-                  >
-                    <span>{t('portalLink')}</span>
-                    <ArrowUpRightIcon className="ml-1 h-3.5 w-3.5" />
-                  </Link>
+                  <SlotCounter
+                    ref={slotCounterRef}
+                    value={claimedAmountFormatted || ''}
+                    duration={2}
+                    startValue={'0'.repeat(claimedAmountFormatted?.length || 1)}
+                    startFromLastDigit
+                    // autoAnimationStart={true}
+                    animateOnVisible={{
+                      triggerOnce: true,
+                    }}
+                    containerClassName="!flex font-mono font-semibold ml-1"
+                    onAnimationEnd={() => {
+                      setShowPercentage(true);
+                      triggerConfetti();
+                    }}
+                  />
                 </div>
               </div>
 
-              <Button variant="outline" className="w-full" onClick={onClose}>
-                {t('close')}
-              </Button>
-            </motion.div>
-          </>
-        )}
+              <div
+                className={cn(
+                  'mt-2 text-sm text-gray-500 opacity-0',
+                  open && showPercentage && 'opacity-100'
+                )}
+              >
+                {t('topPercentage', { percentage: claimedRankPercentage })}
+              </div>
+            </div>
+          </div>
+        </>
+        <div className="flex flex-col gap-3 px-6">
+          <Button className="w-full" size="lg">
+            <a
+              href={`https://portal.rooch.network/account/${walletAddress}`}
+              className="flex items-center justify-center"
+            >
+              <span>{t('portalLink')}</span>
+              <ArrowUpRightIcon className="ml-1 h-3.5 w-3.5" />
+            </a>
+          </Button>
+          <Button variant="secondary" className="w-full" onClick={onClose}>
+            {t('close')}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

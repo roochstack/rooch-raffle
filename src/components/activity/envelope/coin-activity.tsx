@@ -284,15 +284,14 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
         open={twitterBindingDialogOpen}
         onClose={() => setTwitterBindingDialogOpen(false)}
       />
-      {claimedAmount && claimedRankPercentage && (
-        <CoinEnvelopeClaimedDialog
-          open={coinEnvelopeClaimedDialogOpen}
-          onClose={() => setCoinEnvelopeClaimedDialogOpen(false)}
-          claimedAmountFormatted={claimedAmountFormatted}
-          claimedRankPercentage={claimedRankPercentage}
-          coinInfo={coinInfoResp.data}
-        />
-      )}
+
+      <CoinEnvelopeClaimedDialog
+        open={coinEnvelopeClaimedDialogOpen}
+        onClose={() => setCoinEnvelopeClaimedDialogOpen(false)}
+        claimedAmountFormatted={claimedAmountFormatted}
+        claimedRankPercentage={claimedRankPercentage}
+        coinInfo={coinInfoResp.data}
+      />
     </div>
   );
 }
