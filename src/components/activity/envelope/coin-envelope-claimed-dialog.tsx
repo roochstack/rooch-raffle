@@ -100,6 +100,7 @@ export function CoinEnvelopeClaimedDialog({
                     <SlotCounter
                       ref={slotCounterRef}
                       value={claimedAmountFormatted || ''}
+                      startValue={'0'.repeat(claimedAmountFormatted?.length || 1)}
                       duration={2}
                       startFromLastDigit
                       animateOnVisible={{
