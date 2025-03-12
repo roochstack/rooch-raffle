@@ -185,6 +185,7 @@
         "waiting": "Waiting...",
         "claiming": "Claiming...",
         "claimed": "Claimed",
+        "claimedWithAmount": "Claimed {amount} {coinInfoSymbol}",
         "notStarted": "Not Started",
         "claim": "🧧 Open Red Packet",
         "ended": "Activity Ended",

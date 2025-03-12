@@ -185,6 +185,7 @@
         "waiting": "等待中...",
         "claiming": "领取中...",
         "claimed": "已领取",
+        "claimedWithAmount": "已领取 {amount} {coinInfoSymbol}",
         "notStarted": "尚未开始",
         "claim": "🧧立即开红包",
         "ended": "活动已结束",

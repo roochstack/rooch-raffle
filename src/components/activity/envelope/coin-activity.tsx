@@ -50,18 +50,18 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const claimedAmount = useMemo(() => {
-    return claimedAddressResp.data.find((o) => o.address === walletAddress)?.amount || null;
+    return claimedAddressResp.data.find((o) => o.address === walletAddress)?.amount || undefined;
   }, [claimedAddressResp.data, walletAddress]);
 
   const claimedAmountFormatted = useMemo(() => {
     return claimedAmount && coinInfoResp.data
       ? formatCoinAmount(claimedAmount, coinInfoResp.data.decimals)
-      : null;
+      : undefined;
   }, [claimedAmount, coinInfoResp.data]);
 
   const claimedRankPercentage = useMemo(() => {
-    if (claimedAmount === null) {
-      return null;
+    if (!claimedAmount) {
+      return undefined;
     }
 
     const userCountWithMoreAmount = claimedAddressResp.data.filter(
@@ -163,7 +163,12 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
               (data.requireTwitterBinding && twitterBindingStatusResp.isPending) ? (
                 <EnvelopeStatusButton type="waiting" />
               ) : alreadyClaimed ? (
-                <EnvelopeStatusButton type="already-claimed" />
+                <EnvelopeStatusButton
+                  type="already-claimed"
+                  showClaimedAmount={!coinEnvelopeClaimedDialogOpen}
+                  claimedAmountFormatted={claimedAmountFormatted}
+                  coinInfoSymbol={coinInfoResp.data?.symbol}
+                />
               ) : (
                 <div>
                   <EnvelopeStatusButton

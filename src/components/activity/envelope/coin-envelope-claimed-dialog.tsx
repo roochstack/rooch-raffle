@@ -14,8 +14,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 interface ClaimedDialogProps {
   open: boolean;
   onClose: () => void;
-  claimedAmountFormatted: string | null;
-  claimedRankPercentage: number | null;
+  claimedAmountFormatted?: string;
+  claimedRankPercentage?: number;
   coinInfo?: CoinMetaInfo;
 }
 
@@ -28,28 +28,8 @@ export function CoinEnvelopeClaimedDialog({
 }: ClaimedDialogProps) {
   const t = useTranslations('activities.envelope.claimed');
   const [showPercentage, setShowPercentage] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
   const slotCounterRef = useRef<SlotCounterRef>(null);
   const walletAddress = useWalletHexAddress();
-
-  useEffect(() => {
-    if (!open || !claimedAmountFormatted) {
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      if (slotCounterRef.current) {
-        // slotCounterRef.current.refreshStyles();
-        // slotCounterRef.current.startAnimation();
-      }
-    }, 0);
-
-    // 组件卸载时清除轮询
-    return () => {
-      clearTimeout(timer);
-      // clearInterval(checkSlotCounterInterval);
-    };
-  }, [open, claimedAmountFormatted]);
 
   const triggerConfetti = useCallback(() => {
     // 首次撒花 - 使用多个配置创建庆祝效果
@@ -109,7 +89,7 @@ export function CoinEnvelopeClaimedDialog({
             <div className="mb-8">
               <div className="space-y-2">
                 <div className="text-sm text-gray-500">{t('congratulations')}</div>
-                <div className="inline-flex h-[30px] items-center justify-center text-3xl/none text-red-500">
+                <div className="inline-flex h-[30px] items-center justify-center text-3xl/none text-green-500">
                   <div className="flex items-center">
                     {coinInfo?.imageUrl && (
                       <span
@@ -117,26 +97,28 @@ export function CoinEnvelopeClaimedDialog({
                         dangerouslySetInnerHTML={{ __html: coinInfo.imageUrl }}
                       />
                     )}
+                    <SlotCounter
+                      ref={slotCounterRef}
+                      value={claimedAmountFormatted || ''}
+                      duration={2}
+                      startFromLastDigit
+                      animateOnVisible={{
+                        triggerOnce: true,
+                      }}
+                      containerClassName="!flex font-mono font-semibold ml-1"
+                      onAnimationEnd={() => {
+                        setShowPercentage(true);
+                        triggerConfetti();
+                      }}
+                    />
+
                     {coinInfo?.symbol && (
-                      <span className="font-normal tracking-tighter">{coinInfo.symbol} </span>
+                      <span className="flex text-[28px] font-normal tracking-tighter">
+                        {' '}
+                        {coinInfo.symbol}
+                      </span>
                     )}
                   </div>
-                  <SlotCounter
-                    ref={slotCounterRef}
-                    value={claimedAmountFormatted || ''}
-                    duration={2}
-                    startValue={'0'.repeat(claimedAmountFormatted?.length || 1)}
-                    startFromLastDigit
-                    // autoAnimationStart={true}
-                    animateOnVisible={{
-                      triggerOnce: true,
-                    }}
-                    containerClassName="!flex font-mono font-semibold ml-1"
-                    onAnimationEnd={() => {
-                      setShowPercentage(true);
-                      triggerConfetti();
-                    }}
-                  />
                 </div>
               </div>
 
