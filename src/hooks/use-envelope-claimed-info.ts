@@ -44,7 +44,7 @@ export function useEnvelopeClaimedInfo(tableHandleId: string) {
 
   const refetch = useCallback(() => {
     setIsLoading(true);
-    getClaimedInfo(client, tableHandleId)
+    return getClaimedInfo(client, tableHandleId)
       .then((data) => {
         setData(data);
       })

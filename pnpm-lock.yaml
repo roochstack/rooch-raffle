@@ -182,6 +182,9 @@ importers:
       vaul:
         specifier: ^0.9.4
         version: 0.9.4(@types/react-dom@18.3.0)(@types/react@18.3.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      wait-for-element-transition:
+        specifier: ^3.3.1
+        version: 3.3.1
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -2138,6 +2141,10 @@ packages:
   victory-vendor@36.9.2:
     resolution: {integrity: sha512-PnpQQMuxlwYdocC8fIJqVXvkeViHYzotI+NJrCuav0ZYFoq912ZHBk3mCeuj+5/VpodOjPe1z0Fk2ihgzlXqjQ==}
 
+  wait-for-element-transition@3.3.1:
+    resolution: {integrity: sha512-1Wq7yWLtUjAOQkw4N2sLg+wCpKTZ4HU2KOK5IFHNIyTALRK0uL93EQ09Mpzg0cFos6QfOXUQBw4Cg+uxP0cKNw==}
+    engines: {node: '>=10.16'}
+
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
 
@@ -4089,6 +4096,8 @@ snapshots:
       d3-shape: 3.2.0
       d3-time: 3.1.0
       d3-timer: 3.0.1
+
+  wait-for-element-transition@3.3.1: {}
 
   webidl-conversions@3.0.1: {}
 

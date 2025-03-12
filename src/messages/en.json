@@ -171,7 +171,13 @@
       "amount": "Amount",
       "quantity": "Quantity",
       "remaining": "Remaining",
-      "claimed": "Claimed",
+      "claimed": {
+        "title": "Congratulations!",
+        "congratulations": "😆You got",
+        "topPercentage": "😎beat {percentage}% of current participants😎",
+        "close": "Close",
+        "portalLink": "Go to Protal"
+      },
       "share": "Share",
       "shareTitle": "Share Red Packet",
       "shareDescription": "Come and claim the red packet!",
@@ -179,6 +185,7 @@
         "waiting": "Waiting...",
         "claiming": "Claiming...",
         "claimed": "Claimed",
+        "claimedWithAmount": "Claimed {amount} {coinInfoSymbol}",
         "notStarted": "Not Started",
         "claim": "🧧 Open Red Packet",
         "ended": "Activity Ended",
@@ -351,5 +358,6 @@
   "key_late_wasp_race": "Uploading...",
   "crazy_only_cougar_yell": "Bind X (Twitter)",
   "weary_fuzzy_ostrich_catch": "Created at",
+  "great_raw_duck_greet": "None",
   "soft_basic_robin_clap": "End time cannot be earlier than current end time"
 }

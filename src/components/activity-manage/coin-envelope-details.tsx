@@ -37,8 +37,6 @@ export default function CoinEnvelopeDetails({ data }: CoinEnvelopeDetailsProps) 
       );
     }
 
-    console.log('data.totalCoin', data.totalCoin);
-
     return (
       (Number(data.totalCoin) / 10 ** matchedCoin.decimals)
         .toFixed(matchedCoin.decimals)

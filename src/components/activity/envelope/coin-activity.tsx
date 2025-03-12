@@ -12,6 +12,7 @@ import {
 import { CoinEnvelopeItem } from '@/interfaces';
 import { ENVELOPE_MODULE_NAME, MODULE_ADDRESS } from '@/utils/constants';
 import { formatCoinType, formatCoverImageUrl, formatUnits } from '@/utils/kit';
+import { formatCoinAmount } from '@/utils/coin';
 import { Args, Transaction } from '@roochnetwork/rooch-sdk';
 import { useCurrentWallet, useRoochClient } from '@roochnetwork/rooch-sdk-kit';
 import { useMemo, useState } from 'react';
@@ -25,6 +26,8 @@ import { WalletConnectDialog } from '../../wallet-connect-dialog';
 import { useTranslations } from 'next-intl';
 import TwitterBindingStatus from './twitter-binding-status';
 import TwitterBindingDialog from '@/components/twitter-binding-dialog';
+import { CoinEnvelopeClaimedDialog } from './coin-envelope-claimed-dialog';
+
 interface ActivityProps {
   data: CoinEnvelopeItem;
   onClaimed: () => void;
@@ -36,6 +39,7 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
   const walletAddress = useWalletHexAddress();
   const { isConnecting: isWalletConnecting, isConnected: isWalletConnected } = useCurrentWallet();
   const [connectModalOpen, setConnectModalOpen] = useState(false);
+  const [coinEnvelopeClaimedDialogOpen, setCoinEnvelopeClaimedDialogOpen] = useState(false);
   const [twitterBindingDialogOpen, setTwitterBindingDialogOpen] = useState(false);
   const t = useTranslations();
   const { toast } = useToast();
@@ -44,6 +48,27 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
   const coinInfoResp = useCoinInfo(data.coinType);
   const claimedAddressResp = useEnvelopeClaimedInfo(data.claimedAddressTableId);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const claimedAmount = useMemo(() => {
+    return claimedAddressResp.data.find((o) => o.address === walletAddress)?.amount || undefined;
+  }, [claimedAddressResp.data, walletAddress]);
+
+  const claimedAmountFormatted = useMemo(() => {
+    return claimedAmount && coinInfoResp.data
+      ? formatCoinAmount(claimedAmount, coinInfoResp.data.decimals)
+      : undefined;
+  }, [claimedAmount, coinInfoResp.data]);
+
+  const claimedRankPercentage = useMemo(() => {
+    if (!claimedAmount) {
+      return undefined;
+    }
+
+    const userCountWithMoreAmount = claimedAddressResp.data.filter(
+      (o) => o.amount > claimedAmount
+    ).length;
+    return Math.ceil(((userCountWithMoreAmount + 1) / claimedAddressResp.data.length) * 100);
+  }, [claimedAmount, claimedAddressResp.data]);
 
   const alreadyClaimed = useMemo(() => {
     return claimedAddressResp.data.some((o) => o.address === walletAddress);
@@ -61,7 +86,6 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
           backgroundImage: `url(${formatCoverImageUrl(data.coverImageUrl)})`,
         }}
       />
-
       <div className="container mt-16 flex max-w-5xl flex-col px-4 md:mt-[-100px] md:flex-row md:gap-14 md:px-6 xl:gap-20">
         <img
           src={formatCoverImageUrl(data.coverImageUrl)}
@@ -134,12 +158,17 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
               </div>
 
               {isWalletConnecting ||
-                claimedAddressResp.isLoading ||
-                coinInfoResp.isPending ||
-                twitterBindingStatusResp.isPending ? (
+              claimedAddressResp.isLoading ||
+              coinInfoResp.isPending ||
+              (data.requireTwitterBinding && twitterBindingStatusResp.isPending) ? (
                 <EnvelopeStatusButton type="waiting" />
               ) : alreadyClaimed ? (
-                <EnvelopeStatusButton type="already-claimed" />
+                <EnvelopeStatusButton
+                  type="already-claimed"
+                  showClaimedAmount={!coinEnvelopeClaimedDialogOpen}
+                  claimedAmountFormatted={claimedAmountFormatted}
+                  coinInfoSymbol={coinInfoResp.data?.symbol}
+                />
               ) : (
                 <div>
                   <EnvelopeStatusButton
@@ -170,8 +199,9 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
                         });
                         if (res.execution_info.status.type === 'executed') {
                           onClaimed();
-                          claimedAddressResp.refetch();
                           coinInfoResp.refetch();
+                          await claimedAddressResp.refetch();
+                          setCoinEnvelopeClaimedDialogOpen(true);
                         } else {
                           /* @ts-ignore */
                           throw new Error(`abortCode=${res.execution_info.status.abort_code}`);
@@ -204,13 +234,14 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
                       }
                     }}
                   />
-                  {twitterBindingStatusResp.isPending ? null : (
-                    <TwitterBindingStatus
-                      className="mt-2"
-                      binded={twitterBindingStatusResp.binded!}
-                      creatorAddress={data.sender}
-                    />
-                  )}
+                  {data.requireTwitterBinding &&
+                    (twitterBindingStatusResp.isPending ? null : (
+                      <TwitterBindingStatus
+                        className="mt-2"
+                        binded={twitterBindingStatusResp.binded!}
+                        creatorAddress={data.sender}
+                      />
+                    ))}
                 </div>
               )}
             </div>
@@ -252,12 +283,19 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
           </div>
         </div>
       </div>
-
       <WalletConnectDialog open={connectModalOpen} onOpenChange={setConnectModalOpen} />
       <TwitterBindingDialog
         creatorAddress={data.sender}
         open={twitterBindingDialogOpen}
         onClose={() => setTwitterBindingDialogOpen(false)}
+      />
+
+      <CoinEnvelopeClaimedDialog
+        open={coinEnvelopeClaimedDialogOpen}
+        onClose={() => setCoinEnvelopeClaimedDialogOpen(false)}
+        claimedAmountFormatted={claimedAmountFormatted}
+        claimedRankPercentage={claimedRankPercentage}
+        coinInfo={coinInfoResp.data}
       />
     </div>
   );

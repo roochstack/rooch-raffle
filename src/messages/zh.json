@@ -171,7 +171,13 @@
       "amount": "金额",
       "quantity": "数量",
       "remaining": "剩余",
-      "claimed": "已领取",
+      "claimed": {
+        "title": "恭喜!",
+        "congratulations": "😆你领取到",
+        "topPercentage": "😎击败了 {percentage}% 的当前参与者😎",
+        "close": "关闭",
+        "portalLink": "前往 Portal 查看资产"
+      },
       "share": "分享",
       "shareTitle": "分享红包",
       "shareDescription": "快来领取红包！",
@@ -179,6 +185,7 @@
         "waiting": "等待中...",
         "claiming": "领取中...",
         "claimed": "已领取",
+        "claimedWithAmount": "已领取 {amount} {coinInfoSymbol}",
         "notStarted": "尚未开始",
         "claim": "🧧立即开红包",
         "ended": "活动已结束",

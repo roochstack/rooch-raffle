@@ -10,6 +10,9 @@ interface StatusButtonProps {
   onClaim?: () => Promise<void>;
   loading?: boolean;
   minLoadingDuration?: number;
+  showClaimedAmount?: boolean;
+  claimedAmountFormatted?: string;
+  coinInfoSymbol?: string;
 }
 
 export default function EnvelopeStatusButton({
@@ -17,6 +20,9 @@ export default function EnvelopeStatusButton({
   onClaim,
   loading,
   minLoadingDuration = 800,
+  showClaimedAmount = false,
+  claimedAmountFormatted,
+  coinInfoSymbol,
 }: StatusButtonProps) {
   const t = useTranslations('activities.envelope.claimButton');
   const [innerLoading, setInnerLoading] = useState(false);
@@ -57,7 +63,12 @@ export default function EnvelopeStatusButton({
     return (
       <Button size="lg" className="h-12 w-full cursor-not-allowed" disabled>
         <CircleCheckBigIcon className="mr-1 h-4 w-4" />
-        {t('claimed')}
+        {showClaimedAmount
+          ? t('claimedWithAmount', {
+              coinInfoSymbol: coinInfoSymbol,
+              amount: claimedAmountFormatted,
+            })
+          : t('claimed')}
       </Button>
     );
   }
