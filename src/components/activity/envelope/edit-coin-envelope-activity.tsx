@@ -16,7 +16,7 @@ import {
 import { LoadingButtonStatus } from '@/components/ui/loading-button';
 import { useCoinBalances, useWalletHexAddress } from '@/hooks';
 import { useActivityImageUpload } from '@/hooks/use-image-upload';
-import { useExtendEnvelopeEndTime, useUpdateEnvelope } from '@/hooks/use-update-envelope';
+import { useUpdateNotStartedEnvelope, useUpdateOngoingEnvelope } from '@/hooks/use-update-envelope';
 import { CoinEnvelopeItem } from '@/interfaces';
 import { formatCoverImageUrl, formatUnits } from '@/utils/kit';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,6 +35,7 @@ import EnvelopeStatusEditButton from './envelope-status-edit-button';
 import { CoinSelect } from '@/components/ui/coin-select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import pickBy from 'lodash/pickBy';
+import { toClaimDialogConfig, toSocialLinks } from '@/utils/envelope';
 
 interface ActivityProps {
   data: CoinEnvelopeItem;
@@ -50,13 +51,20 @@ interface FormValues {
   totalEnvelope: string;
   totalCoin: string;
   coinType: string;
+  twitterURL: string;
+  telegramURL: string;
+  websiteURL: string;
+  discordURL: string;
+  claimDialogButtonTextEN: string;
+  claimDialogButtonTextZH: string;
+  claimDialogButtonUrl: string;
 }
 
 export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
   const locale = useLocale();
   const coinBalancesResp = useCoinBalances();
-  const updateEnvelope = useUpdateEnvelope();
-  const extendEnvelopeEndTime = useExtendEnvelopeEndTime();
+  const updateNotStartedEnvelope = useUpdateNotStartedEnvelope();
+  const updateOngoingEnvelope = useUpdateOngoingEnvelope();
   const walletAddress = useWalletHexAddress();
 
   const { isConnected: isWalletConnected } = useCurrentWallet();
@@ -111,6 +119,13 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                 message: tRoot('soft_basic_robin_clap'),
               }),
         requireTwitterBinding: z.boolean(),
+        twitterURL: z.string().optional(),
+        telegramURL: z.string().optional(),
+        discordURL: z.string().optional(),
+        websiteURL: z.string().optional(),
+        claimDialogButtonTextEN: z.string().optional(),
+        claimDialogButtonTextZH: z.string().optional(),
+        claimDialogButtonUrl: z.string().optional(),
       })
       .refine(
         (data) => {
@@ -119,6 +134,23 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
         {
           message: t('validation.endTimeInvalid'),
           path: ['endTime'],
+        }
+      )
+      .refine(
+        (data) => {
+          const hasAllFields =
+            data.claimDialogButtonTextEN &&
+            data.claimDialogButtonTextZH &&
+            data.claimDialogButtonUrl;
+          const hasNoFields =
+            !data.claimDialogButtonTextEN &&
+            !data.claimDialogButtonTextZH &&
+            !data.claimDialogButtonUrl;
+          return hasAllFields || hasNoFields;
+        },
+        {
+          message: t('validation.claimDialogButtonTextRequired'),
+          path: ['claimDialogButtonTextEN'],
         }
       );
     return schema;
@@ -136,6 +168,13 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
       envelopeType: data.envelopeType,
       totalEnvelope: data.totalEnvelope.toString(),
       totalCoin: data.envelopeType === 'random' ? data.totalCoin.toString() : '',
+      twitterURL: data.socialLinks.find((link) => link.platform === 'twitter')?.url || '',
+      telegramURL: data.socialLinks.find((link) => link.platform === 'telegram')?.url || '',
+      websiteURL: data.socialLinks.find((link) => link.platform === 'website')?.url || '',
+      discordURL: data.socialLinks.find((link) => link.platform === 'discord')?.url || '',
+      claimDialogButtonTextEN: data.claimDialogConfig?.buttonTextEN || '',
+      claimDialogButtonTextZH: data.claimDialogConfig?.buttonTextZH || '',
+      claimDialogButtonUrl: data.claimDialogConfig?.buttonUrl || '',
     },
   });
 
@@ -147,7 +186,6 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
     },
   });
 
-  const updateHandler = data.status === 'not-started' ? updateEnvelope : extendEnvelopeEndTime;
   const onSubmit = async (formData: FormValues) => {
     if (submitStatus === 'success') {
       return;
@@ -168,16 +206,34 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
       endTime: formData.endTime,
       requireTwitterBinding: formData.requireTwitterBinding,
       coinType: data.coinType,
+      socialLinks: toSocialLinks(
+        formData.twitterURL,
+        formData.telegramURL,
+        formData.discordURL,
+        formData.websiteURL
+      ),
+      claimDialogConfig: toClaimDialogConfig(
+        formData.claimDialogButtonUrl,
+        formData.claimDialogButtonTextEN,
+        formData.claimDialogButtonTextZH
+      ),
     };
 
     try {
       setSubmitStatus('loading');
-      await updateHandler(data.id, submitData);
+
+      if (data.status === 'not-started') {
+        await updateNotStartedEnvelope(data.id, submitData);
+      } else {
+        await updateOngoingEnvelope(data.id, data.endTime, submitData);
+      }
+
       setSubmitStatus('success');
       window.setTimeout(() => {
         router.push(`/activities/envelope/manage/${data.id}`);
       }, 1000);
     } catch (error) {
+      console.error('Error editing envelope', error);
       setSubmitStatus('error');
     }
   };
@@ -471,6 +527,169 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                           <FormDescription>
                             {t('requireTwitterBinding.description')}
                           </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="claimDialogButtonUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('claimDialogButton.url')}</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="https://..."
+                              {...field}
+                              onBlur={(e) => {
+                                const value = e.target.value;
+                                if (
+                                  value &&
+                                  !value.startsWith('http://') &&
+                                  !value.startsWith('https://')
+                                ) {
+                                  field.onChange(`https://${value}`);
+                                }
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="claimDialogButtonTextEN"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel htmlFor={field.name}>
+                            {t('claimDialogButton.textEN')}
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Edit text in English for the button in Claimed Dialog"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="claimDialogButtonTextZH"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel htmlFor={field.name}>
+                            {t('claimDialogButton.textZH')}
+                          </FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="弹窗按钮中文文字" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="twitterURL"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('socialLinks.twitter')}</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="https://twitter.com/..."
+                              {...field}
+                              onBlur={(e) => {
+                                const value = e.target.value;
+                                if (
+                                  value &&
+                                  !value.startsWith('http://') &&
+                                  !value.startsWith('https://')
+                                ) {
+                                  field.onChange(`https://${value}`);
+                                }
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="telegramURL"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('socialLinks.telegram')}</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="https://t.me/..."
+                              {...field}
+                              onBlur={(e) => {
+                                const value = e.target.value;
+                                if (
+                                  value &&
+                                  !value.startsWith('http://') &&
+                                  !value.startsWith('https://')
+                                ) {
+                                  field.onChange(`https://${value}`);
+                                }
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="discordURL"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('socialLinks.discord')}</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="https://discord.gg/..."
+                              {...field}
+                              onBlur={(e) => {
+                                const value = e.target.value;
+                                if (
+                                  value &&
+                                  !value.startsWith('http://') &&
+                                  !value.startsWith('https://')
+                                ) {
+                                  field.onChange(`https://${value}`);
+                                }
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="websiteURL"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('socialLinks.website')}</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="https://..."
+                              {...field}
+                              onBlur={(e) => {
+                                const value = e.target.value;
+                                if (
+                                  value &&
+                                  !value.startsWith('http://') &&
+                                  !value.startsWith('https://')
+                                ) {
+                                  field.onChange(`https://${value}`);
+                                }
+                              }}
+                            />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}

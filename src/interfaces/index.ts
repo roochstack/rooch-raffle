@@ -14,6 +14,8 @@ export interface CreateCoinEnvelopeParams {
   startTime: Date;
   endTime: Date;
   requireTwitterBinding: boolean;
+  socialLinks: SocialLink[];
+  dialogConfig: ClaimDialogConfig | null;
 }
 
 export interface CreateNFTEnvelopeParams {
@@ -104,6 +106,27 @@ export interface CoinEnvelopeItem {
   createdAt: Date;
   updatedAt: Date;
   requireTwitterBinding: boolean;
+  socialLinks: SocialLink[];
+  claimDialogConfig: ClaimDialogConfig | null;
+}
+
+export interface ClaimDialogConfig {
+  buttonTextEN: string;
+  buttonTextZH: string;
+  buttonUrl: string;
+}
+
+export interface SocialLink {
+  platform: SocialPlatform;
+  url: string;
+}
+
+// 社交平台枚举
+export enum SocialPlatform {
+  TWITTER = 'twitter',
+  TELEGRAM = 'telegram',
+  WEBSITE = 'website',
+  DISCORD = 'discord',
 }
 
 export type EnvelopeItem = CoinEnvelopeItem | NFTEnvelopeItem;

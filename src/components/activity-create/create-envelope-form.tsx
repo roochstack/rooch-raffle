@@ -39,6 +39,7 @@ import { LoadingButton, LoadingButtonStatus } from '../ui/loading-button';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { RadioCardGroup } from '../ui/radio-card-group';
 import { ActivityFormLayout } from './activity-form-layout';
+import { toClaimDialogConfig, toSocialLinks } from '@/utils/envelope';
 
 interface FormValues {
   activityName: string;
@@ -51,6 +52,13 @@ interface FormValues {
   totalEnvelope: string;
   totalCoin: string;
   requireTwitterBinding: boolean;
+  twitterURL: string;
+  telegramURL: string;
+  websiteURL: string;
+  discordURL: string;
+  claimDialogButtonTextEN: string;
+  claimDialogButtonTextZH: string;
+  claimDialogButtonUrl: string;
 }
 
 export default function CreateEnvelopeForm() {
@@ -89,6 +97,13 @@ export default function CreateEnvelopeForm() {
         ]),
         nfts: z.array(z.string()),
         requireTwitterBinding: z.boolean(),
+        twitterURL: z.string().optional(),
+        telegramURL: z.string().optional(),
+        discordURL: z.string().optional(),
+        websiteURL: z.string().optional(),
+        claimDialogButtonUrl: z.string().optional(),
+        claimDialogButtonTextEN: z.string().optional(),
+        claimDialogButtonTextZH: z.string().optional(),
       })
       .refine(
         (data) => {
@@ -172,6 +187,23 @@ export default function CreateEnvelopeForm() {
           message: t('validation.nftEmpty'),
           path: ['nfts'],
         }
+      )
+      .refine(
+        (data) => {
+          const hasAllFields =
+            data.claimDialogButtonTextEN &&
+            data.claimDialogButtonTextZH &&
+            data.claimDialogButtonUrl;
+          const hasNoFields =
+            !data.claimDialogButtonTextEN &&
+            !data.claimDialogButtonTextZH &&
+            !data.claimDialogButtonUrl;
+          return hasAllFields || hasNoFields;
+        },
+        {
+          message: t('validation.claimDialogButtonTextRequired'),
+          path: ['claimDialogButtonTextEN'],
+        }
       );
 
     return schema;
@@ -189,6 +221,13 @@ export default function CreateEnvelopeForm() {
       totalCoin: '',
       nfts: [],
       requireTwitterBinding: false,
+      twitterURL: '',
+      telegramURL: '',
+      websiteURL: '',
+      discordURL: '',
+      claimDialogButtonTextEN: '',
+      claimDialogButtonTextZH: '',
+      claimDialogButtonUrl: '',
     },
   });
 
@@ -204,8 +243,6 @@ export default function CreateEnvelopeForm() {
     if (submitStatus === 'success') {
       return;
     }
-
-    console.log('onSubmit', data);
 
     data.startTime.setSeconds(0);
     data.startTime.setMilliseconds(0);
@@ -250,13 +287,21 @@ export default function CreateEnvelopeForm() {
         startTime: data.startTime,
         endTime: data.endTime,
         requireTwitterBinding: data.requireTwitterBinding,
+        socialLinks: toSocialLinks(
+          data.twitterURL,
+          data.telegramURL,
+          data.discordURL,
+          data.websiteURL
+        ),
+        dialogConfig: toClaimDialogConfig(
+          data.claimDialogButtonUrl,
+          data.claimDialogButtonTextEN,
+          data.claimDialogButtonTextZH
+        ),
       };
     }
 
-    console.log('submitData', submitData);
-
     try {
-      console.log('onSubmit', data);
       setSubmitStatus('loading');
       const { id: newEnvelopeId } = await createEnvelope(submitData!);
       setSubmitStatus('success');
@@ -596,6 +641,182 @@ export default function CreateEnvelopeForm() {
                       </div>
                     </FormControl>
                     <FormDescription>{t('requireTwitterBinding.description')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="claimDialogButtonUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor={field.name}>{t('claimDialogButton.url')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        prefix="https://"
+                        {...field}
+                        placeholder="your-website.com"
+                        onBlur={(e) => {
+                          const value = e.target.value;
+                          if (
+                            value &&
+                            !value.startsWith('http://') &&
+                            !value.startsWith('https://')
+                          ) {
+                            field.onChange(`https://${value}`);
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormDescription>{t('claimDialogButton.urlDesc')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="claimDialogButtonTextEN"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor={field.name}>{t('claimDialogButton.textEN')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Edit text in English for the button in Claimed Dialog"
+                      />
+                    </FormControl>
+                    <FormDescription>{t('claimDialogButton.textENDesc')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="claimDialogButtonTextZH"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor={field.name}>{t('claimDialogButton.textZH')}</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="弹窗按钮中文文字" />
+                    </FormControl>
+                    <FormDescription>{t('claimDialogButton.textZHDesc')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="twitterURL"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor={field.name}>{t('socialLinks.twitter')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        prefix="https://"
+                        {...field}
+                        placeholder="twitter.com/your-account"
+                        onBlur={(e) => {
+                          const value = e.target.value;
+                          if (
+                            value &&
+                            !value.startsWith('http://') &&
+                            !value.startsWith('https://')
+                          ) {
+                            field.onChange(`https://${value}`);
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormDescription>{t('socialLinks.twitterDesc')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="telegramURL"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('socialLinks.telegram')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        prefix="https://"
+                        {...field}
+                        placeholder="t.me/your-group"
+                        onBlur={(e) => {
+                          const value = e.target.value;
+                          if (
+                            value &&
+                            !value.startsWith('http://') &&
+                            !value.startsWith('https://')
+                          ) {
+                            field.onChange(`https://${value}`);
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormDescription>{t('socialLinks.telegramDesc')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="websiteURL"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('socialLinks.website')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        prefix="https://"
+                        {...field}
+                        placeholder="example.com"
+                        onBlur={(e) => {
+                          const value = e.target.value;
+                          if (
+                            value &&
+                            !value.startsWith('http://') &&
+                            !value.startsWith('https://')
+                          ) {
+                            field.onChange(`https://${value}`);
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormDescription>{t('socialLinks.websiteDesc')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="discordURL"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('socialLinks.discord')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="https://discord.gg/rooch-raffle-group"
+                        onBlur={(e) => {
+                          const value = e.target.value;
+                          if (
+                            value &&
+                            !value.startsWith('http://') &&
+                            !value.startsWith('https://')
+                          ) {
+                            field.onChange(`https://${value}`);
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormDescription>{t('socialLinks.discordDesc')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

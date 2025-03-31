@@ -126,7 +126,12 @@
           "endTimeInvalid": "结束时间不能早于开始时间",
           "nftEmpty": "NFT 不能为空",
           "rewardAmountRequired": "奖品数量不能为空",
-          "rewardAmountExceeded": "奖品数量不能超过总人数"
+          "rewardAmountExceeded": "奖品数量不能超过总人数",
+          "twitterURLInvalid": "请输入有效的 Twitter 链接",
+          "telegramURLInvalid": "请输入有效的 Telegram 链接",
+          "websiteURLInvalid": "请输入有效的网站链接",
+          "discordURLInvalid": "请输入有效的 Discord 链接",
+          "claimDialogButtonTextRequired": "请输入完整的领取弹窗按钮配置，或都不填写"
         },
         "imageUpload": {
           "title": "上传封面图片",
@@ -148,6 +153,27 @@
         "requireTwitterBinding": {
           "label": "绑定 X (Twitter)",
           "description": "选中后，只有绑定过 X 的钱包地址才能参与"
+        },
+        "socialLinks": {
+          "twitter": "Twitter",
+          "twitterDesc": "输入您的twitter主页链接。如果配置该字段，则会在红包活动页中显示可以跳转到该链接的ICON",
+          "telegram": "Telegram",
+          "telegramDesc": "输入您的 Telegram 群组链接。如果配置该字段，则会在红包活动页中显示可以跳转到该链接的ICON",
+          "discord": "Discord",
+          "discordDesc": "输入您的 Discord 服务器链接。如果配置该字段，则会在红包活动页中显示可以跳转到该链接的ICON",
+          "website": "Website",
+          "websiteDesc": "输入您的网站链接。如果配置该字段，则会在红包活动页中显示可以跳转到该链接的ICON",
+          "empty": "未配置社交平台链接"
+        },
+        "claimDialogButton": {
+          "title": "领取弹窗按钮",
+          "url": "弹窗按钮的跳转链接",
+          "urlDesc": "如果配置该字段，则在红包领取成功后的弹窗中，会显示可以跳转到该链接的按钮",
+          "textEN": "弹窗按钮的显示的英文文字",
+          "textENDesc": "如果配置弹窗跳转链接，则需要配置该字段",
+          "textZH": "弹窗按钮的显示的中文文字",
+          "textZHDesc": "如果配置弹窗跳转链接，则需要配置该字段",
+          "empty": "未配置领取弹窗按钮"
         }
       },
       "button": {
@@ -221,11 +247,11 @@
         },
         "editWarning": {
           "title": "注意",
-          "content": "活动尚未开始，您可以更新活动名称、封面图片、开始/结束时间、参与条件"
+          "content": "活动尚未开始，您可以更新活动名称、封面图片、开始/结束时间、参与条件、社交平台URL、领取弹窗按钮配置"
         },
         "extendEndTimeWarning": {
           "title": "注意",
-          "content": "活动已开始，您只可以更新活动结束时间"
+          "content": "活动已开始，您只可以更新活动结束时间、社交平台URL、领取弹窗按钮配置"
         }
       },
       "extendEndTime": {

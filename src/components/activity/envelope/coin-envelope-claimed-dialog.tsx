@@ -4,11 +4,11 @@ import SlotCounter, { SlotCounterRef } from '@/components/slot-counter';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useWalletHexAddress } from '@/hooks/app-hooks';
-import { CoinMetaInfo } from '@/interfaces';
+import { ClaimDialogConfig, CoinMetaInfo } from '@/interfaces';
 import { cn } from '@/lib/utils';
 import confetti from 'canvas-confetti';
 import { ArrowUpRightIcon } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface ClaimedDialogProps {
@@ -17,6 +17,7 @@ interface ClaimedDialogProps {
   claimedAmountFormatted?: string;
   claimedRankPercentage?: number;
   coinInfo?: CoinMetaInfo;
+  claimDialogConfig: ClaimDialogConfig | null;
 }
 
 export function CoinEnvelopeClaimedDialog({
@@ -25,7 +26,10 @@ export function CoinEnvelopeClaimedDialog({
   claimedAmountFormatted,
   claimedRankPercentage,
   coinInfo,
+  claimDialogConfig,
 }: ClaimedDialogProps) {
+  const locale = useLocale();
+
   const t = useTranslations('activities.envelope.claimed');
   const [showPercentage, setShowPercentage] = useState(false);
   const slotCounterRef = useRef<SlotCounterRef>(null);
@@ -135,16 +139,33 @@ export function CoinEnvelopeClaimedDialog({
             </div>
           </div>
         </>
+        <div className="text-center">
+          <a
+            href={`https://portal.rooch.network/account/${walletAddress}`}
+            className="flex items-center justify-center text-xs text-gray-500 hover:underline"
+          >
+            <span>{t('portalLink')}</span>
+            <ArrowUpRightIcon className="ml-1 h-3.5 w-3.5" />
+          </a>
+        </div>
         <div className="flex flex-col gap-3 px-6">
-          <Button className="w-full" size="lg">
-            <a
-              href={`https://portal.rooch.network/account/${walletAddress}`}
-              className="flex items-center justify-center"
-            >
-              <span>{t('portalLink')}</span>
-              <ArrowUpRightIcon className="ml-1 h-3.5 w-3.5" />
-            </a>
-          </Button>
+          {claimDialogConfig && (
+            <Button className="w-full" size="lg">
+              <a
+                target="_blank"
+                rel="noopener"
+                href={claimDialogConfig.buttonUrl?.replace('{wallet_address}', walletAddress)}
+                className="flex items-center justify-center"
+              >
+                <span>
+                  {locale === 'zh'
+                    ? claimDialogConfig.buttonTextZH
+                    : claimDialogConfig.buttonTextEN}
+                </span>
+                <ArrowUpRightIcon className="ml-1 h-3.5 w-3.5" />
+              </a>
+            </Button>
+          )}
           <Button variant="secondary" className="w-full" onClick={onClose}>
             {t('close')}
           </Button>
