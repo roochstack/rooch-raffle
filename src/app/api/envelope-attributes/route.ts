@@ -1,11 +1,8 @@
-import { neon } from '@neondatabase/serverless';
-import * as schema from '@/db/schema';
-import { drizzle } from 'drizzle-orm/neon-http';
 import { eq } from 'drizzle-orm';
 import { envelopeAttributes } from '@/db/schema';
 import { NextRequest, NextResponse } from 'next/server';
 import { ClaimDialogConfig, SocialLink } from '@/interfaces';
-import { useRouter } from '@/i18n/routing';
+import { db } from '@/db';
 
 export interface EnvelopeAttributes {
   roochObjectId: string;
@@ -16,12 +13,6 @@ export interface EnvelopeAttributes {
 if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL must be a Neon postgres connection string');
 }
-const sql = neon(process.env.DATABASE_URL!);
-
-export const db = drizzle({
-  client: sql,
-  schema: { ...schema },
-});
 
 export const POST = async (request: NextRequest) => {
   try {
