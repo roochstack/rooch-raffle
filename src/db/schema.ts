@@ -1,11 +1,6 @@
 import { ClaimDialogConfig, SocialLink } from '@/interfaces';
 import { jsonb, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 
-export const testUser = pgTable('test_user', {
-  id: serial('id').primaryKey(),
-  name: text('name').notNull(),
-});
-
 export interface EnvelopeAttributes {
   roochObjectId: string;
   socialLinks: SocialLink[];
