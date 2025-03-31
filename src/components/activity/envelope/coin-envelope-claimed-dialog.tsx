@@ -152,6 +152,8 @@ export function CoinEnvelopeClaimedDialog({
           {claimDialogConfig && (
             <Button className="w-full" size="lg">
               <a
+                target="_blank"
+                rel="noopener"
                 href={claimDialogConfig.buttonUrl?.replace('{wallet_address}', walletAddress)}
                 className="flex items-center justify-center"
               >

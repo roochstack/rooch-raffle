@@ -1,9 +1,11 @@
 'use client';
 
-import { Twitter, Globe, MessageCircle, MessagesSquare, ExternalLink } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
 import { SocialLink, SocialPlatform } from '@/interfaces';
+import { cn } from '@/lib/utils';
+import { ExternalLink } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { RiDiscordFill, RiTelegram2Fill, RiTwitterXFill } from 'react-icons/ri';
+import { TbWorld } from 'react-icons/tb';
 
 interface SocialLinksProps {
   links: SocialLink[];
@@ -12,10 +14,16 @@ interface SocialLinksProps {
 }
 
 const PLATFORM_ICON = {
-  [SocialPlatform.TWITTER]: <Twitter className="h-4 w-4 text-[#1DA1F2]" />,
-  [SocialPlatform.TELEGRAM]: <MessageCircle className="h-4 w-4 text-[#0088cc]" />,
-  [SocialPlatform.WEBSITE]: <Globe className="h-4 w-4 text-gray-700" />,
-  [SocialPlatform.DISCORD]: <MessagesSquare className="h-4 w-4 text-[#5865F2]" />,
+  [SocialPlatform.TWITTER]: (
+    <RiTwitterXFill className="h-4.5 w-4.5 text-gray-500 hover:text-gray-700" />
+  ),
+  [SocialPlatform.TELEGRAM]: (
+    <RiTelegram2Fill className="h-4.5 w-4.5 text-gray-500 hover:text-gray-700" />
+  ),
+  [SocialPlatform.WEBSITE]: <TbWorld className="h-4.5 w-4.5 text-gray-500 hover:text-gray-700" />,
+  [SocialPlatform.DISCORD]: (
+    <RiDiscordFill className="h-4.5 w-4.5 text-gray-500 hover:text-gray-700" />
+  ),
 };
 
 export function SocialLinks({ links = [], onChange, editable = false }: SocialLinksProps) {
@@ -37,14 +45,10 @@ export function SocialLinks({ links = [], onChange, editable = false }: SocialLi
     <div className={cn('flex items-center space-x-3')}>
       {linksToRender.map((link, index) => {
         return (
-          <a
-            key={index}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full bg-gray-100 p-2 transition-colors hover:bg-gray-200"
-          >
-            {PLATFORM_ICON[link.platform] || <ExternalLink className="h-4 w-4 text-gray-500" />}
+          <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="">
+            {PLATFORM_ICON[link.platform] || (
+              <ExternalLink className="h-4 w-4 text-gray-500 hover:text-gray-700" />
+            )}
           </a>
         );
       })}

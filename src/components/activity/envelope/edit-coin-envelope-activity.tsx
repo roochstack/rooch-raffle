@@ -538,7 +538,20 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                         <FormItem>
                           <FormLabel>{t('claimDialogButton.url')}</FormLabel>
                           <FormControl>
-                            <Input placeholder="https://..." {...field} />
+                            <Input
+                              placeholder="https://..."
+                              {...field}
+                              onBlur={(e) => {
+                                const value = e.target.value;
+                                if (
+                                  value &&
+                                  !value.startsWith('http://') &&
+                                  !value.startsWith('https://')
+                                ) {
+                                  field.onChange(`https://${value}`);
+                                }
+                              }}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -584,7 +597,20 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                         <FormItem>
                           <FormLabel>{t('socialLinks.twitter')}</FormLabel>
                           <FormControl>
-                            <Input placeholder="https://twitter.com/..." {...field} />
+                            <Input
+                              placeholder="https://twitter.com/..."
+                              {...field}
+                              onBlur={(e) => {
+                                const value = e.target.value;
+                                if (
+                                  value &&
+                                  !value.startsWith('http://') &&
+                                  !value.startsWith('https://')
+                                ) {
+                                  field.onChange(`https://${value}`);
+                                }
+                              }}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -597,7 +623,20 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                         <FormItem>
                           <FormLabel>{t('socialLinks.telegram')}</FormLabel>
                           <FormControl>
-                            <Input placeholder="https://t.me/..." {...field} />
+                            <Input
+                              placeholder="https://t.me/..."
+                              {...field}
+                              onBlur={(e) => {
+                                const value = e.target.value;
+                                if (
+                                  value &&
+                                  !value.startsWith('http://') &&
+                                  !value.startsWith('https://')
+                                ) {
+                                  field.onChange(`https://${value}`);
+                                }
+                              }}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -610,7 +649,20 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                         <FormItem>
                           <FormLabel>{t('socialLinks.discord')}</FormLabel>
                           <FormControl>
-                            <Input placeholder="https://discord.gg/..." {...field} />
+                            <Input
+                              placeholder="https://discord.gg/..."
+                              {...field}
+                              onBlur={(e) => {
+                                const value = e.target.value;
+                                if (
+                                  value &&
+                                  !value.startsWith('http://') &&
+                                  !value.startsWith('https://')
+                                ) {
+                                  field.onChange(`https://${value}`);
+                                }
+                              }}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -623,7 +675,20 @@ export default function EditCoinEnvelopeActivity({ data }: ActivityProps) {
                         <FormItem>
                           <FormLabel>{t('socialLinks.website')}</FormLabel>
                           <FormControl>
-                            <Input placeholder="https://..." {...field} />
+                            <Input
+                              placeholder="https://..."
+                              {...field}
+                              onBlur={(e) => {
+                                const value = e.target.value;
+                                if (
+                                  value &&
+                                  !value.startsWith('http://') &&
+                                  !value.startsWith('https://')
+                                ) {
+                                  field.onChange(`https://${value}`);
+                                }
+                              }}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

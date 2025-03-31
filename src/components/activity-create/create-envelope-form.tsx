@@ -653,7 +653,21 @@ export default function CreateEnvelopeForm() {
                   <FormItem>
                     <FormLabel htmlFor={field.name}>{t('claimDialogButton.url')}</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="https://rooch-raffle.vercel.app" />
+                      <Input
+                        prefix="https://"
+                        {...field}
+                        placeholder="your-website.com"
+                        onBlur={(e) => {
+                          const value = e.target.value;
+                          if (
+                            value &&
+                            !value.startsWith('http://') &&
+                            !value.startsWith('https://')
+                          ) {
+                            field.onChange(`https://${value}`);
+                          }
+                        }}
+                      />
                     </FormControl>
                     <FormDescription>{t('claimDialogButton.urlDesc')}</FormDescription>
                     <FormMessage />
@@ -701,7 +715,21 @@ export default function CreateEnvelopeForm() {
                   <FormItem>
                     <FormLabel htmlFor={field.name}>{t('socialLinks.twitter')}</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="https://twitter.com/rooch-raffle" />
+                      <Input
+                        prefix="https://"
+                        {...field}
+                        placeholder="twitter.com/your-account"
+                        onBlur={(e) => {
+                          const value = e.target.value;
+                          if (
+                            value &&
+                            !value.startsWith('http://') &&
+                            !value.startsWith('https://')
+                          ) {
+                            field.onChange(`https://${value}`);
+                          }
+                        }}
+                      />
                     </FormControl>
                     <FormDescription>{t('socialLinks.twitterDesc')}</FormDescription>
                     <FormMessage />
@@ -715,7 +743,21 @@ export default function CreateEnvelopeForm() {
                   <FormItem>
                     <FormLabel>{t('socialLinks.telegram')}</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="https://t.me/rooch-raffle-group" />
+                      <Input
+                        prefix="https://"
+                        {...field}
+                        placeholder="t.me/your-group"
+                        onBlur={(e) => {
+                          const value = e.target.value;
+                          if (
+                            value &&
+                            !value.startsWith('http://') &&
+                            !value.startsWith('https://')
+                          ) {
+                            field.onChange(`https://${value}`);
+                          }
+                        }}
+                      />
                     </FormControl>
                     <FormDescription>{t('socialLinks.telegramDesc')}</FormDescription>
                     <FormMessage />
@@ -730,7 +772,21 @@ export default function CreateEnvelopeForm() {
                   <FormItem>
                     <FormLabel>{t('socialLinks.website')}</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="https://example.com" />
+                      <Input
+                        prefix="https://"
+                        {...field}
+                        placeholder="example.com"
+                        onBlur={(e) => {
+                          const value = e.target.value;
+                          if (
+                            value &&
+                            !value.startsWith('http://') &&
+                            !value.startsWith('https://')
+                          ) {
+                            field.onChange(`https://${value}`);
+                          }
+                        }}
+                      />
                     </FormControl>
                     <FormDescription>{t('socialLinks.websiteDesc')}</FormDescription>
                     <FormMessage />
@@ -745,7 +801,20 @@ export default function CreateEnvelopeForm() {
                   <FormItem>
                     <FormLabel>{t('socialLinks.discord')}</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="https://discord.gg/rooch-raffle-group" />
+                      <Input
+                        {...field}
+                        placeholder="https://discord.gg/rooch-raffle-group"
+                        onBlur={(e) => {
+                          const value = e.target.value;
+                          if (
+                            value &&
+                            !value.startsWith('http://') &&
+                            !value.startsWith('https://')
+                          ) {
+                            field.onChange(`https://${value}`);
+                          }
+                        }}
+                      />
                     </FormControl>
                     <FormDescription>{t('socialLinks.discordDesc')}</FormDescription>
                     <FormMessage />

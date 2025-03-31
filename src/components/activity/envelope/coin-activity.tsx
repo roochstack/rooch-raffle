@@ -283,7 +283,8 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
             </div>
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 flex items-center justify-start">
+          <div className="mt-8">
+            <hr className="mb-2 border-gray-300/70" />
             <SocialLinks links={data.socialLinks} />
           </div>
         </div>
