@@ -7,9 +7,7 @@ import { CreateEnvelopeParams } from '@/interfaces';
 
 export const useCreateEnvelope = () => {
   const client = useRoochClient();
-  const { wallet } = useCurrentWallet();
   const { sessionOrWallet } = useAppSession();
-  const walletAddress = useWalletHexAddress();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -74,6 +72,25 @@ export const useCreateEnvelope = () => {
 
     if (!newObjectCreatedChange) {
       throw new Error('Failed to create envelope');
+    }
+
+    // 将社交链接和按钮配置保存到数据库
+    if (params.assetType === 'coin' && (params.socialLinks.length > 0 || params.dialogConfig)) {
+      try {
+        await fetch('/api/envelope-attributes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            roochObjectId: newObjectCreatedChange.metadata.id,
+            socialLinks: params.socialLinks,
+            claimDialogConfig: params.dialogConfig,
+          }),
+        });
+      } catch (error) {
+        console.error('保存红包属性到链下db失败', error);
+      }
     }
 
     return {

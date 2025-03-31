@@ -1,7 +1,16 @@
-import { ActivityStatus, CoinEnvelopeItem, EnvelopeItem, NFTEnvelopeItem } from '@/interfaces';
+import {
+  ActivityStatus,
+  CoinEnvelopeItem,
+  EnvelopeItem,
+  NFTEnvelopeItem,
+  SocialLink,
+  SocialPlatform,
+  ClaimDialogConfig,
+} from '@/interfaces';
 import { fromUnixTime } from 'date-fns';
 import { get } from 'lodash';
 import { normalizeCoinType } from './coin';
+import { EnvelopeAttributes } from '@/db/schema';
 
 function parseNftTypeFromObjectType(objectType: string) {
   const pattern = /<(0x[a-f0-9]+::[^:]+::[^>]+)>/;
@@ -102,7 +111,10 @@ export function formatNftEnvelopeData(item: any): NFTEnvelopeItem {
   };
 }
 
-export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
+export function formatCoinEnvelopeData(
+  item: any,
+  extraData?: EnvelopeAttributes
+): CoinEnvelopeItem {
   const {
     moduleName,
     sender,
@@ -160,12 +172,39 @@ export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
     createdAt,
     updatedAt,
     requireTwitterBinding,
+    socialLinks: extraData?.socialLinks || [],
+    claimDialogConfig: extraData?.claimDialogConfig || null,
   };
 }
 
-export function formatEnvelopeData(item: any): EnvelopeItem {
+export function formatEnvelopeData(item: any, extraData?: EnvelopeAttributes): EnvelopeItem {
   if (item.decoded_value.value.nft) {
     return formatNftEnvelopeData(item);
   }
-  return formatCoinEnvelopeData(item);
+  return formatCoinEnvelopeData(item, extraData);
+}
+
+export function toSocialLinks(
+  twitterURL: string,
+  telegramURL: string,
+  discordURL: string,
+  websiteURL: string
+) {
+  console.log('toSocialLinks', twitterURL, telegramURL, discordURL, websiteURL);
+  return [
+    ...(twitterURL ? [{ platform: SocialPlatform.TWITTER, url: twitterURL } as SocialLink] : []),
+    ...(telegramURL ? [{ platform: SocialPlatform.TELEGRAM, url: telegramURL } as SocialLink] : []),
+    ...(discordURL ? [{ platform: SocialPlatform.DISCORD, url: discordURL } as SocialLink] : []),
+    ...(websiteURL ? [{ platform: SocialPlatform.WEBSITE, url: websiteURL } as SocialLink] : []),
+  ];
+}
+
+export function toClaimDialogConfig(buttonUrl: string, buttonTextEN: string, buttonTextZH: string) {
+  return buttonUrl
+    ? ({
+        buttonUrl: buttonUrl,
+        buttonTextEN: buttonTextEN,
+        buttonTextZH: buttonTextZH,
+      } as ClaimDialogConfig)
+    : null;
 }

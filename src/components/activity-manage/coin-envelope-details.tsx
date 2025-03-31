@@ -3,10 +3,11 @@
 import { useCoinBalances } from '@/hooks/use-coin-balances';
 import { CoinEnvelopeItem } from '@/interfaces';
 import { formatDate } from 'date-fns';
-import { TwitterIcon } from 'lucide-react';
+import { TwitterIcon, Globe, MessageCircle, MessagesSquare } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { CoinLabel } from '../coin-label';
 import { useMemo } from 'react';
+
 interface CoinEnvelopeDetailsProps {
   data: CoinEnvelopeItem;
 }
@@ -145,6 +146,69 @@ export default function CoinEnvelopeDetails({ data }: CoinEnvelopeDetailsProps) 
             </span>
           ) : (
             <span>{t('great_raw_duck_greet')}</span>
+          )}
+        </dd>
+
+        {/* 社交链接 */}
+        <dt className="sm: col-start-1 border-gray-950/5 pt-3 text-gray-500 first:border-none sm:border-gray-950/5 sm:py-3">
+          {t('activities.create.form.socialLinks.twitter')}
+        </dt>
+        <dd className="sm: pb-3 pt-1 text-gray-950 sm:border-gray-950/5 sm:py-3 sm:[&:nth-child(2)]:border-none">
+          {data.socialLinks && data.socialLinks.length > 0 ? (
+            <div className="space-y-2">
+              {data.socialLinks.map((link, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <span className="text-gray-500">
+                    {link.platform === 'twitter' && <TwitterIcon className="h-4 w-4" />}
+                    {link.platform === 'telegram' && <MessageCircle className="h-4 w-4" />}
+                    {link.platform === 'discord' && <MessagesSquare className="h-4 w-4" />}
+                    {link.platform === 'website' && <Globe className="h-4 w-4" />}
+                  </span>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    {link.url}
+                  </a>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <span>{t('activities.create.form.socialLinks.empty')}</span>
+          )}
+        </dd>
+
+        {/* 弹窗配置 */}
+        <dt className="sm: col-start-1 border-gray-950/5 pt-3 text-gray-500 first:border-none sm:border-gray-950/5 sm:py-3">
+          {t('activities.create.form.claimDialogButton.title')}
+        </dt>
+        <dd className="sm: pb-3 pt-1 text-gray-950 sm:border-gray-950/5 sm:py-3 sm:[&:nth-child(2)]:border-none">
+          {data.claimDialogConfig ? (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="text-gray-500">🔗</span>
+                <a
+                  href={data.claimDialogConfig.buttonUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  {data.claimDialogConfig.buttonUrl}
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-gray-500">🇺🇸</span>
+                <span>{data.claimDialogConfig.buttonTextEN}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-gray-500">🇨🇳</span>
+                <span>{data.claimDialogConfig.buttonTextZH}</span>
+              </div>
+            </div>
+          ) : (
+            <span>{t('activities.create.form.claimDialogButton.empty')}</span>
           )}
         </dd>
       </dl>

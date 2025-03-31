@@ -126,7 +126,8 @@
           "endTimeInvalid": "End time cannot be earlier than start time",
           "nftEmpty": "NFT cannot be empty",
           "rewardAmountRequired": "Reward amount is required",
-          "rewardAmountExceeded": "Reward amount cannot exceed total participants"
+          "rewardAmountExceeded": "Reward amount cannot exceed total participants",
+          "claimDialogButtonTextRequired": "Please enter the complete claim dialog button configuration, or leave them all blank"
         },
         "imageUpload": {
           "title": "Upload Cover Image",
@@ -148,6 +149,27 @@
         "requireTwitterBinding": {
           "label": "Bind X (Twitter)",
           "description": "If enabled, only wallets linked to X (Twitter) are eligible to participate"
+        },
+        "socialLinks": {
+          "twitter": "Twitter",
+          "twitterDesc": "Enter your Twitter URL. If configured, an icon will be displayed on the red packet activity page to jump to the URL",
+          "telegram": "Telegram",
+          "telegramDesc": "Enter your Telegram URL. If configured, an icon will be displayed on the red packet activity page to jump to the URL",
+          "discord": "Discord",
+          "discordDesc": "Enter your Discord URL. If configured, an icon will be displayed on the red packet activity page to jump to the URL",
+          "website": "Website",
+          "websiteDesc": "Enter your website URL. If configured, an icon will be displayed on the red packet activity page to jump to the URL",
+          "empty": "No social links configured"
+        },
+        "claimDialogButton": {
+          "title": "Claim Dialog Button",
+          "empty": "No claim dialog button configured",
+          "url": "Claim Dialog Button URL",
+          "urlDesc": "Enter your claim dialog button URL. If configured, an icon will be displayed on the red packet activity page to jump to the URL",
+          "textEN": "Claim Dialog Button Text in English",
+          "textENDesc": "Enter the text for the claim dialog button in English. If configured, the button will be displayed in the claim dialog in English",
+          "textZH": "Claim Dialog Button Text in Chinese",
+          "textZHDesc": "Enter the text for the claim dialog button in Chinese. If configured, the button will be displayed in the claim dialog in Chinese"
         }
       },
       "button": {
@@ -176,7 +198,7 @@
         "congratulations": "😆You got",
         "topPercentage": "😎beat {percentage}% of current participants😎",
         "close": "Close",
-        "portalLink": "Go to Protal"
+        "portalLink": "Go to Portal to check your assets"
       },
       "share": "Share",
       "shareTitle": "Share Red Packet",
@@ -221,11 +243,11 @@
         },
         "editWarning": {
           "title": "Note",
-          "content": "Activity has not started. You can update the activity name, cover image, start/end time, and participation conditions."
+          "content": "Activity has not started. You can update the activity name, cover image, start/end time, and participation conditions, social platforms URL, and claim dialog button configuration."
         },
         "extendEndTimeWarning": {
           "title": "Note",
-          "content": "Activity has started. You can only update the end time"
+          "content": "Activity has started. You can only update the end time, social platforms URL and claim dialog button configuration"
         }
       },
       "extendEndTime": {

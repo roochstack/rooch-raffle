@@ -47,7 +47,7 @@ async function getEnvelopesData(
   );
 
   return envelopeQueryResults.flatMap((envelopeQueryResult) =>
-    envelopeQueryResult.data.map(formatEnvelopeData)
+    envelopeQueryResult.data.map((item) => formatEnvelopeData(item))
   );
 }
 

@@ -27,6 +27,7 @@ import { useTranslations } from 'next-intl';
 import TwitterBindingStatus from './twitter-binding-status';
 import TwitterBindingDialog from '@/components/twitter-binding-dialog';
 import { CoinEnvelopeClaimedDialog } from './coin-envelope-claimed-dialog';
+import { SocialLinks } from './social-links';
 
 interface ActivityProps {
   data: CoinEnvelopeItem;
@@ -281,6 +282,10 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
               )}
             </div>
           </div>
+
+          <div className="absolute bottom-0 left-0 right-0 flex items-center justify-start">
+            <SocialLinks links={data.socialLinks} />
+          </div>
         </div>
       </div>
       <WalletConnectDialog open={connectModalOpen} onOpenChange={setConnectModalOpen} />
@@ -296,6 +301,7 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
         claimedAmountFormatted={claimedAmountFormatted}
         claimedRankPercentage={claimedRankPercentage}
         coinInfo={coinInfoResp.data}
+        claimDialogConfig={data.claimDialogConfig}
       />
     </div>
   );
