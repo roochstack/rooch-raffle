@@ -117,7 +117,7 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
                 <StatusCellContent status={envelopeDetail.status} />
               </div>
               <div className="flex items-center gap-x-2">
-                {envelopeDetail.status !== 'ended' && (
+                {envelopeDetail.status !== 'ended' && envelopeDetail.status !== 'all-claimed' && (
                   <Link
                     href={`/activities/envelope/${id}/edit`}
                     className="inline-flex cursor-pointer items-center justify-center rounded-md border-b border-transparent bg-gray-200/60 px-2.5 py-2 text-sm font-semibold leading-none text-gray-600 transition-all hover:bg-gray-600 hover:text-white"
