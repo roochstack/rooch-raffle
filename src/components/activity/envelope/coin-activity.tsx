@@ -236,13 +236,13 @@ export default function CoinActivity({ data, onClaimed }: ActivityProps) {
                     }}
                   />
                   {data.requireTwitterBinding &&
-                    (twitterBindingStatusResp.isPending ? null : (
+                    (twitterBindingStatusResp.isPending || !twitterBindingStatusResp.binded ? (
                       <TwitterBindingStatus
                         className="mt-2"
                         binded={twitterBindingStatusResp.binded!}
                         creatorAddress={data.sender}
                       />
-                    ))}
+                    ) : null)}
                 </div>
               )}
             </div>
