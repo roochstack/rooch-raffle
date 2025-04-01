@@ -3,10 +3,11 @@
 import { useCoinBalances } from '@/hooks/use-coin-balances';
 import { CoinEnvelopeItem } from '@/interfaces';
 import { formatDate } from 'date-fns';
-import { TwitterIcon, Globe, MessageCircle, MessagesSquare } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { CoinLabel } from '../coin-label';
 import { useMemo } from 'react';
+import { RiDiscordFill, RiTelegram2Fill, RiTwitterXFill } from 'react-icons/ri';
+import { TbWorld } from 'react-icons/tb';
 
 interface CoinEnvelopeDetailsProps {
   data: CoinEnvelopeItem;
@@ -151,7 +152,7 @@ export default function CoinEnvelopeDetails({ data }: CoinEnvelopeDetailsProps) 
 
         {/* 社交链接 */}
         <dt className="sm: col-start-1 border-gray-950/5 pt-3 text-gray-500 first:border-none sm:border-gray-950/5 sm:py-3">
-          {t('activities.create.form.socialLinks.twitter')}
+          {t('activities.create.form.socialLinks.title')}
         </dt>
         <dd className="sm: pb-3 pt-1 text-gray-950 sm:border-gray-950/5 sm:py-3 sm:[&:nth-child(2)]:border-none">
           {data.socialLinks && data.socialLinks.length > 0 ? (
@@ -159,10 +160,18 @@ export default function CoinEnvelopeDetails({ data }: CoinEnvelopeDetailsProps) 
               {data.socialLinks.map((link, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <span className="text-gray-500">
-                    {link.platform === 'twitter' && <TwitterIcon className="h-4 w-4" />}
-                    {link.platform === 'telegram' && <MessageCircle className="h-4 w-4" />}
-                    {link.platform === 'discord' && <MessagesSquare className="h-4 w-4" />}
-                    {link.platform === 'website' && <Globe className="h-4 w-4" />}
+                    {link.platform === 'twitter' && (
+                      <RiTwitterXFill className="h-4.5 w-4.5 text-gray-500" />
+                    )}
+                    {link.platform === 'telegram' && (
+                      <RiTelegram2Fill className="h-4.5 w-4.5 text-gray-500" />
+                    )}
+                    {link.platform === 'discord' && (
+                      <RiDiscordFill className="h-4.5 w-4.5 text-gray-500" />
+                    )}
+                    {link.platform === 'website' && (
+                      <TbWorld className="h-4.5 w-4.5 text-gray-500" />
+                    )}
                   </span>
                   <a
                     href={link.url}
