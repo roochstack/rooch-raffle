@@ -151,6 +151,7 @@
           "description": "If enabled, only wallets linked to X (Twitter) are eligible to participate"
         },
         "socialLinks": {
+          "title": "Social Platforms",
           "twitter": "Twitter",
           "twitterDesc": "Enter your Twitter URL. If configured, an icon will be displayed on the red packet activity page to jump to the URL",
           "telegram": "Telegram",
@@ -159,7 +160,7 @@
           "discordDesc": "Enter your Discord URL. If configured, an icon will be displayed on the red packet activity page to jump to the URL",
           "website": "Website",
           "websiteDesc": "Enter your website URL. If configured, an icon will be displayed on the red packet activity page to jump to the URL",
-          "empty": "No social links configured"
+          "empty": "No social platforms configured"
         },
         "claimDialogButton": {
           "title": "Claim Dialog Button",

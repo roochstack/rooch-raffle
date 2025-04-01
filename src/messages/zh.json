@@ -155,6 +155,7 @@
           "description": "选中后，只有绑定过 X 的钱包地址才能参与"
         },
         "socialLinks": {
+          "title": "社交平台链接",
           "twitter": "Twitter",
           "twitterDesc": "输入您的twitter主页链接。如果配置该字段，则会在红包活动页中显示可以跳转到该链接的ICON",
           "telegram": "Telegram",
